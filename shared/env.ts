@@ -1,0 +1,21 @@
+import process from "node:process";
+import { z } from "zod/mini";
+
+const EnvZodSchema = z.object({
+  DATABASE_URL: z.string(),
+  BETTER_AUTH_SECRET: z.string(),
+});
+
+const parsedEnv = EnvZodSchema.safeParse(process.env);
+
+if (!parsedEnv.success) {
+  let message = "Missing required values in .env:\n";
+
+  parsedEnv.error.issues.forEach((issue) => {
+    message += `${String(issue.path[0])}\n`;
+  });
+
+  throw new Error(message);
+}
+
+export const env = parsedEnv.data;
