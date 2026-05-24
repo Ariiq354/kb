@@ -1,2 +1,31 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+
+@theme {
+  --font-plus-jakarta-sans: "Plus Jakarta Sans", sans-serif;
+
+  --color-mosque: #00666b;
+  --color-just-right: #fad9c1;
+  --color-wewak: #e35079;
+
+  --color-eastern-blue-50: #f1f9fa;
+  --color-eastern-blue-100: #dcf0f1;
+  --color-eastern-blue-200: #bee0e3;
+  --color-eastern-blue-300: #90cad0;
+  --color-eastern-blue-400: #5caab4;
+  --color-eastern-blue-500: #42929d;
+  --color-eastern-blue-600: #387582;
+  --color-eastern-blue-700: #33606b;
+  --color-eastern-blue-800: #30515a;
+  --color-eastern-blue-900: #2c454d;
+  --color-eastern-blue-950: #192d33;
+}
+
+body {
+  font-family: var(--font-plus-jakarta-sans);
+}

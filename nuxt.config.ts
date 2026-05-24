@@ -8,9 +8,14 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "nuxt-security",
     "@pinia/nuxt",
+    "@nuxt/image",
   ],
 
   css: ["~/assets/css/main.css"],
+
+  ui: {
+    colorMode: false,
+  },
 
   security: {
     headers: {
