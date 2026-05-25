@@ -3,7 +3,7 @@
     <div class="container">
       <div class="grid grid-cols-2 gap-16 items-center">
         <div class="relative">
-          <div class="absolute -left-4 -bottom-4 w-full h-full bg-mosque/20 rounded-2xl z-0" />
+          <div class="absolute -left-4 -bottom-4 w-full h-full bg-primary/20 rounded-2xl z-0" />
           <div class="rounded-2xl bg-amber-50 relative z-10 h-100 shadow-sm flex items-center justify-center">
             <UIcon name="i-material-symbols-add-photo-alternate-outline" size="100" />
           </div>
@@ -17,7 +17,7 @@
           </p>
           <ul class="space-y-4">
             <li class="flex gap-4 items-center">
-              <div class="w-10 h-10 rounded-full bg-mosque/10 flex items-center justify-center text-mosque">
+              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                 <UIcon name="i-material-symbols-favorite-rounded" size="20" />
               </div>
 
@@ -32,7 +32,7 @@
             </li>
 
             <li class="flex gap-4 items-center">
-              <div class="w-10 h-10 rounded-full bg-mosque/10 flex items-center justify-center text-mosque">
+              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                 <UIcon name="i-material-symbols-home-rounded" size="20" />
               </div>
 
@@ -47,7 +47,7 @@
             </li>
 
             <li class="flex gap-4 items-center">
-              <div class="w-10 h-10 rounded-full bg-mosque/10 flex items-center justify-center text-mosque">
+              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                 <UIcon name="i-material-symbols-menu-book-rounded" size="20" />
               </div>
 
@@ -62,7 +62,7 @@
             </li>
 
             <li class="flex gap-4 items-center">
-              <div class="w-10 h-10 rounded-full bg-mosque/10 flex items-center justify-center text-mosque">
+              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                 <UIcon name="i-material-symbols-forum-rounded" size="20" />
               </div>
 

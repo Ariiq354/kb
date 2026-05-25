@@ -12,13 +12,13 @@
 
     <div class="grid grid-cols-3 gap-4">
       <!-- Service 1: Bootcamp -->
-      <div class="col-span-2 border border-mosque/20 rounded-2xl p-8 shadow-md relative">
+      <div class="col-span-2 border border-primary/20 rounded-2xl p-8 shadow-md relative">
         <div class="absolute top-0 right-0 p-8 opacity-10 text-primary">
           <UIcon name="i-material-symbols-favorite" size="100" />
         </div>
 
         <div class="flex flex-col justify-between">
-          <span class="flex items-center justify-center w-12 h-12 rounded-full bg-mosque text-white mb-4">
+          <span class="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white mb-4">
             <UIcon name="i-material-symbols-group" size="24" />
           </span>
 
@@ -42,9 +42,9 @@
       </div>
 
       <!-- Service 2: Ebooks -->
-      <div class="border border-mosque/20 rounded-2xl p-8 shadow-md relative">
+      <div class="border border-primary/20 rounded-2xl p-8 shadow-md relative">
         <div class="flex flex-col justify-between h-full">
-          <span class="flex items-center justify-center w-12 h-12 rounded-full bg-mosque/20 text-mosque mb-4">
+          <span class="flex items-center justify-center w-12 h-12 rounded-full bg-primary/20 text-primary mb-4">
             <UIcon name="i-material-symbols-menu-book-outline" size="24" />
           </span>
 
@@ -83,7 +83,7 @@
 
             <UButton
               to="/login"
-              class="rounded-full bg-mosque text-white hover:bg-mosque/80 px-6 py-3 text-sm"
+              class="rounded-full bg-primary text-white hover:bg-primary/80 px-6 py-3 text-sm"
             >
               Mulai Profil Anda
             </UButton>

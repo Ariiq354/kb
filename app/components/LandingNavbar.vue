@@ -3,7 +3,7 @@
     <div class="container flex justify-between">
       <div class="flex gap-2 items-center">
         <NuxtImg src="/logo.webp" alt="logo" class="h-12" />
-        <h1 class="text-mosque uppercase tracking-wide font-bold text-2xl">
+        <h1 class="text-primary uppercase tracking-wide font-bold text-2xl">
           Keluarga Bahagia
         </h1>
       </div>
@@ -42,7 +42,7 @@
   position: relative;
   padding-bottom: 4px;
   font-weight: 600;
-  color: var(--color-mosque);
+  color: var(--color-eastern-blue-700);
   text-decoration: none;
   transition:
     color 0.3s ease,
@@ -57,7 +57,7 @@
   bottom: 0;
   width: 0%;
   height: 2px;
-  background-color: var(--color-mosque);
+  background-color: var(--color-eastern-blue-700);
   transition: width 0.3s ease;
 }
 

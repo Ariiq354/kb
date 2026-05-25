@@ -4,7 +4,7 @@
       <div class="flex flex-col gap-4">
         <div class="flex gap-2 items-center">
           <NuxtImg src="/logo.webp" alt="logo" class="h-12" />
-          <h1 class="text-mosque uppercase tracking-wide font-bold text-2xl">
+          <h1 class="text-primary uppercase tracking-wide font-bold text-2xl">
             Keluarga Bahagia
           </h1>
         </div>
@@ -84,6 +84,6 @@
   bottom: 0;
   width: 70%; /* border length */
   height: 2px;
-  background-color: var(--color-mosque);
+  background-color: var(--color-primary);
 }
 </style>

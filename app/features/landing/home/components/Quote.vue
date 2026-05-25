@@ -1,5 +1,5 @@
 <template>
-  <section class="container bg-mosque/10 text-mosque rounded-3xl p-24 shadow-lg relative my-20">
+  <section class="container bg-primary/10 text-primary rounded-3xl p-24 shadow-lg relative my-20">
     <UIcon name="i-material-symbols-format-quote-outline" size="150" class="absolute left-20 top-5 opacity-10" />
     <div class="flex flex-col items-center justify-center">
       <UIcon name="i-material-symbols-format-quote-outline" size="40" />
