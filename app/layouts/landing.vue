@@ -6,7 +6,9 @@ import LandingNavbar from "~/components/LandingNavbar.vue";
 <template>
   <div>
     <LandingNavbar />
-    <slot />
+    <div class="mt-21">
+      <slot />
+    </div>
     <LandingFooter />
   </div>
 </template>

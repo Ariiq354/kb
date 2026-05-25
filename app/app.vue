@@ -1,3 +1,15 @@
+<script setup lang="ts">
+useSeoMeta({
+  description: "Keluarga Bahagia",
+});
+
+useHead({
+  htmlAttrs: {
+    lang: "id",
+  },
+});
+</script>
+
 <template>
   <div>
     <NuxtRouteAnnouncer />

@@ -6,10 +6,10 @@ import Seminar from "./components/Seminar.vue";
 </script>
 
 <template>
-  <div>
+  <main>
     <Hero />
     <Layanan />
     <Seminar />
     <Quote />
-  </div>
+  </main>
 </template>
