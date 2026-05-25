@@ -24,7 +24,7 @@
           Kontak
         </ULink>
       </nav>
-      <UButton to="/login" class="rounded-full bg-mosque text-white hover:bg-mosque/80 px-6 py-2 text-sm">
+      <UButton to="/login" class="rounded-full px-6 py-2 text-sm">
         Daftar Sekarang
       </UButton>
     </div>

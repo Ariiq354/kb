@@ -31,7 +31,7 @@
           </p>
 
           <UButton
-            to="/bootcamp"
+            to="/products"
             variant="link"
             trailing-icon="i-material-symbols-arrow-forward"
             class="flex items-center w-fit p-0"
@@ -57,7 +57,7 @@
           </p>
 
           <UButton
-            to="/ebooks"
+            to="/products"
             variant="link"
             trailing-icon="i-material-symbols-arrow-forward"
             class="flex items-center w-fit p-0"

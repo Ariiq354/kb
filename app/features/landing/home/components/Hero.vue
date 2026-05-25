@@ -8,7 +8,7 @@
         Temukan perjalanan menuju keluarga yang harmonis melalui bimbingan, pembelajaran, dan dukungan untuk membangun hubungan yang penuh cinta, keberkahan, dan kebahagiaan.
       </p>
       <div class="pt-8 flex gap-4 justify-start">
-        <UButton color="primary" class="rounded-full px-8 py-4 text-sm">
+        <UButton class="rounded-full px-8 py-4 text-sm">
           Daftar Sekarang
         </UButton>
         <UButton variant="soft" class="rounded-full px-8 py-4 text-sm">

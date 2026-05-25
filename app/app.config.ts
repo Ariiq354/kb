@@ -1,12 +1,12 @@
 export default defineAppConfig({
   ui: {
+    colors: {
+      primary: "eastern-blue",
+    },
     card: {
       slots: {
         root: "shadow-lg",
       },
-    },
-    colors: {
-      primary: "eastern-blue",
     },
     input: {
       defaultVariants: {
