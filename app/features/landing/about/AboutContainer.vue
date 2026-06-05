@@ -79,7 +79,7 @@ const mentors = [
           class="relative overflow-hidden rounded-3xl bg-eastern-blue-200 p-6 shadow-xl"
         >
           <div
-            class="flex aspect-4/3k items-center justify-center rounded-2xl bg-eastern-blue-50"
+            class="flex aspect-4/3 items-center justify-center rounded-2xl bg-eastern-blue-50"
           >
             <UIcon
               name="i-material-symbols-favorite-rounded"
