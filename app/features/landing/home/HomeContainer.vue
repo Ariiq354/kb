@@ -6,7 +6,7 @@ import Seminar from "./components/Seminar.vue";
 </script>
 
 <template>
-  <main>
+  <main class="mt-21">
     <Hero />
     <Layanan />
     <Seminar />

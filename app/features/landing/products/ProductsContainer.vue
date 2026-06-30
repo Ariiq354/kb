@@ -1,5 +1,23 @@
+<script setup lang="ts">
+import Bootcamps from "./components/Bootcamps.vue";
+import Courses from "./components/Courses.vue";
+import Ebooks from "./components/Ebooks.vue";
+</script>
+
 <template>
-  <div>
-    Ini Produk
+  <div class="container">
+    <div class="py-20">
+      <h1 class="text-primary-600 text-4xl font-bold">
+        Program & Materi Unggulan Kami
+      </h1>
+      <p class="max-w-3xl mt-2">
+        Temukan pelatihan intensif yang dipandu oleh para ahli dan panduan komprehensif yang dirancang untuk memelihara hubungan Anda dan membangun ikatan yang langgeng.
+      </p>
+    </div>
+    <Bootcamps />
+    <div class="mt-20">
+      <Courses />
+    </div>
+    <Ebooks />
   </div>
 </template>
