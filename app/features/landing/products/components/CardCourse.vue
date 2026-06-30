@@ -11,7 +11,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="max-w-120 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+  <div class="max-w-120 rounded-xl overflow-hidden border border-gray-200 shadow-sm transition-transform hover:-translate-y-2 mt-3">
     <NuxtImg
       :src="image"
       class="w-full h-65 object-cover"
@@ -25,7 +25,7 @@ defineProps<{
         <div class="flex items-center gap-1">
           <UIcon name="i-stash-cam-video-solid" class="text-lg text-gray-500" />
           <p class="text-xs">
-            5 Video
+            {{ totalVideo }} Video
           </p>
         </div>
 

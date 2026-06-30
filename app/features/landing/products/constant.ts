@@ -59,7 +59,7 @@ export const DUMMY_COURSE = [
   },
   {
     id: 2,
-    title: "Kiat Membangun Rumah Tangga",
+    title: "Membangun Karakter Anak Sejak Dini",
     totalVideo: 2,
     harga: 75000,
     image: "/images/course-image-1.webp",
@@ -77,5 +77,36 @@ export const DUMMY_COURSE = [
     totalVideo: 2,
     harga: 75000,
     image: "/images/course-image-1.webp",
+  },
+];
+
+export const DUMMY_EBOOK = [
+  {
+    id: 1,
+    title: "Rumah Tangga Seindah Surga",
+    penulis: "Ukasyah Habibu Ahmad",
+    harga: 75000,
+    image: "/images/ebook-image-1.webp",
+  },
+  {
+    id: 2,
+    title: "Rumah Tangga Seindah Surga",
+    penulis: "Ukasyah Habibu Ahmad",
+    harga: 75000,
+    image: "/images/ebook-image-1.webp",
+  },
+  {
+    id: 3,
+    title: "Rumah Tangga Seindah Surga",
+    penulis: "Ukasyah Habibu Ahmad",
+    harga: 75000,
+    image: "/images/ebook-image-1.webp",
+  },
+  {
+    id: 4,
+    title: "Rumah Tangga Seindah Surga",
+    penulis: "Ukasyah Habibu Ahmad",
+    harga: 75000,
+    image: "/images/ebook-image-1.webp",
   },
 ];

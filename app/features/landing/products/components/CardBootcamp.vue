@@ -13,7 +13,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="max-w-100 rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+  <div class="max-w-100 rounded-xl overflow-hidden border border-gray-200 shadow-sm transition-transform hover:shadow-md hover:-translate-y-2 mt-3">
     <NuxtImg
       :src="image"
       class="w-full"
