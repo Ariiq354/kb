@@ -28,7 +28,7 @@ const mentors = [
 </script>
 
 <template>
-  <main class="container mx-auto space-y-28 px-6 py-12">
+  <main class="container mx-auto space-y-28 px-6 py-32">
     <!-- HERO / ABOUT -->
     <section class="grid items-center gap-12 lg:grid-cols-2">
       <!-- Left -->

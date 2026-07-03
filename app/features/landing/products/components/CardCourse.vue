@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatRupiah } from "~/utils/index";
+import { formatRupiah } from "~/utils/number";
 
 defineProps<{
   id: number;

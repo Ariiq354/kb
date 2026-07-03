@@ -5,7 +5,7 @@ import Ebooks from "./components/Ebooks.vue";
 </script>
 
 <template>
-  <div class="container">
+  <main class="container py-20">
     <div class="mb-20">
       <h1 class="text-primary-600 text-4xl font-bold">
         Program & Materi Unggulan Kami
@@ -19,5 +19,5 @@ import Ebooks from "./components/Ebooks.vue";
       <Courses />
     </div>
     <Ebooks />
-  </div>
+  </main>
 </template>
