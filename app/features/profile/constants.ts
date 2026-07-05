@@ -2,37 +2,60 @@ import { z } from "zod";
 
 interface UserResponse {
   id: number;
+  name: string | null;
+  email: string | null;
+  noTelepon: string | null;
+  image: string | null;
+  kodeUser: string | null;
+  statusKawin: string | null;
+  tanggalLahir: string | null;
+  kelurahan: string | null;
   gender: "Laki-laki" | "Perempuan" | null;
-  namaKantor: string | null;
-  provinsiKantor: string | null;
-  noHp: string | null;
-  nip18: string | null;
-  idJabatan: number | null;
-  namaJabatan: string | null;
-  namaUnitEs4: string | null;
-  namaPangkat: string | null;
-  pendidikanFormal: string | null;
-  alamat: string | null;
-  provinsi: string | null;
+  kecamatan: string | null;
   kota: string | null;
-  foto: string | null;
-  name: string;
-  nip9: string | null;
+  provinsi: string | null;
+  namaAyah: string | null;
+  anakKe: number | null;
+  dariBersaudara: number | null;
+  suku: string | null;
+  pendidikan: string | null;
+  pekerjaan: string | null;
+  jurusan: string | null;
+  tinggi: number | null;
+  berat: number | null;
+  hobi: string | null;
+  instagram: string | null;
+  kriteria: string | null;
+  perokok: boolean | null;
+  gaji: number | null;
+  agama: string | null;
+  deskripsi: string | null;
 }
 
 export const schema = z.object({
-  gender: z.enum(["Laki-laki", "Perempuan"]).optional(),
-  namaKantor: z.string().optional(),
-  provinsiKantor: z.string().optional(),
-  noHp: z.string().optional(),
-  nip18: z.string().optional(),
-  idJabatan: z.number().optional(),
-  namaUnitEs4: z.string().optional(),
-  namaPangkat: z.string().optional(),
-  pendidikanFormal: z.string().optional(),
-  alamat: z.string().optional(),
-  provinsi: z.string().optional(),
-  kota: z.string().optional(),
+  statusKawin: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  tanggalLahir: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  kelurahan: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  gender: z.enum(["Laki-laki", "Perempuan"], { error: "Wajib diisi" }),
+  kecamatan: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  kota: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  provinsi: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  namaAyah: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  anakKe: z.coerce.number({ error: "Wajib diisi" }),
+  dariBersaudara: z.coerce.number({ error: "Wajib diisi" }),
+  suku: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  pendidikan: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  pekerjaan: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  jurusan: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  tinggi: z.coerce.number({ error: "Wajib diisi" }),
+  berat: z.coerce.number({ error: "Wajib diisi" }),
+  hobi: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  instagram: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  kriteria: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  perokok: z.boolean({ error: "Wajib diisi" }),
+  gaji: z.coerce.number({ error: "Wajib diisi" }),
+  agama: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  deskripsi: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
   foto: z.string().optional(),
   file: z.optional(
     z
@@ -44,21 +67,32 @@ export const schema = z.object({
   ),
 });
 
-export function initFormData(data?: UserResponse): Schema {
+export function initFormData(data?: UserResponse | null): Partial<Schema> {
   return {
+    statusKawin: data?.statusKawin ?? undefined,
+    tanggalLahir: data?.tanggalLahir ?? undefined,
+    kelurahan: data?.kelurahan ?? undefined,
     gender: data?.gender ?? undefined,
-    namaKantor: data?.namaKantor ?? undefined,
-    provinsiKantor: data?.provinsiKantor ?? undefined,
-    noHp: data?.noHp ?? undefined,
-    nip18: data?.nip18 ?? undefined,
-    idJabatan: data?.idJabatan ?? undefined,
-    namaUnitEs4: data?.namaUnitEs4 ?? undefined,
-    namaPangkat: data?.namaPangkat ?? undefined,
-    pendidikanFormal: data?.pendidikanFormal ?? undefined,
-    alamat: data?.alamat ?? undefined,
-    provinsi: data?.provinsi ?? undefined,
+    kecamatan: data?.kecamatan ?? undefined,
     kota: data?.kota ?? undefined,
-    foto: data?.foto ?? undefined,
+    provinsi: data?.provinsi ?? undefined,
+    namaAyah: data?.namaAyah ?? undefined,
+    anakKe: data?.anakKe ?? undefined,
+    dariBersaudara: data?.dariBersaudara ?? undefined,
+    suku: data?.suku ?? undefined,
+    pendidikan: data?.pendidikan ?? undefined,
+    pekerjaan: data?.pekerjaan ?? undefined,
+    jurusan: data?.jurusan ?? undefined,
+    tinggi: data?.tinggi ?? undefined,
+    berat: data?.berat ?? undefined,
+    hobi: data?.hobi ?? undefined,
+    instagram: data?.instagram ?? undefined,
+    kriteria: data?.kriteria ?? undefined,
+    perokok: data?.perokok ?? false,
+    gaji: data?.gaji ?? undefined,
+    agama: data?.agama ?? undefined,
+    deskripsi: data?.deskripsi ?? undefined,
+    foto: data?.image ?? undefined,
   };
 }
 
