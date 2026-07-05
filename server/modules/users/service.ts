@@ -1,107 +1,57 @@
-import type { CreateUserProfileSchema, GetUserProfileSchema, UpdateUserProfileSchema, MePatchProfileSchema } from "./model";
+import type { UserProfileSchema } from "./model";
 import { deleteFile, uploadFile } from "~~/server/utils/files";
-import { UserProfileRepo } from "./repo";
+import { UserRepo } from "./repo";
 
-export abstract class UserProfileService {
-  static async create(payload: CreateUserProfileSchema) {
-    const { file, ...data } = payload;
-    const fileData = file[0]!;
-
-    const { key } = await uploadFile(
-      "user-profile",
-      fileData.filename!,
-      fileData.data,
-      fileData.type!,
-    );
-
-    return await UserProfileRepo.create(data, key);
-  }
-
-  static async update(id: number, payload: UpdateUserProfileSchema) {
-    const profile = await UserProfileRepo.findById(id);
-
-    if (!profile) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: "Profile tidak ditemukan",
-      });
-    }
-
-    const { file, ...data } = payload;
-    let fileKey: string | undefined;
+export abstract class UserService {
+  static async updateUser(user: UserWithId, payload: UserProfileSchema) {
+    const { file, ...profileData } = payload;
+    let newlyUploadedKey: string | undefined;
 
     if (file && file.length > 0) {
       const fileData = file[0]!;
+
       const { key } = await uploadFile(
-        "user-profile",
+        "user-image",
         fileData.filename!,
         fileData.data,
         fileData.type!,
       );
-      fileKey = key;
 
-      if (profile.foto) {
-        await deleteFile(profile.foto);
-      }
+      newlyUploadedKey = key;
+      profileData.foto = key;
     }
 
-    return await UserProfileRepo.update(id, data, fileKey);
+    try {
+      const result = await UserRepo.updateUser(user.id, profileData);
+
+      if (user.image && (newlyUploadedKey || !profileData.foto)) {
+        await deleteFile(user.image);
+      }
+
+      return result;
+    }
+    catch (error) {
+      if (newlyUploadedKey) {
+        await deleteFile(newlyUploadedKey);
+      }
+
+      throw error;
+    }
   }
 
-  static async findAll(query: GetUserProfileSchema) {
-    return await UserProfileRepo.findAll(query);
-  }
+  static async getUserProfile(userId: number) {
+    const result = await UserRepo.getUserProfile(userId);
 
-  static async delete(id: number) {
-    const profile = await UserProfileRepo.findById(id);
-
-    if (!profile) {
+    if (!result) {
       throw createError({
         statusCode: 404,
-        statusMessage: "Profile tidak ditemukan",
+        message: "User tidak ditemukan",
+        data: {
+          code: "USER_MISSING",
+        },
       });
     }
 
-    if (profile.foto) {
-      await deleteFile(profile.foto);
-    }
-
-    return await UserProfileRepo.delete(id);
-  }
-
-  static async findMe(userId: number) {
-    return await UserProfileRepo.findMe(userId);
-  }
-
-  static async updateMe(userId: number, payload: MePatchProfileSchema) {
-    const profile = await UserProfileRepo.findMe(userId);
-
-    const { file, ...data } = payload;
-    let fileKey: string | undefined;
-
-    if (file && file.length > 0) {
-      const fileData = file[0]!;
-      const { key } = await uploadFile(
-        "user-profile",
-        fileData.filename!,
-        fileData.data,
-        fileData.type!,
-      );
-      fileKey = key;
-
-      if (profile && profile.user_profile && profile.user_profile.foto) {
-        await deleteFile(profile.user_profile.foto);
-      }
-    }
-
-    return await UserProfileRepo.updateMe(userId, data, fileKey);
-  }
-
-  static async findAllAdmin(query: GetUserProfileSchema) {
-    return await UserProfileRepo.findAllAdmin(query);
-  }
-
-  static async findAllMember(query: GetUserProfileSchema) {
-    return await UserProfileRepo.findAllMember(query);
-  }
+    return result;
+  };
 }

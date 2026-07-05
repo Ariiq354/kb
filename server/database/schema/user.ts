@@ -29,6 +29,5 @@ export const userProfileTable = pgTable("user_profile", {
   gaji: integer().notNull().default(0),
   agama: text().notNull().default(""),
   deskripsi: text().notNull().default(""),
-  foto: text().notNull(),
   ...createdUpdated,
 });

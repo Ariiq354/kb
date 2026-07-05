@@ -1,22 +1,19 @@
-import type { SQL } from "drizzle-orm";
-import type { GetUserProfileSchema, MePatchProfileSchema, UpdateUserProfileSchema } from "./model";
-import { and, desc, eq, ilike, or } from "drizzle-orm";
+import type { UserProfileSchema } from "./model";
+import { eq } from "drizzle-orm";
 import { db } from "~~/server/database";
 import { userTable } from "~~/server/database/schema/auth";
 import { userProfileTable } from "~~/server/database/schema/user";
+import { generateUniqueCode } from "~~/server/utils/generator";
 
-export abstract class UserProfileRepo {
-  static async updateUser(userId: number, payload: Omit<UpdateUserProfileSchema, "file">, foto?: string) {
-    // const updateData = foto ? { ...data, foto } : data;
-    // const [result] = await db
-    //   .update(userProfileTable)
-    //   .set(updateData)
-    //   .where(eq(userProfileTable.id, id))
-    //   .returning();
+export abstract class UserRepo {
+  static async updateUser(userId: number, payload: Omit<UserProfileSchema, "file">) {
     return db.transaction(async (tx) => {
+      const kodeUser = await generateUniqueCode(userProfileTable, userProfileTable.kodeUser, 4);
+
       const result = await tx.insert(userProfileTable)
         .values({
           userId,
+          kodeUser,
           ...payload,
         })
         .onConflictDoUpdate({
@@ -31,7 +28,7 @@ export abstract class UserProfileRepo {
 
       await tx.update(userTable)
         .set({
-          image: payload.foto || null,
+          image: payload.foto,
         })
         .where(eq(userTable.id, userId));
     });
@@ -44,6 +41,7 @@ export abstract class UserProfileRepo {
         name: userTable.name,
         email: userTable.email,
         noTelepon: userTable.noTelepon,
+        image: userTable.image,
         kodeUser: userProfileTable.kodeUser,
         statusKawin: userProfileTable.statusKawin,
         tanggalLahir: userProfileTable.tanggalLahir,
@@ -68,7 +66,6 @@ export abstract class UserProfileRepo {
         gaji: userProfileTable.gaji,
         agama: userProfileTable.agama,
         deskripsi: userProfileTable.deskripsi,
-        foto: userProfileTable.foto,
       })
       .from(userTable)
       .leftJoin(userProfileTable, eq(userTable.id, userProfileTable.userId))
@@ -76,128 +73,5 @@ export abstract class UserProfileRepo {
       .limit(1);
 
     return result || null;
-  }
-
-  static async findById(id: number) {
-    const [result] = await db
-      .select()
-      .from(userProfileTable)
-      .where(eq(userProfileTable.id, id))
-      .limit(1);
-    return result || null;
-  }
-
-  static async findAll(query: GetUserProfileSchema) {
-    const conditions: (SQL<unknown> | undefined)[] = [];
-
-    if (query.search) {
-      conditions.push(ilike(userProfileTable.kodeUser, `%${query.search}%`));
-    }
-
-    if (query.gender) {
-      conditions.push(eq(userProfileTable.gender, query.gender));
-    }
-
-    const qb = db
-      .select()
-      .from(userProfileTable)
-      .orderBy(desc(userProfileTable.id))
-      .where(and(...conditions));
-
-    const offset = (query.page - 1) * query.limit;
-    const total = await db.$count(qb);
-    const data = await qb.limit(query.limit).offset(offset);
-
-    return { total, data };
-  }
-
-  static async updateMe(userId: number, data: Omit<MePatchProfileSchema, "file">, foto?: string) {
-    const [profile] = await db.select().from(userProfileTable).where(eq(userProfileTable.userId, userId)).limit(1);
-    const updateData = foto ? { ...data, foto } : data;
-
-    if (profile) {
-      const [result] = await db
-        .update(userProfileTable)
-        .set(updateData)
-        .where(eq(userProfileTable.userId, userId))
-        .returning();
-      return result;
-    }
-    else {
-      const kodeUser = `USR-${Date.now()}`;
-      const [result] = await db
-        .insert(userProfileTable)
-        .values({ ...updateData, userId, kodeUser, foto: foto || "" })
-        .returning();
-      return result;
-    }
-  }
-
-  static async findAllAdmin(query: GetUserProfileSchema) {
-    const conditions: (SQL<unknown> | undefined)[] = [];
-
-    if (query.search) {
-      conditions.push(
-        or(
-          ilike(userProfileTable.kodeUser, `%${query.search}%`),
-          ilike(userTable.name, `%${query.search}%`),
-          ilike(userTable.email, `%${query.search}%`),
-        ),
-      );
-    }
-
-    if (query.gender) {
-      conditions.push(eq(userProfileTable.gender, query.gender));
-    }
-
-    const qb = db
-      .select()
-      .from(userTable)
-      .leftJoin(userProfileTable, eq(userTable.id, userProfileTable.userId))
-      .orderBy(desc(userTable.id))
-      .where(and(...conditions));
-
-    const offset = (query.page - 1) * query.limit;
-    const total = await db.$count(qb);
-    const data = await qb.limit(query.limit).offset(offset);
-
-    return { total, data };
-  }
-
-  static async findAllMember(query: GetUserProfileSchema) {
-    const conditions: (SQL<unknown> | undefined)[] = [];
-
-    if (query.search) {
-      conditions.push(
-        or(
-          ilike(userProfileTable.kodeUser, `%${query.search}%`),
-          ilike(userTable.name, `%${query.search}%`),
-        ),
-      );
-    }
-
-    if (query.gender) {
-      conditions.push(eq(userProfileTable.gender, query.gender));
-    }
-
-    const qb = db
-      .select({
-        user: {
-          id: userTable.id,
-          name: userTable.name,
-          image: userTable.image,
-        },
-        profile: userProfileTable,
-      })
-      .from(userTable)
-      .innerJoin(userProfileTable, eq(userTable.id, userProfileTable.userId))
-      .orderBy(desc(userTable.id))
-      .where(and(...conditions));
-
-    const offset = (query.page - 1) * query.limit;
-    const total = await db.$count(qb);
-    const data = await qb.limit(query.limit).offset(offset);
-
-    return { total, data };
   }
 }
