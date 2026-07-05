@@ -1,10 +1,14 @@
 import process from "node:process";
-import { z } from "zod/mini";
+import { z } from "zod";
 
 const EnvZodSchema = z.object({
   DATABASE_URL: z.string(),
   BETTER_AUTH_SECRET: z.string(),
   BETTER_AUTH_URL: z.string(),
+  CLOUDFLARE_ACCOUNT_ID: z.string(),
+  CLOUDFLARE_ACCESS_ID: z.string(),
+  CLOUDFLARE_SECRET_ID: z.string(),
+  CLOUDFLARE_BUCKET: z.string(),
 });
 
 const parsedEnv = EnvZodSchema.safeParse(process.env);

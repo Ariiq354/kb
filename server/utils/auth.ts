@@ -5,6 +5,10 @@ import { ac, admin, user } from "~~/shared/permission";
 import { db } from "../database";
 
 export const auth = betterAuth({
+  trustedOrigins: [
+    "https://keluargabahagia.id",
+    "https://*.keluargabahagia.id",
+  ],
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
@@ -18,6 +22,9 @@ export const auth = betterAuth({
       generateId: false,
       useNumberId: true,
     },
+  },
+  user: {
+    modelName: "userTable",
   },
   plugins: [
     adminPlugins({
