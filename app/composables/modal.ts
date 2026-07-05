@@ -1,7 +1,7 @@
 const overlay = useOverlay();
 export function openModal(
   component: any,
-  props: object,
+  props?: object,
 ) {
   const modal = overlay.create(component, {
     props,

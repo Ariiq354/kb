@@ -25,6 +25,9 @@ export const auth = betterAuth({
   },
   user: {
     modelName: "userTable",
+    additionalFields: {
+      noTelepon: { type: "string", required: true },
+    },
   },
   plugins: [
     adminPlugins({

@@ -2,7 +2,7 @@ import { useToast } from "#ui/composables/useToast";
 
 export function useToastSuccess(
   title: string,
-  description: string | undefined,
+  description?: string,
 ) {
   const toast = useToast();
   toast.add({
@@ -14,7 +14,7 @@ export function useToastSuccess(
   });
 }
 
-export function useToastError(title: string, description: string | undefined) {
+export function useToastError(title: string, description?: string) {
   const toast = useToast();
   toast.add({
     title,
