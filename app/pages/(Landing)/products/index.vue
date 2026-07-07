@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import ProductsContainer from "~/features/landing/products/ProductsContainer.vue";
 
-useHead({
-  title: "Keluarga Bahagia - Layanan",
+useLandingSeo({
+  title: "Layanan",
+  description: "Jelajahi layanan Keluarga Bahagia: bootcamp pranikah, course online, ebook panduan keluarga, dan program taaruf untuk membangun hubungan yang sehat.",
+  path: "/products",
 });
 
 definePageMeta({

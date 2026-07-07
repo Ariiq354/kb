@@ -1,2 +1,4 @@
 User-Agent: *
 Disallow:
+
+Sitemap: https://keluargabahagia.id/sitemap.xml

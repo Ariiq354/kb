@@ -1,12 +1,19 @@
 <script setup lang="ts">
-useSeoMeta({
-  description: "Keluarga Bahagia",
-});
+useWebsiteStructuredData();
 
 useHead({
+  titleTemplate: title => title
+    ? `${title} | Keluarga Bahagia`
+    : "Keluarga Bahagia",
   htmlAttrs: {
     lang: "id",
   },
+  meta: [
+    {
+      name: "robots",
+      content: "index, follow",
+    },
+  ],
 });
 </script>
 
