@@ -1,68 +1,277 @@
+
 # AGENTS.md
 
-## Project Context
+## Project Overview
 
-This project uses Nuxt 3, Vue 3, TypeScript, Tailwind CSS, and Nuxt UI.
+This project is built with:
 
-Follow the existing code structure, naming conventions, and component style in this repository. Prioritize consistency with the current codebase over introducing new patterns.
+- Nuxt 4
+- Vue 3
+- TypeScript
+- Nuxt UI 4
+- Tailwind CSS v4
+- Drizzle ORM
+- Better Auth
+- Neon PostgreSQL
+- Bun as the package manager
+
+---
+
+## Package Manager
+
+Use **Bun** for every dependency and script.
+
+Never use:
+
+- npm
+- yarn
+- pnpm
+
+Examples:
+
+```bash
+bun install
+bun add <package>
+bun remove <package>
+
+bun run dev
+bun run build
+bun run lint
+bun run check
+```
+
+---
+
+## Development Commands
+
+Install dependencies
+
+```bash
+bun install
+```
+
+Development
+
+```bash
+bun run dev
+```
+
+Production build
+
+```bash
+bun run build
+```
+
+Preview
+
+```bash
+bun run preview
+```
+
+Generate static site
+
+```bash
+bun run generate
+```
+
+Lint
+
+```bash
+bun run lint
+```
+
+Type check
+
+```bash
+bun run check
+```
+
+Database
+
+```bash
+bun run db:push
+bun run db:studio
+```
+
+---
 
 ## Tech Stack
 
-- Nuxt 3
-- Vue 3
+### Frontend
+
+- Nuxt 4
+- Vue 3 Composition API
 - TypeScript
-- `<script setup lang="ts">`
-- Tailwind CSS
-- Nuxt UI components
-- Nuxt Image where image optimization is needed
+- Nuxt UI 4
+- Tailwind CSS v4
+- VueUse
+- Nuxt Image
+- Nuxt Charts
 
-## General Rules
+### Backend
 
-- Use Vue Composition API with `<script setup lang="ts">`.
-- Always use TypeScript.
-- Follow the existing folder structure.
-- Do not introduce new libraries unless explicitly requested.
-- Do not change unrelated files.
-- Keep changes focused on the requested task.
-- Prefer readable and maintainable code over overly clever solutions.
-- Reuse existing utilities, constants, components, composables, and types when available.
-- Do not duplicate logic if a helper already exists.
-- Match the current coding style, formatting, and naming conventions.
+- Nuxt Server Routes
+- Better Auth
+- Drizzle ORM
+- PostgreSQL (Neon)
 
-## Vue / Nuxt Guidelines
+---
 
-- Use `ref`, `computed`, and `watch` only when needed.
-- Use `defineProps` and `defineEmits` with TypeScript types.
-- Prefer typed props over `any`.
-- Avoid `any` unless there is no practical alternative.
-- Use Nuxt auto-imports where already used in the project.
-- Use `useFetch`, `useAsyncData`, or existing repository/composable patterns according to the current project style.
-- Use `useRuntimeConfig()` for public runtime values such as base image URLs or API URLs.
-- Use `NuxtLink` for internal navigation.
-- Use `NuxtImg` for images when the project already uses it.
-- For dynamic HTML rendering, use `v-html` carefully and only with trusted/sanitized content.
+## Code Style
 
-## Styling Guidelines
+- Use TypeScript everywhere.
+- Prefer Composition API.
+- Prefer `<script setup lang="ts">`.
+- Prefer async/await over Promise chains.
+- Prefer Zod for request validation.
+- Keep functions small and focused.
+- Avoid `any` unless absolutely necessary.
+- Prefer explicit types when inference is unclear.
+- Use double quotes (`"`) and semicolons (`;`) as enforced by ESLint.
 
-- Use Tailwind CSS utility classes.
-- Follow existing spacing, color, border, radius, and shadow patterns.
-- Keep responsive design in mind.
-- Use mobile-first responsive classes.
-- Prefer:
-  - `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
-  - `flex flex-col sm:flex-row`
-  - `px-4 md:px-6 lg:px-8`
-- Use existing theme colors such as `primary`, `muted`, or project-defined colors.
-- Do not hardcode new colors unless consistent with the existing design.
-- For rich HTML content, use Tailwind Typography with `prose` classes when available.
+---
 
-## Folder Structure Rules
+## Nuxt Guidelines
 
-Always follow the existing folder structure in this Nuxt project.
+- Nuxt auto-imports are **DISABLED** in this project (`imports: { scan: false }, components: { dirs: [] }`). You must explicitly import components, composables, and utilities (e.g., `import MyComponent from "~/features/MyComponent.vue"`).
+- Follow the Nuxt 4 standard project directory structure:
+  - `app/`: Frontend application code (pages, components, layouts, features).
+  - `server/`: Backend API routes, database operations, and server-side modules (`server/modules/`).
+  - `shared/`: Code shared between the client and server (types, constants, schemas).
+- Prefer composables over duplicated logic.
+- Use server routes (`server/api/`) for backend API endpoints.
+- Keep business logic and database queries inside domain-specific modules in `server/modules/` (using `service.ts` and `repo.ts`).
+- Keep feature-specific UI inside `app/features/` and generic reusable UI inside `app/components/`.
+- Keep reusable state inside `app/composables/`.
+- Use `useFetch` or `$fetch` appropriately.
+- Use runtime config for secrets.
+- Never hardcode secrets.
 
-Before creating a new file:
+---
 
-- Check whether a similar feature, page, component, composable, type, or constant already exists.
-- Place new files near related existing files.
-- Do not create a new folder pattern if the project already has one.
-- Do not move files unless explicitly requested.
+## Database
+
+- ORM: Drizzle ORM
+- Database: PostgreSQL (Neon)
+
+Guidelines:
+
+- Never write raw SQL if Drizzle supports it.
+- Keep schema inside `server/database/schema/`.
+- Keep queries inside `repo.ts` and business logic inside `service.ts` within `server/modules/<feature-name>/`.
+- Use migrations via Drizzle Kit.
+- The schema uses Drizzle's `casing: "snake_case"`. Write your TypeScript models using `camelCase` and Drizzle will automatically map them to `snake_case` in the database.
+
+Commands
+
+```bash
+bun run db:push
+bun run db:studio
+```
+
+---
+
+## Authentication
+
+Use Better Auth.
+
+Guidelines:
+
+- Never implement custom authentication when Better Auth provides the feature.
+- Keep auth logic centralized.
+- Protect server routes appropriately.
+
+---
+
+## UI
+
+Use Nuxt UI components whenever possible.
+
+Before creating custom components:
+
+1. Check whether Nuxt UI already provides it.
+2. Extend existing components rather than rebuilding them.
+
+---
+
+## Styling
+
+- Tailwind CSS v4 only.
+- Prefer utility classes.
+- Avoid inline styles.
+- Keep class names readable.
+- Reuse design tokens.
+
+---
+
+## Validation
+
+Use Zod for:
+
+- request validation
+- form validation
+- API validation
+
+Avoid manual validation whenever possible.
+
+---
+
+## Linting
+
+Before finishing changes always run:
+
+```bash
+bun run lint
+bun run check
+```
+
+Code should pass both linting and type checking.
+
+---
+
+## Dependencies
+
+Prefer existing dependencies before adding new ones.
+
+Current notable libraries include:
+
+- Better Auth
+- Drizzle ORM
+- date-fns
+- VueUse
+- Zod
+- AWS SDK S3
+
+Do not introduce another library if the existing stack already solves the problem.
+
+---
+
+## Best Practices
+
+- Write readable code.
+- Prefer composition over duplication.
+- Keep components focused.
+- Keep server logic separated from UI.
+- Use strong typing.
+- Follow Nuxt conventions.
+- Avoid premature optimization.
+- Minimize unnecessary dependencies.
+- Keep files organized by feature when possible.
+
+---
+
+## Agent Instructions
+
+When modifying this project:
+
+1. Use Bun commands only.
+2. Follow Nuxt 4 conventions (including `app/`, `server/`, and `shared/` directories).
+3. Preserve TypeScript type safety.
+4. Reuse existing composables and components.
+5. Explicitly import components and composables since auto-imports are disabled.
+6. Prefer Nuxt UI before creating custom UI.
+7. Validate inputs with Zod.
+8. Use Drizzle ORM for database operations and organize backend logic in `server/modules/`.
+9. Do not introduce new dependencies unless necessary.
+10. Ensure `bun run lint` and `bun run check` pass before considering work complete.
+11. Keep changes minimal, idiomatic, and maintainable.
