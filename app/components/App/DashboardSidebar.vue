@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { DropdownMenuItem, NavigationMenuItem } from "@nuxt/ui";
 import { useAuthSession } from "~/composables/auth";
+import { openModal } from "~/composables/modal.js";
+import { useToastError } from "~/composables/toast.js";
 import { authClient } from "~/utils/auth";
 import ModalPassword from "../Modal/ModalPassword.vue";
 

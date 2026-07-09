@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useToastError } from "~/composables/toast";
+import { useToastError, useToastSuccess } from "~/composables/toast";
 
 const props = defineProps<{
   path: string;

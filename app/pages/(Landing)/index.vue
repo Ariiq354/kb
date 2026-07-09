@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HomeContainer from "~/features/landing/home/HomeContainer.vue";
+import { useLandingSeo } from "~/utils/seo";
 
 useLandingSeo({
   title: "Keluarga Bahagia",

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ProductsContainer from "~/features/landing/products/ProductsContainer.vue";
+import { useLandingSeo } from "~/utils/seo";
 
 useLandingSeo({
   title: "Layanan",

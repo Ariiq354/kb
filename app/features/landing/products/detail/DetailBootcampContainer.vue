@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FormatRupiah from "~/components/FormatRupiah.vue";
 import { formatRupiah } from "~/utils/number";
 import { DUMMY_DETAIL } from "./constant";
 

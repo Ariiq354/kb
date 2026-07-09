@@ -3,6 +3,12 @@ import type { FormSubmitEvent } from "@nuxt/ui";
 import type { Schema } from "./constants";
 import { FetchError } from "ofetch";
 import { ref } from "vue";
+import UploadImage from "~/components/Custom/UploadImage.vue";
+import SelectDesa from "~/components/Options/SelectDesa.vue";
+import SelectKecamatan from "~/components/Options/SelectKecamatan.vue";
+import SelectKota from "~/components/Options/SelectKota.vue";
+import SelectProvinsi from "~/components/Options/SelectProvinsi.vue";
+import { useToastError, useToastSuccess } from "~/composables/toast";
 import { initFormData, schema } from "./constants";
 
 const { data, refresh } = await useFetch("/api/v1/users/me");

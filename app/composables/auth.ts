@@ -1,3 +1,5 @@
+import { authClient } from "~/utils/auth";
+
 export async function useAuthSession() {
   const relativeFetch = ((url: string, opts?: any) => {
     try {

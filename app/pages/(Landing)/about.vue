@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AboutContainer from "~/features/landing/about/AboutContainer.vue";
+import { useLandingSeo } from "~/utils/seo";
 
 useLandingSeo({
   title: "Tentang Kami",

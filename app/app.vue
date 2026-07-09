@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useWebsiteStructuredData } from "./utils/seo";
+
 useWebsiteStructuredData();
 
 useHead({

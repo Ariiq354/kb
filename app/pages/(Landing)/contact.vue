@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ContactContainer from "~/features/landing/contact/ContactContainer.vue";
+import { useLandingSeo } from "~/utils/seo";
 
 useLandingSeo({
   title: "Kontak",
