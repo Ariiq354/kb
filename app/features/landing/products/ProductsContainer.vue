@@ -5,8 +5,8 @@ import Ebooks from "./components/Ebooks.vue";
 </script>
 
 <template>
-  <main class="bg-[url('/images/kontakback.webp')] object-cover bg-repeat-y bg-center">
-    <div class="container py-20 ">
+  <main class="bg-[url('/images/tentangbg1.webp')] bg-contain">
+    <div class="container py-20 bg-white">
       <div class="mb-20">
         <h1 class="text-primary-600 text-4xl font-bold">
           Program & Materi Unggulan Kami

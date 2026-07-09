@@ -28,7 +28,7 @@ const mentors = [
 </script>
 
 <template>
-  <main class="min-h-screen bg-[url('/images/tentangbg1.webp')] bg-contain bg-center pt-32">
+  <main class="bg-[url('/images/tentangbg1.webp')] bg-contain pt-32">
     <div class="container mx-auto space-y-28 px-6">
       <!-- HERO / ABOUT -->
       <section class="grid items-center gap-12 lg:grid-cols-2">
