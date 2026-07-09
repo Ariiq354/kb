@@ -3,6 +3,7 @@ import { adminGuard } from "~~/server/utils/guard";
 
 export default defineEventHandler(async (event) => {
   adminGuard(event);
-  const id = getRouterParam(event, "id");
-  return await DiskonService.delete(Number(id));
+  const body = await readValidatedBodySafe(event, deleteSchema);
+
+  return await DiskonService.delete(body.ids);
 });

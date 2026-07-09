@@ -1,37 +1,26 @@
 import type { SQL } from "drizzle-orm";
-import type { CreateDiskonSchema, GetDiskonSchema, UpdateDiskonSchema } from "./model";
-import { and, desc, eq, ilike } from "drizzle-orm";
+import type { PaginationSearchSchema } from "~~/server/utils/schema";
+import type { CreateDiskonSchema, UpdateDiskonSchema } from "./model";
+import { and, desc, eq, ilike, inArray } from "drizzle-orm";
 import { db } from "~~/server/database";
 import { diskonTable } from "~~/server/database/schema/diskon";
 
-export abstract class DiskonRepo {
+export class DiskonRepo {
   static async create(data: CreateDiskonSchema) {
-    const [result] = await db
+    await db
       .insert(diskonTable)
-      .values(data)
-      .returning();
-    return result;
+      .values(data);
   }
 
   static async update(id: number, data: UpdateDiskonSchema) {
-    const [result] = await db
+    return await db
       .update(diskonTable)
       .set(data)
       .where(eq(diskonTable.id, id))
-      .returning();
-    return result;
+      .returning({ id: diskonTable.id });
   }
 
-  static async findById(id: number) {
-    const [result] = await db
-      .select()
-      .from(diskonTable)
-      .where(eq(diskonTable.id, id))
-      .limit(1);
-    return result || null;
-  }
-
-  static async findAll(query: GetDiskonSchema) {
+  static async findAll(query: PaginationSearchSchema) {
     const conditions: (SQL<unknown> | undefined)[] = [];
 
     if (query.search) {
@@ -39,10 +28,18 @@ export abstract class DiskonRepo {
     }
 
     const qb = db
-      .select()
+      .select({
+        id: diskonTable.id,
+        kode: diskonTable.kode,
+        persen: diskonTable.persen,
+        batasWaktu: diskonTable.batasWaktu,
+        batasPemakai: diskonTable.batasPemakai,
+        jumlahDipakai: diskonTable.jumlahDipakai,
+        status: diskonTable.status,
+      })
       .from(diskonTable)
-      .orderBy(desc(diskonTable.id))
-      .where(and(...conditions));
+      .where(and(...conditions))
+      .orderBy(desc(diskonTable.id));
 
     const offset = (query.page - 1) * query.limit;
     const total = await db.$count(qb);
@@ -51,9 +48,10 @@ export abstract class DiskonRepo {
     return { total, data };
   }
 
-  static async delete(id: number) {
+  static async delete(id: number[]) {
     return await db
       .delete(diskonTable)
-      .where(eq(diskonTable.id, id));
+      .where(inArray(diskonTable.id, id))
+      .returning({ id: diskonTable.id });
   }
 }
