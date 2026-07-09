@@ -5,19 +5,21 @@ import Ebooks from "./components/Ebooks.vue";
 </script>
 
 <template>
-  <main class="container py-20">
-    <div class="mb-20">
-      <h1 class="text-primary-600 text-4xl font-bold">
-        Program & Materi Unggulan Kami
-      </h1>
-      <p class="max-w-3xl mt-2">
-        Temukan pelatihan intensif yang dipandu oleh para ahli dan panduan komprehensif yang dirancang untuk memelihara hubungan Anda dan membangun ikatan yang langgeng.
-      </p>
+  <main class="bg-[url('/images/kontakback.webp')] object-cover bg-repeat-y bg-center">
+    <div class="container py-20 ">
+      <div class="mb-20">
+        <h1 class="text-primary-600 text-4xl font-bold">
+          Program & Materi Unggulan Kami
+        </h1>
+        <p class="max-w-3xl mt-2">
+          Temukan pelatihan intensif yang dipandu oleh para ahli dan panduan komprehensif yang dirancang untuk memelihara hubungan Anda dan membangun ikatan yang langgeng.
+        </p>
+      </div>
+      <Bootcamps />
+      <div class="my-20">
+        <Courses />
+      </div>
+      <Ebooks />
     </div>
-    <Bootcamps />
-    <div class="my-20">
-      <Courses />
-    </div>
-    <Ebooks />
   </main>
 </template>

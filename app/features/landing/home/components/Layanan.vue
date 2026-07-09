@@ -12,7 +12,7 @@
 
     <div class="grid grid-cols-3 gap-4">
       <!-- Service 1: Bootcamp -->
-      <div class="col-span-2 border border-primary/20 rounded-2xl p-8 shadow-md relative">
+      <div class="col-span-2 border border-primary/20 rounded-2xl p-8 shadow-md relative bg-white">
         <div class="absolute top-0 right-0 p-8 opacity-10 text-primary">
           <UIcon name="i-material-symbols-favorite" size="100" />
         </div>
@@ -42,7 +42,7 @@
       </div>
 
       <!-- Service 2: Ebooks -->
-      <div class="border border-primary/20 rounded-2xl p-8 shadow-md relative">
+      <div class="border border-primary/20 rounded-2xl p-8 shadow-md relative bg-white">
         <div class="flex flex-col justify-between h-full">
           <span class="flex items-center justify-center w-12 h-12 rounded-full bg-primary/20 text-primary mb-4">
             <UIcon name="i-material-symbols-menu-book-outline" size="24" />
@@ -68,7 +68,7 @@
       </div>
 
       <!-- Service 3: Jodoh -->
-      <div class="col-span-3 rounded-2xl p-12 shadow-md relative bg-just-right/20">
+      <div class="col-span-3 rounded-2xl p-12 shadow-md relative bg-[#fef7f2]">
         <div class="flex flex-row items-center justify-between gap-10 relative z-10">
           <div class="max-w-2xl space-y-5">
             <div class="space-y-3">
