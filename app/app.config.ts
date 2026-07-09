@@ -16,6 +16,14 @@ export default defineAppConfig({
         root: "w-full",
       },
     },
+    inputNumber: {
+      defaultVariants: {
+        size: "lg",
+      },
+      slots: {
+        root: "w-full",
+      },
+    },
     textarea: {
       defaultVariants: {
         size: "lg",
