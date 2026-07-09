@@ -6,7 +6,7 @@ import Ebooks from "./components/Ebooks.vue";
 
 <template>
   <main class="bg-[url('/images/tentangbg1.webp')] bg-contain">
-    <div class="container py-20 bg-white">
+    <div class="container py-20 px-20 bg-white">
       <div class="mb-20">
         <h1 class="text-primary-600 text-4xl font-bold">
           Program & Materi Unggulan Kami

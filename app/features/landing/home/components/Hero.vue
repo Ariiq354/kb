@@ -1,22 +1,22 @@
 <template>
-  <section class="container flex items-center gap-12">
-    <div class="w-1/2 text-left">
-      <h1 class="font-bold text-5xl leading-14">
-        Selamat Datang di <br><span class="text-eastern-blue-500">Keluarga</span> Bahagia
+  <section class="container flex flex-col items-center gap-10 lg:flex-row lg:gap-12">
+    <div class="w-full text-center lg:w-1/2 lg:text-left">
+      <h1 class="text-4xl font-bold leading-tight sm:text-5xl lg:leading-14">
+        Selamat Datang di <br class="hidden sm:block"><span class="text-eastern-blue-500">Keluarga</span> Bahagia
       </h1>
-      <p class="text-lg max-w-md mt-6">
+      <p class="mx-auto mt-5 max-w-md text-base leading-relaxed sm:mt-6 sm:text-lg lg:mx-0">
         Temukan perjalanan menuju keluarga yang harmonis melalui bimbingan, pembelajaran, dan dukungan untuk membangun hubungan yang penuh cinta, keberkahan, dan kebahagiaan.
       </p>
-      <div class="pt-8 flex gap-4 justify-start">
-        <UButton class="rounded-full px-8 py-4 text-sm">
+      <div class="flex flex-col justify-center gap-3 pt-8 sm:flex-row lg:justify-start">
+        <UButton class="justify-center rounded-full px-8 py-4 text-sm">
           Daftar Sekarang
         </UButton>
-        <UButton variant="soft" class="rounded-full px-8 py-4 text-sm">
+        <UButton variant="soft" class="justify-center rounded-full px-8 py-4 text-sm">
           Lihat Layanan Kami
         </UButton>
       </div>
     </div>
-    <div class="relative w-150 h-150">
+    <div class="relative aspect-square w-full max-w-80 sm:max-w-[27.5rem] lg:max-w-none lg:flex-1">
       <!-- Background Card -->
       <div
         class="absolute inset-0 bg-[#eadfd6] rounded-4xl rotate-3 shadow-sm"
