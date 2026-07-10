@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import ProfileContainer from "~/features/profile/ProfileContainer.vue";
-
 useHead({
-  title: "Profil User",
+  title: "Ta'aruf",
 });
 </script>
 
@@ -13,14 +11,16 @@ useHead({
     }"
   >
     <template #header>
-      <UDashboardNavbar title="Profil User">
+      <UDashboardNavbar title="Ta'aruf">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
       </UDashboardNavbar>
     </template>
     <template #body>
-      <ProfileContainer />
+      <div>
+        Ini Ta'aruf
+      </div>
     </template>
   </UDashboardPanel>
 </template>

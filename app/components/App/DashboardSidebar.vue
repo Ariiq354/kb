@@ -142,7 +142,7 @@ const dropdownItems = computed<DropdownMenuItem[][]>(() => [
     v-model:open="open"
     collapsible
     resizable
-    class="bg-gray-50 dark:bg-gray-900 transition-all duration-300 min-w-0 border-r border-gray-200 dark:border-gray-800"
+    class="bg-white dark:bg-gray-900 transition-all duration-300 min-w-0 border-r border-gray-200 dark:border-gray-800 overflow-hidden"
   >
     <template #header>
       <div class="hidden w-full md:flex items-center justify-center gap-3 px-2 py-3">
@@ -151,17 +151,16 @@ const dropdownItems = computed<DropdownMenuItem[][]>(() => [
           alt="Keluarga Bahagia"
           class="h-10 w-10"
         />
-        <div class="font-bold text-primary-500">
+        <div class="font-bold text-primary-500 text-nowrap">
           Keluarga Bahagia
         </div>
       </div>
     </template>
 
-    <template #default="{ collapsed }">
+    <template #default>
       <UNavigationMenu
         :items="links"
         orientation="vertical"
-        :class="{ hidden: collapsed }"
         :ui="{
           label: 'text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider px-2 py-2',
           link: [
@@ -175,7 +174,7 @@ const dropdownItems = computed<DropdownMenuItem[][]>(() => [
       />
     </template>
 
-    <template #footer="{ collapsed }">
+    <template #footer>
       <UDropdownMenu
         :items="dropdownItems"
         :ui="{ content: 'w-(--reka-dropdown-menu-trigger-width)' }"
@@ -191,8 +190,7 @@ const dropdownItems = computed<DropdownMenuItem[][]>(() => [
           variant="ghost"
           block
           class="data-[state=open]:bg-gray-100 dark:data-[state=open]:bg-gray-800"
-          trailing-icon="i-heroicons-chevron-up-down"
-          :class="{ hidden: collapsed }"
+          trailing-icon="i-lucide-chevrons-up-down"
           :ui="{
             trailingIcon: 'text-gray-500 dark:text-gray-400',
           }"
