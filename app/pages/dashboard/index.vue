@@ -1,19 +1,26 @@
 <script setup lang="ts">
-definePageMeta({
-  layout: {
-    name: "dashboard",
-    props: {
-      title: "Dashboard",
-    },
-  },
-});
 useHead({
   title: "Dashboard",
 });
 </script>
 
 <template>
-  <div>
-    Ini Dashboard
-  </div>
+  <UDashboardPanel
+    :ui="{
+      body: 'bg-gray-50 dark:bg-gray-900',
+    }"
+  >
+    <template #header>
+      <UDashboardNavbar title="Dashboard">
+        <template #leading>
+          <UDashboardSidebarCollapse />
+        </template>
+      </UDashboardNavbar>
+    </template>
+    <template #body>
+      <div>
+        Ini Dashboard
+      </div>
+    </template>
+  </UDashboardPanel>
 </template>

@@ -11,5 +11,6 @@ export default withNuxt(
     },
     formatters: true,
     vue: true,
+    ignores: ["public"],
   }),
 );

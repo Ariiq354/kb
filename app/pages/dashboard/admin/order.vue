@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import ProfileContainer from "~/features/profile/ProfileContainer.vue";
-
 useHead({
-  title: "Profil User",
+  title: "Kelola Order",
 });
 </script>
 
@@ -13,14 +11,16 @@ useHead({
     }"
   >
     <template #header>
-      <UDashboardNavbar title="Profil User">
+      <UDashboardNavbar title="Kelola Order">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
       </UDashboardNavbar>
     </template>
     <template #body>
-      <ProfileContainer />
+      <div>
+        Ini Kelola Order
+      </div>
     </template>
   </UDashboardPanel>
 </template>
