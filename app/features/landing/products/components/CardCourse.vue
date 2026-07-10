@@ -11,19 +11,19 @@ defineProps<{
 </script>
 
 <template>
-  <div class="max-w-120 rounded-xl overflow-hidden border border-gray-200 shadow-sm transition-transform hover:-translate-y-2 mt-3">
+  <div class="mt-3 w-full overflow-hidden rounded-xl border border-muted shadow-sm transition-transform hover:-translate-y-2">
     <NuxtImg
       :src="image"
-      class="w-full h-65 object-cover"
+      class="aspect-video w-full object-cover"
     />
 
-    <div class="p-6">
-      <h3 class="text-lg text-black font-semibold flex-1">
+    <div class="p-4 sm:p-6">
+      <h3 class="flex-1 text-base font-semibold text-default sm:text-lg">
         {{ title }}
       </h3>
-      <div class="flex items-center justify-between border-b border-dashed border-gray-300 py-3 mb-4">
+      <div class="mb-4 flex items-center justify-between gap-3 border-b border-dashed border-muted py-3">
         <div class="flex items-center gap-1">
-          <UIcon name="i-stash-cam-video-solid" class="text-lg text-gray-500" />
+          <UIcon name="i-stash-cam-video-solid" class="text-lg text-muted" />
           <p class="text-xs">
             {{ totalVideo }} Video
           </p>

@@ -15,17 +15,17 @@ function goToDetail(id: number) {
 </script>
 
 <template>
-  <div class="w-80 rounded-xl overflow-hidden border border-gray-200 shadow-sm p-5 cursor-pointer transition-transform hover:-translate-y-2 mt-3" @click="goToDetail(id)">
+  <div class="mt-3 w-full cursor-pointer overflow-hidden rounded-xl border border-muted p-4 shadow-sm transition-transform hover:-translate-y-2 sm:p-5" @click="goToDetail(id)">
     <NuxtImg
       :src="image"
-      class="object-cover"
+      class="mx-auto aspect-[3/4] w-full object-cover"
     />
 
     <div class="flex flex-col gap-2 mt-2">
-      <h3 class="text-lg text-black font-semibold flex-1 text-wrap leading-6 line-clamp-2">
+      <h3 class="line-clamp-2 flex-1 text-wrap text-base leading-6 font-semibold text-default sm:text-lg">
         {{ title }}
       </h3>
-      <p class="text-sm text-gray-400 line-clamp-1">
+      <p class="line-clamp-1 text-sm text-muted">
         {{ penulis }}
       </p>
       <p class="font-semibold text-primary">
