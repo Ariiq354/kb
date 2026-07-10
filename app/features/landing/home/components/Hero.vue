@@ -4,7 +4,7 @@
       <h1 class="text-4xl font-bold leading-tight sm:text-5xl lg:leading-14">
         Selamat Datang di <br class="hidden sm:block"><span class="text-eastern-blue-500">Keluarga</span> Bahagia
       </h1>
-      <p class="mx-auto mt-5 max-w-md text-base leading-relaxed sm:mt-6 sm:text-lg lg:mx-0">
+      <p class="mx-auto mt-5 max-w-md text-base leading-relaxed sm:mt-6 sm:text-lg lg:mx-0 bg-white">
         Temukan perjalanan menuju keluarga yang harmonis melalui bimbingan, pembelajaran, dan dukungan untuk membangun hubungan yang penuh cinta, keberkahan, dan kebahagiaan.
       </p>
       <div class="flex flex-col justify-center gap-3 pt-8 sm:flex-row lg:justify-start">
@@ -16,7 +16,7 @@
         </UButton>
       </div>
     </div>
-    <div class="relative aspect-square w-full max-w-80 sm:max-w-[27.5rem] lg:max-w-none lg:flex-1">
+    <div class="relative aspect-square w-full max-w-80 sm:max-w-110 lg:max-w-none lg:flex-1">
       <!-- Background Card -->
       <div
         class="absolute inset-0 bg-[#eadfd6] rounded-4xl rotate-3 shadow-sm"

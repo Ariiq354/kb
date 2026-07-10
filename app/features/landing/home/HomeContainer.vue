@@ -7,7 +7,7 @@ import Seminar from "./components/Seminar.vue";
 
 <template>
   <main>
-    <div class="bg-[url('/images/landingbg1.webp')] bg-cover bg-center pt-10 md:pt-16 lg:pt-20">
+    <div class="bg-[url('/images/landingbg1.webp')] bg-auto md:bg-contain bg-center pt-10 md:pt-16 lg:pt-20">
       <Hero />
       <Layanan />
     </div>
