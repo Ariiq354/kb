@@ -1,23 +1,23 @@
 import type { UserProfileSchema } from "./model";
 import { eq } from "drizzle-orm";
 import { db } from "~~/server/database";
-import { userTable } from "~~/server/database/schema/auth";
-import { userProfileTable } from "~~/server/database/schema/user";
+import { user } from "~~/server/database/schema/auth";
+import { userProfile } from "~~/server/database/schema/user";
 import { generateUniqueCode } from "~~/server/utils/generator";
 
 export abstract class UserRepo {
   static async updateUser(userId: number, payload: Omit<UserProfileSchema, "file">) {
     return db.transaction(async (tx) => {
-      const kodeUser = await generateUniqueCode(userProfileTable, userProfileTable.kodeUser, 4);
+      const kodeUser = await generateUniqueCode(userProfile, userProfile.kodeUser, 4);
 
-      const result = await tx.insert(userProfileTable)
+      const result = await tx.insert(userProfile)
         .values({
           userId,
           kodeUser,
           ...payload,
         })
         .onConflictDoUpdate({
-          target: userProfileTable.userId,
+          target: userProfile.userId,
           set: payload,
         })
         .returning();
@@ -26,50 +26,50 @@ export abstract class UserRepo {
         throw new Error("User tidak ditemukan");
       }
 
-      await tx.update(userTable)
+      await tx.update(user)
         .set({
           image: payload.foto,
         })
-        .where(eq(userTable.id, userId));
+        .where(eq(user.id, userId));
     });
   }
 
   static async getUserProfile(userId: number) {
     const [result] = await db
       .select({
-        id: userTable.id,
-        name: userTable.name,
-        email: userTable.email,
-        noTelepon: userTable.noTelepon,
-        image: userTable.image,
-        kodeUser: userProfileTable.kodeUser,
-        statusKawin: userProfileTable.statusKawin,
-        tanggalLahir: userProfileTable.tanggalLahir,
-        kelurahan: userProfileTable.kelurahan,
-        gender: userProfileTable.gender,
-        kecamatan: userProfileTable.kecamatan,
-        kota: userProfileTable.kota,
-        provinsi: userProfileTable.provinsi,
-        namaAyah: userProfileTable.namaAyah,
-        anakKe: userProfileTable.anakKe,
-        dariBersaudara: userProfileTable.dariBersaudara,
-        suku: userProfileTable.suku,
-        pendidikan: userProfileTable.pendidikan,
-        pekerjaan: userProfileTable.pekerjaan,
-        jurusan: userProfileTable.jurusan,
-        tinggi: userProfileTable.tinggi,
-        berat: userProfileTable.berat,
-        hobi: userProfileTable.hobi,
-        instagram: userProfileTable.instagram,
-        kriteria: userProfileTable.kriteria,
-        perokok: userProfileTable.perokok,
-        gaji: userProfileTable.gaji,
-        agama: userProfileTable.agama,
-        deskripsi: userProfileTable.deskripsi,
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        noTelepon: user.noTelepon,
+        image: user.image,
+        kodeUser: userProfile.kodeUser,
+        statusKawin: userProfile.statusKawin,
+        tanggalLahir: userProfile.tanggalLahir,
+        kelurahan: userProfile.kelurahan,
+        gender: userProfile.gender,
+        kecamatan: userProfile.kecamatan,
+        kota: userProfile.kota,
+        provinsi: userProfile.provinsi,
+        namaAyah: userProfile.namaAyah,
+        anakKe: userProfile.anakKe,
+        dariBersaudara: userProfile.dariBersaudara,
+        suku: userProfile.suku,
+        pendidikan: userProfile.pendidikan,
+        pekerjaan: userProfile.pekerjaan,
+        jurusan: userProfile.jurusan,
+        tinggi: userProfile.tinggi,
+        berat: userProfile.berat,
+        hobi: userProfile.hobi,
+        instagram: userProfile.instagram,
+        kriteria: userProfile.kriteria,
+        perokok: userProfile.perokok,
+        gaji: userProfile.gaji,
+        agama: userProfile.agama,
+        deskripsi: userProfile.deskripsi,
       })
-      .from(userTable)
-      .leftJoin(userProfileTable, eq(userTable.id, userProfileTable.userId))
-      .where(eq(userTable.id, userId))
+      .from(user)
+      .leftJoin(userProfile, eq(user.id, userProfile.userId))
+      .where(eq(user.id, userId))
       .limit(1);
 
     return result || null;

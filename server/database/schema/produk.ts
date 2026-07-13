@@ -1,7 +1,7 @@
-import { boolean, integer, pgEnum, pgTable, text } from "drizzle-orm/pg-core";
-import { userTable } from "./auth";
+import { boolean, integer, pgEnum, snakeCase, text } from "drizzle-orm/pg-core";
+import { user } from "./auth";
 import { createdUpdated } from "./common";
-import { diskonTable } from "./diskon";
+import { diskon } from "./diskon";
 
 export const produkTypeEnum = pgEnum("produk_type", [
   "BOOTCAMP",
@@ -15,7 +15,7 @@ export const orderStatusEnum = pgEnum("order_status", [
   "PAID",
 ]);
 
-export const produkTable = pgTable("produk", {
+export const produk = snakeCase.table("produk", {
   id: integer().primaryKey().generatedByDefaultAsIdentity(),
   type: produkTypeEnum("type").notNull(),
   judul: text().notNull(),
@@ -25,11 +25,11 @@ export const produkTable = pgTable("produk", {
   ...createdUpdated,
 });
 
-export const orders = pgTable("orders", {
+export const orders = snakeCase.table("orders", {
   id: integer().primaryKey().generatedByDefaultAsIdentity(),
-  userId: integer().notNull().references(() => userTable.id, { onDelete: "cascade" }),
-  produkId: integer().references(() => produkTable.id, { onDelete: "cascade" }),
-  diskonId: integer().references(() => diskonTable.id, { onDelete: "cascade" }),
+  userId: integer().notNull().references(() => user.id, { onDelete: "cascade" }),
+  produkId: integer().references(() => produk.id, { onDelete: "cascade" }),
+  diskonId: integer().references(() => diskon.id, { onDelete: "cascade" }),
   originalHarga: integer().notNull(),
   diskonPersen: integer().default(0).notNull(),
   finalHarga: integer().notNull(),

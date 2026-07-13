@@ -1,9 +1,9 @@
-import { integer, pgTable, text } from "drizzle-orm/pg-core";
-import { produkTable } from "./produk";
+import { integer, snakeCase, text } from "drizzle-orm/pg-core";
+import { produk } from "./produk";
 
-export const ebookTable = pgTable("ebook", {
+export const ebook = snakeCase.table("ebook", {
   id: integer().primaryKey().generatedByDefaultAsIdentity(),
-  produkId: integer().references(() => produkTable.id, { onDelete: "cascade" }).notNull().unique(),
+  produkId: integer().references(() => produk.id, { onDelete: "cascade" }).notNull().unique(),
   deskripsi: text(),
   pdfUrl: text().notNull(),
 });

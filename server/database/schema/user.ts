@@ -1,11 +1,11 @@
-import { boolean, integer, pgTable, text } from "drizzle-orm/pg-core";
-import { userTable } from "./auth";
+import { boolean, integer, snakeCase, text } from "drizzle-orm/pg-core";
+import { user } from "./auth";
 import { createdUpdated } from "./common";
 
-export const userProfileTable = pgTable("user_profile", {
+export const userProfile = snakeCase.table("user_profile", {
   id: integer().primaryKey().generatedByDefaultAsIdentity(),
   kodeUser: text().notNull(),
-  userId: integer().notNull().references(() => userTable.id, { onDelete: "cascade" }).unique(),
+  userId: integer().notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   statusKawin: text().notNull(),
   tanggalLahir: text().notNull(),
   kelurahan: text().notNull(),

@@ -3,7 +3,7 @@ import type { CreateDiskonSchema, UpdateDiskonSchema } from "./model";
 import { createError } from "h3";
 import { DiskonRepo } from "./repo";
 
-export class DiskonService {
+export abstract class DiskonService {
   static async create(payload: CreateDiskonSchema) {
     return await DiskonRepo.create(payload);
   }

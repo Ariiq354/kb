@@ -10,12 +10,15 @@ const multipartFileSchema = z.object({
 
 export type MultipartFile = z.infer<typeof multipartFileSchema>;
 
-interface MultipartFilesOptions {
-  minCount?: number;
-  maxCount?: number;
+interface MultipartFileOptions {
   minSize?: number;
   maxSize?: number;
   fileTypes?: string[];
+}
+
+interface MultipartFilesOptions extends MultipartFileOptions {
+  minCount?: number;
+  maxCount?: number;
 }
 
 export function multipartFiles({
@@ -26,7 +29,7 @@ export function multipartFiles({
   fileTypes,
 }: MultipartFilesOptions = {}) {
   const fileSchema = multipartFileSchema.superRefine(
-    (file: MultipartFile, ctx) => {
+    (file, ctx) => {
       if (
         minSize !== undefined
         && file.data.length < minSize
@@ -96,6 +99,59 @@ export function multipartFiles({
         });
       }
     }),
+  );
+}
+
+export function multipartFile({
+  minSize,
+  maxSize,
+  fileTypes,
+}: MultipartFileOptions = {}) {
+  const fileSchema = multipartFileSchema.superRefine(
+    (file, ctx) => {
+      if (
+        minSize !== undefined
+        && file.data.length < minSize
+      ) {
+        ctx.addIssue({
+          code: "custom",
+          message: `File "${file.filename ?? "unknown"}" must be at least ${minSize} bytes`,
+        });
+      }
+
+      if (
+        maxSize !== undefined
+        && file.data.length > maxSize
+      ) {
+        ctx.addIssue({
+          code: "custom",
+          message: `File "${file.filename ?? "unknown"}" must be at most ${maxSize} bytes`,
+        });
+      }
+
+      if (
+        fileTypes?.length
+        && (!file.type || !fileTypes.includes(file.type))
+      ) {
+        ctx.addIssue({
+          code: "custom",
+          message: `File "${file.filename ?? "unknown"}" must be one of: ${fileTypes.join(", ")}`,
+        });
+      }
+    },
+  );
+
+  return z.preprocess(
+    (value) => {
+      if (value == null) {
+        return undefined;
+      }
+
+      return Array.isArray(value)
+        ? value[0]
+        : value;
+    },
+    fileSchema,
   );
 }
 

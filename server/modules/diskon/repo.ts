@@ -3,43 +3,43 @@ import type { PaginationSearchSchema } from "~~/server/utils/schema";
 import type { CreateDiskonSchema, UpdateDiskonSchema } from "./model";
 import { and, desc, eq, ilike, inArray } from "drizzle-orm";
 import { db } from "~~/server/database";
-import { diskonTable } from "~~/server/database/schema/diskon";
+import { diskon } from "~~/server/database/schema/diskon";
 
-export class DiskonRepo {
+export abstract class DiskonRepo {
   static async create(data: CreateDiskonSchema) {
     await db
-      .insert(diskonTable)
+      .insert(diskon)
       .values(data);
   }
 
   static async update(id: number, data: UpdateDiskonSchema) {
     return await db
-      .update(diskonTable)
+      .update(diskon)
       .set(data)
-      .where(eq(diskonTable.id, id))
-      .returning({ id: diskonTable.id });
+      .where(eq(diskon.id, id))
+      .returning({ id: diskon.id });
   }
 
   static async findAll(query: PaginationSearchSchema) {
     const conditions: (SQL<unknown> | undefined)[] = [];
 
     if (query.search) {
-      conditions.push(ilike(diskonTable.kode, `%${query.search}%`));
+      conditions.push(ilike(diskon.kode, `%${query.search}%`));
     }
 
     const qb = db
       .select({
-        id: diskonTable.id,
-        kode: diskonTable.kode,
-        persen: diskonTable.persen,
-        batasWaktu: diskonTable.batasWaktu,
-        batasPemakai: diskonTable.batasPemakai,
-        jumlahDipakai: diskonTable.jumlahDipakai,
-        status: diskonTable.status,
+        id: diskon.id,
+        kode: diskon.kode,
+        persen: diskon.persen,
+        batasWaktu: diskon.batasWaktu,
+        batasPemakai: diskon.batasPemakai,
+        jumlahDipakai: diskon.jumlahDipakai,
+        status: diskon.status,
       })
-      .from(diskonTable)
+      .from(diskon)
       .where(and(...conditions))
-      .orderBy(desc(diskonTable.id));
+      .orderBy(desc(diskon.id));
 
     const offset = (query.page - 1) * query.limit;
     const total = await db.$count(qb);
@@ -50,8 +50,8 @@ export class DiskonRepo {
 
   static async delete(id: number[]) {
     return await db
-      .delete(diskonTable)
-      .where(inArray(diskonTable.id, id))
-      .returning({ id: diskonTable.id });
+      .delete(diskon)
+      .where(inArray(diskon.id, id))
+      .returning({ id: diskon.id });
   }
 }

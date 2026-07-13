@@ -1,7 +1,7 @@
-import { boolean, date, integer, pgTable, text } from "drizzle-orm/pg-core";
+import { boolean, date, integer, snakeCase, text } from "drizzle-orm/pg-core";
 import { createdUpdated } from "./common";
 
-export const diskonTable = pgTable("diskon", {
+export const diskon = snakeCase.table("diskon", {
   id: integer().primaryKey().generatedByDefaultAsIdentity(),
   kode: text().notNull().unique(),
   persen: integer().notNull(),

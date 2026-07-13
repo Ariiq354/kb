@@ -1,5 +1,5 @@
-import { date, integer, pgEnum, pgTable, text } from "drizzle-orm/pg-core";
-import { userTable } from "./auth";
+import { date, integer, pgEnum, snakeCase, text } from "drizzle-orm/pg-core";
+import { user } from "./auth";
 import { createdUpdated } from "./common";
 
 export const taarufStatusEnum = pgEnum("taaruf_status", [
@@ -12,19 +12,19 @@ export const taarufStatusEnum = pgEnum("taaruf_status", [
   "MARRIED",
 ]);
 
-export const taarufProsesTable = pgTable("taaruf_proses", {
+export const taarufProses = snakeCase.table("taaruf_proses", {
   id: integer().primaryKey().generatedByDefaultAsIdentity(),
-  requesterUserId: integer().notNull().references(() => userTable.id, { onDelete: "cascade" }),
-  targetUserId: integer().notNull().references(() => userTable.id, { onDelete: "cascade" }),
+  requesterUserId: integer().notNull().references(() => user.id, { onDelete: "cascade" }),
+  targetUserId: integer().notNull().references(() => user.id, { onDelete: "cascade" }),
   status: taarufStatusEnum().default("PENDING").notNull(),
   startedAt: date({ mode: "string" }),
   finishedAt: date({ mode: "string" }),
   ...createdUpdated,
 });
 
-export const taarufProsesLogTable = pgTable("taaruf_proses_logs", {
+export const taarufProsesLog = snakeCase.table("taaruf_proses_logs", {
   id: integer().primaryKey().generatedByDefaultAsIdentity(),
-  prosesId: integer().notNull().references(() => taarufProsesTable.id, { onDelete: "cascade" }),
+  prosesId: integer().notNull().references(() => taarufProses.id, { onDelete: "cascade" }),
   status: taarufStatusEnum().notNull(),
   keterangan: text(),
   ...createdUpdated,
