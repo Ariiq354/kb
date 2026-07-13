@@ -33,7 +33,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     }
   }
 
-  formData.append("file", state.value.file!);
+  if (state.value.file) {
+    formData.append("file", state.value.file);
+  }
 
   try {
     await $fetch("/api/v1/users/me", {

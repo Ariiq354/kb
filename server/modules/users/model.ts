@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { multipartFiles } from "~~/server/utils/schema";
+import { multipartFile } from "~~/server/utils/schema";
 
 export const userProfileSchema = z.object({
   statusKawin: z.string(),
@@ -25,11 +25,10 @@ export const userProfileSchema = z.object({
   gaji: z.coerce.number().int().default(0),
   agama: z.string().default(""),
   deskripsi: z.string().default(""),
-  file: multipartFiles({
-    maxCount: 1,
+  file: multipartFile({
     maxSize: 5 * 1024 * 1024,
     fileTypes: ["image/jpeg", "image/png", "image/webp"],
-  }),
+  }).optional(),
   foto: z.string().optional(),
 });
 

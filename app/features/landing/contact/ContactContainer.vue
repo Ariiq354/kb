@@ -16,7 +16,7 @@ import FormContact from "./components/FormContact.vue";
           <UCard>
             <div class="flex items-start gap-5">
               <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-100 sm:size-12">
-                <UIcon name="i-heroicons-envelope-solid" class="text-xl text-primary sm:text-2xl" />
+                <UIcon name="i-lucide-mail" class="text-xl text-primary sm:text-2xl" />
               </div>
               <div>
                 <p class="text-lg text-primary font-semibold">
@@ -34,7 +34,7 @@ import FormContact from "./components/FormContact.vue";
           <UCard>
             <div class="flex items-start gap-5">
               <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-just-right sm:size-12">
-                <UIcon name="i-ion-location-sharp" class="text-[22px] text-warning sm:text-[26px]" />
+                <UIcon name="i-lucide-map-pin" class="text-[22px] text-warning sm:text-[26px]" />
               </div>
               <div>
                 <p class="text-lg text-primary font-semibold">

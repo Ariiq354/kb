@@ -23,7 +23,7 @@ defineProps<{
       </h3>
       <div class="mb-4 flex items-center justify-between gap-3 border-b border-dashed border-muted py-3">
         <div class="flex items-center gap-1">
-          <UIcon name="i-stash-cam-video-solid" class="text-lg text-muted" />
+          <UIcon name="i-lucide-video" class="text-lg text-muted" />
           <p class="text-xs">
             {{ totalVideo }} Video
           </p>

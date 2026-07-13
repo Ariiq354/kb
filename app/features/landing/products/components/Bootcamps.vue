@@ -5,7 +5,7 @@ import CardBootcamp from "./CardBootcamp.vue";
 
 <template>
   <div class="flex items-center gap-3 border-b border-muted pb-2">
-    <UIcon name="i-majesticons-academic-cap-line" class="text-2xl text-primary sm:text-3xl" />
+    <UIcon name="i-lucide-graduation-cap" class="text-2xl text-primary sm:text-3xl" />
     <h2 class="text-xl font-medium text-default sm:text-2xl">
       Bootcamps
     </h2>

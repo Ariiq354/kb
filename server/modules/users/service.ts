@@ -1,3 +1,4 @@
+import type { UserWithId } from "~~/server/utils/auth";
 import type { UserProfileSchema } from "./model";
 import { deleteFile, uploadFile } from "~~/server/utils/files";
 import { UserRepo } from "./repo";
@@ -7,8 +8,8 @@ export abstract class UserService {
     const { file, ...profileData } = payload;
     let newlyUploadedKey: string | undefined;
 
-    if (file && file.length > 0) {
-      const fileData = file[0]!;
+    if (file) {
+      const fileData = file;
 
       const { key } = await uploadFile(
         "user-image",
@@ -24,7 +25,7 @@ export abstract class UserService {
     try {
       const result = await UserRepo.updateUser(user.id, profileData);
 
-      if (user.image && (newlyUploadedKey || !profileData.foto)) {
+      if (user.image && (newlyUploadedKey || profileData.foto === "")) {
         await deleteFile(user.image);
       }
 

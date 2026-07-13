@@ -7,6 +7,8 @@ import { generateUniqueCode } from "~~/server/utils/generator";
 
 export abstract class UserRepo {
   static async updateUser(userId: number, payload: Omit<UserProfileSchema, "file">) {
+    const { foto, ...profileData } = payload;
+
     return db.transaction(async (tx) => {
       const kodeUser = await generateUniqueCode(userProfile, userProfile.kodeUser, 4);
 
@@ -14,11 +16,11 @@ export abstract class UserRepo {
         .values({
           userId,
           kodeUser,
-          ...payload,
+          ...profileData,
         })
         .onConflictDoUpdate({
           target: userProfile.userId,
-          set: payload,
+          set: profileData,
         })
         .returning();
 
@@ -26,11 +28,13 @@ export abstract class UserRepo {
         throw new Error("User tidak ditemukan");
       }
 
-      await tx.update(user)
-        .set({
-          image: payload.foto,
-        })
-        .where(eq(user.id, userId));
+      if (foto !== undefined) {
+        await tx.update(user)
+          .set({
+            image: foto || null,
+          })
+          .where(eq(user.id, userId));
+      }
     });
   }
 

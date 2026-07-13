@@ -57,7 +57,7 @@ const messageCounterClass = computed(() => {
     </UForm>
     <UButton class="w-full cursor-pointer sm:w-44 mt-4">
       <div class="flex items-center justify-center gap-4 w-full text-base">
-        <UIcon name="i-streamline-send-email-remix" />
+        <UIcon name="i-lucide-send" />
         Kirim Pesan
       </div>
     </UButton>
