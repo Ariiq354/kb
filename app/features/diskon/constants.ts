@@ -5,15 +5,22 @@ import { formatDateIndo } from "~/utils";
 
 export const columns: TableColumn<any>[] = [
   { accessorKey: "kode", header: "Kode" },
-  { accessorKey: "persen", header: "Persen" },
+  {
+    accessorKey: "persen",
+    header: "Persen",
+    cell: ({ row }) => `${row.original.persen}%`,
+  },
   {
     accessorKey: "batasWaktu",
     header: "Batas Waktu",
-    cell: ({ row }) => {
-      return formatDateIndo(row.original.batasWaktu);
-    },
+    cell: ({ row }) => formatDateIndo(row.original.batasWaktu),
   },
-  { accessorKey: "jumlahDipakai", header: "Jumlah Dipakai" },
+  {
+    accessorKey: "jumlahDipakai",
+    header: "Jumlah Dipakai",
+    cell: ({ row }) =>
+      new Intl.NumberFormat("id-ID").format(row.original.jumlahDipakai),
+  },
 ];
 
 export const schema = z.object({

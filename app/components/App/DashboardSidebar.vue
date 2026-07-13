@@ -44,8 +44,30 @@ const links = computed<NavigationMenuItem[][]>(() => {
       {
         label: "Kelola Produk",
         icon: "i-lucide-shopping-bag",
-        to: "/dashboard/admin/produk",
-        onSelect: closeSidebar,
+        type: "trigger",
+        children: [
+          {
+            label: "Produk",
+            to: "/dashboard/admin/produk",
+            exact: true,
+            onSelect: closeSidebar,
+          },
+          {
+            label: "Bootcamp",
+            to: "/dashboard/admin/produk/bootcamp",
+            onSelect: closeSidebar,
+          },
+          {
+            label: "E-Book",
+            to: "/dashboard/admin/produk/ebook",
+            onSelect: closeSidebar,
+          },
+          {
+            label: "Course",
+            to: "/dashboard/admin/produk/course",
+            onSelect: closeSidebar,
+          },
+        ],
       },
       {
         label: "Kelola Diskon",

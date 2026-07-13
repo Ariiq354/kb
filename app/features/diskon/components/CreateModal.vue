@@ -73,6 +73,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           <UInputNumber
             v-model="state.persen"
             :disabled="isLoading"
+            :format-options="{
+              style: 'percent',
+            }"
           />
         </UFormField>
         <UFormField label="Batas Waktu" name="batasWaktu">
