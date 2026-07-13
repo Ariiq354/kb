@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { MglMap, MglMarker, MglNavigationControl, useMap } from "@indoorequal/vue-maplibre-gl";
 import { onClickOutside } from "@vueuse/core";
 import { onUnmounted, ref, watch } from "vue";
+import { MglMap, MglMarker, MglNavigationControl } from "#components";
+import { useMglMap } from "#imports";
 import InputSearch from "~/components/Custom/InputSearch.vue";
 
 interface Props {
@@ -24,7 +25,7 @@ const mapCenter = ref<[number, number]>([...props.center]);
 const mapZoom = ref<number>(props.zoom);
 const markerCoordinates = ref<[number, number] | null>([...props.center]);
 
-const mapInstance = useMap();
+const mapInstance = useMglMap();
 
 watch(() => props.center, (newCenter) => {
   if (mapInstance.map) {

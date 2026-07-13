@@ -13,6 +13,15 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
+  vite: {
+    optimizeDeps: {
+      include: ["maplibre-gl"],
+    },
+    ssr: {
+      noExternal: ["maplibre-gl", "@indoorequal/vue-maplibre-gl"],
+    },
+  },
+
   ui: {
     colorMode: false,
   },

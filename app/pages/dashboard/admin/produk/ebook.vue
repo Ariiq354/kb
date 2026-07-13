@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import EbookContainer from "~/features/ebook/EbookContainer.vue";
+
 useHead({
   title: "Daftar Ebook",
 });
 </script>
 
 <template>
-  <div>Ini Ebook</div>
+  <EbookContainer />
 </template>
