@@ -1,5 +1,7 @@
+import type { SQL } from "drizzle-orm";
+import type { PaginationSearchSchema } from "~~/server/utils/schema";
 import type { UserProfileSchema } from "./model";
-import { eq } from "drizzle-orm";
+import { and, desc, eq, ilike, or } from "drizzle-orm";
 import { db } from "~~/server/database";
 import { user } from "~~/server/database/schema/auth";
 import { userProfile } from "~~/server/database/schema/user";
@@ -46,6 +48,129 @@ export abstract class UserRepo {
         email: user.email,
         noTelepon: user.noTelepon,
         image: user.image,
+        kodeUser: userProfile.kodeUser,
+        statusKawin: userProfile.statusKawin,
+        tanggalLahir: userProfile.tanggalLahir,
+        kelurahan: userProfile.kelurahan,
+        gender: userProfile.gender,
+        kecamatan: userProfile.kecamatan,
+        kota: userProfile.kota,
+        provinsi: userProfile.provinsi,
+        namaAyah: userProfile.namaAyah,
+        anakKe: userProfile.anakKe,
+        dariBersaudara: userProfile.dariBersaudara,
+        suku: userProfile.suku,
+        pendidikan: userProfile.pendidikan,
+        pekerjaan: userProfile.pekerjaan,
+        jurusan: userProfile.jurusan,
+        tinggi: userProfile.tinggi,
+        berat: userProfile.berat,
+        hobi: userProfile.hobi,
+        instagram: userProfile.instagram,
+        kriteria: userProfile.kriteria,
+        perokok: userProfile.perokok,
+        gaji: userProfile.gaji,
+        agama: userProfile.agama,
+        deskripsi: userProfile.deskripsi,
+      })
+      .from(user)
+      .leftJoin(userProfile, eq(user.id, userProfile.userId))
+      .where(eq(user.id, userId))
+      .limit(1);
+
+    return result || null;
+  }
+
+  static async banUser(userId: number, payload: { banned: boolean; banReason?: string | null }) {
+    const [result] = await db.update(user)
+      .set({
+        banned: payload.banned,
+        banReason: payload.banned ? (payload.banReason || "Tanpa alasan") : null,
+      })
+      .where(eq(user.id, userId))
+      .returning();
+
+    return result || null;
+  }
+
+  static async findAll(query: PaginationSearchSchema) {
+    const conditions: (SQL<unknown> | undefined)[] = [];
+
+    if (query.search) {
+      conditions.push(
+        or(
+          ilike(user.name, `%${query.search}%`),
+          ilike(user.email, `%${query.search}%`),
+          ilike(user.noTelepon, `%${query.search}%`),
+          ilike(userProfile.kodeUser, `%${query.search}%`),
+        ),
+      );
+    }
+
+    const qb = db
+      .select({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        noTelepon: user.noTelepon,
+        image: user.image,
+        role: user.role,
+        banned: user.banned,
+        banReason: user.banReason,
+        banExpires: user.banExpires,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        kodeUser: userProfile.kodeUser,
+        statusKawin: userProfile.statusKawin,
+        tanggalLahir: userProfile.tanggalLahir,
+        kelurahan: userProfile.kelurahan,
+        gender: userProfile.gender,
+        kecamatan: userProfile.kecamatan,
+        kota: userProfile.kota,
+        provinsi: userProfile.provinsi,
+        namaAyah: userProfile.namaAyah,
+        anakKe: userProfile.anakKe,
+        dariBersaudara: userProfile.dariBersaudara,
+        suku: userProfile.suku,
+        pendidikan: userProfile.pendidikan,
+        pekerjaan: userProfile.pekerjaan,
+        jurusan: userProfile.jurusan,
+        tinggi: userProfile.tinggi,
+        berat: userProfile.berat,
+        hobi: userProfile.hobi,
+        instagram: userProfile.instagram,
+        kriteria: userProfile.kriteria,
+        perokok: userProfile.perokok,
+        gaji: userProfile.gaji,
+        agama: userProfile.agama,
+        deskripsi: userProfile.deskripsi,
+      })
+      .from(user)
+      .leftJoin(userProfile, eq(user.id, userProfile.userId))
+      .where(and(...conditions))
+      .orderBy(desc(user.id));
+
+    const offset = (query.page - 1) * query.limit;
+    const total = await db.$count(qb);
+    const data = await qb.limit(query.limit).offset(offset);
+
+    return { total, data };
+  }
+
+  static async findById(userId: number) {
+    const [result] = await db
+      .select({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        noTelepon: user.noTelepon,
+        image: user.image,
+        role: user.role,
+        banned: user.banned,
+        banReason: user.banReason,
+        banExpires: user.banExpires,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
         kodeUser: userProfile.kodeUser,
         statusKawin: userProfile.statusKawin,
         tanggalLahir: userProfile.tanggalLahir,

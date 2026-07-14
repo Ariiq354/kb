@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import UserContainer from "~/features/user/UserContainer.vue";
+
 useHead({
-  title: "Kelola User",
+  title: "Kelola Anggota",
 });
 </script>
 
@@ -11,16 +13,14 @@ useHead({
     }"
   >
     <template #header>
-      <UDashboardNavbar title="Kelola User">
+      <UDashboardNavbar title="Kelola Anggota">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
       </UDashboardNavbar>
     </template>
     <template #body>
-      <div>
-        Ini Kelola User
-      </div>
+      <UserContainer />
     </template>
   </UDashboardPanel>
 </template>

@@ -1,3 +1,4 @@
+import { CalendarDate, getLocalTimeZone, parseDate, today } from "@internationalized/date";
 import { z } from "zod";
 
 interface UserResponse {
@@ -34,7 +35,7 @@ interface UserResponse {
 
 export const schema = z.object({
   statusKawin: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
-  tanggalLahir: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  tanggalLahir: z.instanceof(CalendarDate),
   kelurahan: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
   gender: z.enum(["Laki-laki", "Perempuan"], { error: "Wajib diisi" }),
   kecamatan: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
@@ -70,7 +71,7 @@ export const schema = z.object({
 export function initFormData(data?: UserResponse | null): Partial<Schema> {
   return {
     statusKawin: data?.statusKawin ?? undefined,
-    tanggalLahir: data?.tanggalLahir ?? undefined,
+    tanggalLahir: data?.tanggalLahir ? parseDate(data.tanggalLahir) : today(getLocalTimeZone()),
     kelurahan: data?.kelurahan ?? undefined,
     gender: data?.gender ?? undefined,
     kecamatan: data?.kecamatan ?? undefined,

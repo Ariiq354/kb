@@ -1,5 +1,7 @@
 import type { UserWithId } from "~~/server/utils/auth";
+import type { PaginationSearchSchema } from "~~/server/utils/schema";
 import type { UserProfileSchema } from "./model";
+import { createError } from "h3";
 import { deleteFile, uploadFile } from "~~/server/utils/files";
 import { UserRepo } from "./repo";
 
@@ -54,5 +56,13 @@ export abstract class UserService {
     }
 
     return result;
-  };
+  }
+
+  static async findAll(query: PaginationSearchSchema) {
+    return await UserRepo.findAll(query);
+  }
+
+  static async banUser(userId: number, payload: { banned: boolean; banReason?: string | null }) {
+    return await UserRepo.banUser(userId, payload);
+  }
 }

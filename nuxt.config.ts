@@ -18,12 +18,6 @@ export default defineNuxtConfig({
       include: [
         "maplibre-gl",
         "@indoorequal/vue-maplibre-gl",
-        "better-auth/client/plugins",
-        "better-auth/vue",
-        "@internationalized/date",
-        "date-fns",
-        "date-fns/locale",
-        "zod",
       ],
     },
     ssr: {

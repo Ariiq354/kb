@@ -3,6 +3,7 @@ import type { FormSubmitEvent } from "@nuxt/ui";
 import type { Schema } from "./constants";
 import { FetchError } from "ofetch";
 import { ref } from "vue";
+import InputCalendar from "~/components/Custom/InputCalendar.vue";
 import UploadImage from "~/components/Custom/UploadImage.vue";
 import SelectDesa from "~/components/Options/SelectDesa.vue";
 import SelectKecamatan from "~/components/Options/SelectKecamatan.vue";
@@ -13,7 +14,7 @@ import { initFormData, schema } from "./constants";
 
 const { data, refresh } = await useFetch("/api/v1/users/me");
 
-const state = ref(initFormData(data?.value));
+const state = ref(initFormData(data?.value)) as Ref<Schema>;
 const isLoading = ref(false);
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -28,7 +29,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   for (const [key, value] of Object.entries(
     event.data as Record<string, any>,
   )) {
-    if (value !== undefined && value !== null && value !== "") {
+    if (value !== undefined && value !== null && value !== "" && key !== "file") {
       formData.append(key, value.toString());
     }
   }
@@ -124,11 +125,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 border-t border-gray-100 dark:border-gray-800 pt-5">
               <UFormField label="Tanggal Lahir" name="tanggalLahir">
-                <UInput
+                <InputCalendar
                   v-model="state.tanggalLahir"
-                  type="date"
                   :disabled="isLoading"
-                  placeholder="Pilih Tanggal Lahir"
                 />
               </UFormField>
               <UFormField label="Jenis Kelamin" name="gender">
@@ -140,23 +139,18 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                 />
               </UFormField>
               <UFormField label="Status Kawin" name="statusKawin">
-                <UInput
+                <USelect
                   v-model="state.statusKawin"
-                  placeholder="Contoh: Belum Kawin / Kawin / Cerai"
+                  :items="['Belum Kawin', 'Kawin', 'Cerai']"
+                  placeholder="Pilih Status Kawin"
                   :disabled="isLoading"
                 />
               </UFormField>
               <UFormField label="Agama" name="agama">
-                <UInput
+                <USelect
                   v-model="state.agama"
-                  placeholder="Contoh: Islam, Kristen, dll."
-                  :disabled="isLoading"
-                />
-              </UFormField>
-              <UFormField label="Status Perokok" name="perokok" class="md:col-span-2">
-                <UCheckbox
-                  v-model="state.perokok"
-                  label="Saya seorang perokok"
+                  :items="['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu']"
+                  placeholder="Pilih Agama"
                   :disabled="isLoading"
                 />
               </UFormField>
@@ -231,34 +225,37 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                 />
               </UFormField>
               <UFormField label="Anak Ke" name="anakKe">
-                <UInput
+                <UInputNumber
                   v-model="state.anakKe"
-                  type="number"
                   placeholder="Contoh: 1"
                   :disabled="isLoading"
                 />
               </UFormField>
               <UFormField label="Dari Bersaudara" name="dariBersaudara">
-                <UInput
+                <UInputNumber
                   v-model="state.dariBersaudara"
-                  type="number"
                   placeholder="Contoh: 3"
                   :disabled="isLoading"
                 />
               </UFormField>
               <UFormField label="Tinggi Badan (cm)" name="tinggi">
-                <UInput
+                <UInputNumber
                   v-model="state.tinggi"
-                  type="number"
                   placeholder="Contoh: 170"
                   :disabled="isLoading"
                 />
               </UFormField>
               <UFormField label="Berat Badan (kg)" name="berat">
-                <UInput
+                <UInputNumber
                   v-model="state.berat"
-                  type="number"
                   placeholder="Contoh: 65"
+                  :disabled="isLoading"
+                />
+              </UFormField>
+              <UFormField name="perokok" class="md:col-span-2">
+                <UCheckbox
+                  v-model="state.perokok"
+                  label="Saya seorang perokok"
                   :disabled="isLoading"
                 />
               </UFormField>
@@ -295,11 +292,18 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                 />
               </UFormField>
               <UFormField label="Estimasi Gaji" name="gaji">
-                <UInput
+                <UInputNumber
                   v-model="state.gaji"
-                  type="number"
                   placeholder="Contoh: 5000000"
+                  class="w-full"
                   :disabled="isLoading"
+                  :format-options="{
+                    style: 'currency',
+                    currency: 'IDR',
+                    currencyDisplay: 'symbol',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  }"
                 />
               </UFormField>
             </div>
