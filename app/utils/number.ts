@@ -26,3 +26,29 @@ export function formatRupiahParts(value: number) {
 
   return { currency, number };
 }
+
+export function formatDuration(seconds: number) {
+  if (!seconds)
+    return "0 detik";
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+
+  if (h > 0) {
+    return `${h} jam ${m} menit`;
+  }
+  if (m > 0) {
+    return `${m} menit ${s} detik`;
+  }
+  return `${s} detik`;
+}
+
+export function formatBytes(bytes: number, decimals = 2) {
+  if (!bytes)
+    return "0 Bytes";
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${Number.parseFloat((bytes / k ** i).toFixed(dm))} ${sizes[i]}`;
+}

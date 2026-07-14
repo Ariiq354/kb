@@ -15,7 +15,16 @@ export default defineNuxtConfig({
 
   vite: {
     optimizeDeps: {
-      include: ["maplibre-gl"],
+      include: [
+        "maplibre-gl",
+        "@indoorequal/vue-maplibre-gl",
+        "better-auth/client/plugins",
+        "better-auth/vue",
+        "@internationalized/date",
+        "date-fns",
+        "date-fns/locale",
+        "zod",
+      ],
     },
     ssr: {
       noExternal: ["maplibre-gl", "@indoorequal/vue-maplibre-gl"],
