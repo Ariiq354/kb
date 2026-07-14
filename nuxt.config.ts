@@ -52,7 +52,7 @@ export default defineNuxtConfig({
           "'self'",
           "data:",
           "blob:",
-          "https://pub-f206e0b7c19942eb86f161705065f105.r2.dev",
+          "https://assets.keluargabahagia.id",
         ],
       },
     },
@@ -60,7 +60,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      imageUrl: "https://pub-f206e0b7c19942eb86f161705065f105.r2.dev",
+      imageUrl: "https://assets.keluargabahagia.id",
     },
   },
 

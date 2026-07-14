@@ -1,24 +1,23 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
 
-const links = [{
-  label: "Produk",
-  icon: "i-lucide-package",
-  to: "/dashboard/admin/produk",
-  exact: true,
-}, {
-  label: "Bootcamp",
-  icon: "i-lucide-graduation-cap",
-  to: "/dashboard/admin/produk/bootcamp",
-}, {
-  label: "E-Book",
-  icon: "i-lucide-book-open",
-  to: "/dashboard/admin/produk/ebook",
-}, {
-  label: "Course",
-  icon: "i-lucide-monitor-play",
-  to: "/dashboard/admin/produk/course",
-}] satisfies NavigationMenuItem[];
+const links = [
+  {
+    label: "Bootcamp",
+    icon: "i-lucide-graduation-cap",
+    to: "/dashboard/admin/produk/bootcamp",
+  },
+  {
+    label: "E-Book",
+    icon: "i-lucide-book-open",
+    to: "/dashboard/admin/produk/ebook",
+  },
+  {
+    label: "Course",
+    icon: "i-lucide-monitor-play",
+    to: "/dashboard/admin/produk/course",
+  },
+] satisfies NavigationMenuItem[];
 </script>
 
 <template>

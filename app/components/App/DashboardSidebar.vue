@@ -47,12 +47,6 @@ const links = computed<NavigationMenuItem[][]>(() => {
         type: "trigger",
         children: [
           {
-            label: "Produk",
-            to: "/dashboard/admin/produk",
-            exact: true,
-            onSelect: closeSidebar,
-          },
-          {
             label: "Bootcamp",
             to: "/dashboard/admin/produk/bootcamp",
             onSelect: closeSidebar,
