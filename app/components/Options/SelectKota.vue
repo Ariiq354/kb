@@ -1,34 +1,66 @@
 <script setup lang="ts">
-import regencies from "~~/public/wilayah/regencies.json";
+import { computed, watch } from "vue";
+import { useKota } from "~/composables/wilayah";
 
 const props = defineProps<{
-  provinceId?: string;
+  provinsiId?: number;
   disabled?: boolean;
 }>();
 
-const selectedRegency = defineModel<string>();
+const selectedKota = defineModel<number>();
 
-const filteredRegencies = computed(() =>
-  regencies.filter(
-    regency => regency.provinceId === props.provinceId,
-  ),
-);
+const { kota, loadingStates, fetchKota } = useKota();
 
+let isFirstRun = true;
 watch(
-  () => props.provinceId,
-  () => {
-    selectedRegency.value = undefined;
+  () => props.provinsiId,
+  async (newProvinsiId) => {
+    if (!isFirstRun) {
+      selectedKota.value = undefined;
+    }
+    isFirstRun = false;
+    if (newProvinsiId) {
+      await fetchKota(newProvinsiId);
+    }
   },
+  { immediate: true },
 );
+
+const daftarKota = computed(() => {
+  if (!props.provinsiId) {
+    return [];
+  }
+  return kota.value[props.provinsiId] || [];
+});
+
+const isLoading = computed(() => {
+  return props.provinsiId ? !!loadingStates.value[props.provinsiId] : false;
+});
+
+// Guard the bound value to prevent rendering the raw number while options are loading
+const selectValue = computed({
+  get() {
+    const val = selectedKota.value;
+    if (val === undefined || val === null) {
+      return undefined;
+    }
+    const exists = daftarKota.value.some(k => k.id === val);
+    return exists ? val : undefined;
+  },
+  set(val) {
+    selectedKota.value = val;
+  },
+});
 </script>
 
 <template>
   <USelectMenu
-    v-model="selectedRegency"
-    :items="filteredRegencies"
+    v-model="selectValue"
+    :items="daftarKota"
     label-key="name"
     value-key="id"
-    :disabled="disabled || !provinceId"
+    :disabled="disabled || !provinsiId || isLoading"
+    :loading="isLoading"
     placeholder="Pilih Kota / Kabupaten"
   />
 </template>

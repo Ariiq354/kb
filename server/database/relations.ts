@@ -7,6 +7,7 @@ import * as ebookSchema from "./schema/ebook";
 import * as produkSchema from "./schema/produk";
 import * as taarufSchema from "./schema/taaruf";
 import * as userSchema from "./schema/user";
+import * as wilayahSchema from "./schema/wilayah";
 
 export const relations = defineRelations({
   ...authSchema,
@@ -17,6 +18,7 @@ export const relations = defineRelations({
   ...courseSchema,
   ...taarufSchema,
   ...userSchema,
+  ...wilayahSchema,
 }, r => ({
   user: {
     profile: r.one.userProfile(),

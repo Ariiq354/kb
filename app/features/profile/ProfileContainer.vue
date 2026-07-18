@@ -166,31 +166,51 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 border-t border-gray-100 dark:border-gray-800 pt-5">
               <UFormField label="Provinsi" name="provinsi">
-                <SelectProvinsi
-                  v-model="state.provinsi"
-                  :disabled="isLoading"
-                />
+                <ClientOnly>
+                  <SelectProvinsi
+                    v-model="state.provinsi"
+                    :disabled="isLoading"
+                  />
+                  <template #fallback>
+                    <UInput placeholder="Pilih Provinsi" disabled loading />
+                  </template>
+                </ClientOnly>
               </UFormField>
               <UFormField label="Kabupaten/Kota" name="kota">
-                <SelectKota
-                  v-model="state.kota"
-                  :province-id="state.provinsi"
-                  :disabled="isLoading"
-                />
+                <ClientOnly>
+                  <SelectKota
+                    v-model="state.kota"
+                    :provinsi-id="state.provinsi"
+                    :disabled="isLoading"
+                  />
+                  <template #fallback>
+                    <UInput placeholder="Pilih Kota / Kabupaten" disabled loading />
+                  </template>
+                </ClientOnly>
               </UFormField>
               <UFormField label="Kecamatan" name="kecamatan">
-                <SelectKecamatan
-                  v-model="state.kecamatan"
-                  :regency-id="state.kota"
-                  :disabled="isLoading"
-                />
+                <ClientOnly>
+                  <SelectKecamatan
+                    v-model="state.kecamatan"
+                    :kota-id="state.kota"
+                    :disabled="isLoading"
+                  />
+                  <template #fallback>
+                    <UInput placeholder="Pilih Kecamatan" disabled loading />
+                  </template>
+                </ClientOnly>
               </UFormField>
               <UFormField label="Kelurahan" name="kelurahan">
-                <SelectDesa
-                  v-model="state.kelurahan"
-                  :district-id="state.kecamatan"
-                  :disabled="isLoading"
-                />
+                <ClientOnly>
+                  <SelectDesa
+                    v-model="state.kelurahan"
+                    :kecamatan-id="state.kecamatan"
+                    :disabled="isLoading"
+                  />
+                  <template #fallback>
+                    <UInput placeholder="Pilih Kelurahan / Desa" disabled loading />
+                  </template>
+                </ClientOnly>
               </UFormField>
               <UFormField label="Instagram" name="instagram" class="md:col-span-2">
                 <UInput

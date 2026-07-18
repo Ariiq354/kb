@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import type { UserDetail } from "../constants";
 import { computed, ref } from "vue";
-import kecamatan from "~~/public/wilayah/districts.json";
-import provinsi from "~~/public/wilayah/provinces.json";
-import kota from "~~/public/wilayah/regencies.json";
-import kelurahan from "~~/public/wilayah/villages.json";
 import { useToastError, useToastSuccess } from "~/composables/toast";
 import { formatDateIndo } from "~/utils";
 
@@ -96,7 +92,7 @@ function cancelBan() {
         <!-- Header Info -->
         <div class="flex flex-col sm:flex-row items-center gap-4 pb-6 border-b border-muted">
           <UAvatar
-            :src="user.image ? `${config.public.imageUrl}/${user.image}` : undefined"
+            :src="user.image ? (user.image.startsWith('http') ? user.image : `${config.public.imageUrl}/${user.image}`) : undefined"
             :alt="user.name"
             size="xl"
             class="bg-gray-100 dark:bg-gray-850"
@@ -224,19 +220,19 @@ function cancelBan() {
             <div class="space-y-3 text-sm">
               <div class="flex justify-between">
                 <span class="text-gray-500 dark:text-gray-400">Kelurahan:</span>
-                <span class="font-medium text-gray-900 dark:text-white">{{ kelurahan.find(k => k.id === user?.kelurahan)?.name || '-' }}</span>
+                <span class="font-medium text-gray-900 dark:text-white">{{ user?.kelurahanNama || '-' }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-500 dark:text-gray-400">Kecamatan:</span>
-                <span class="font-medium text-gray-900 dark:text-white">{{ kecamatan.find(k => k.id === user?.kecamatan)?.name || '-' }}</span>
+                <span class="font-medium text-gray-900 dark:text-white">{{ user?.kecamatanNama || '-' }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-500 dark:text-gray-400">Kota / Kabupaten:</span>
-                <span class="font-medium text-gray-900 dark:text-white">{{ kota.find(k => k.id === user?.kota)?.name || '-' }}</span>
+                <span class="font-medium text-gray-900 dark:text-white">{{ user?.kotaNama || '-' }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-500 dark:text-gray-400">Provinsi:</span>
-                <span class="font-medium text-gray-900 dark:text-white">{{ provinsi.find(p => p.id === user?.provinsi)?.name || '-' }}</span>
+                <span class="font-medium text-gray-900 dark:text-white">{{ user?.provinsiNama || '-' }}</span>
               </div>
             </div>
           </div>

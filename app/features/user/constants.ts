@@ -25,7 +25,11 @@ export const columns: TableColumn<any>[] = [
       const config = useRuntimeConfig();
       return h("div", { class: "flex items-center gap-3" }, [
         h(UAvatar, {
-          src: row.original.image ? `${config.public.imageUrl}/${row.original.image}` : undefined,
+          src: row.original.image
+            ? (row.original.image.startsWith("http")
+                ? row.original.image
+                : `${config.public.imageUrl}/${row.original.image}`)
+            : undefined,
           alt: row.original.name,
           size: "sm",
           class: "bg-gray-100 dark:bg-gray-800",

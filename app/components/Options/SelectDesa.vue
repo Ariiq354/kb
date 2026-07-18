@@ -1,40 +1,66 @@
 <script setup lang="ts">
-import villages from "~~/public/wilayah/villages.json";
-
-interface Village {
-  id: string;
-  name: string;
-  districtId: string;
-}
+import { computed, watch } from "vue";
+import { useDesa } from "~/composables/wilayah";
 
 const props = defineProps<{
-  districtId?: string;
+  kecamatanId?: number;
   disabled?: boolean;
 }>();
 
-const selectedVillages = defineModel<string>();
+const selectedDesa = defineModel<number>();
 
-const filteredVillages = computed(() =>
-  (villages as Village[]).filter(
-    village => village.districtId === props.districtId,
-  ),
-);
+const { desa, loadingStates, fetchDesa } = useDesa();
 
+let isFirstRun = true;
 watch(
-  () => props.districtId,
-  () => {
-    selectedVillages.value = undefined;
+  () => props.kecamatanId,
+  async (newKecamatanId) => {
+    if (!isFirstRun) {
+      selectedDesa.value = undefined;
+    }
+    isFirstRun = false;
+    if (newKecamatanId) {
+      await fetchDesa(newKecamatanId);
+    }
   },
+  { immediate: true },
 );
+
+const daftarDesa = computed(() => {
+  if (!props.kecamatanId) {
+    return [];
+  }
+  return desa.value[props.kecamatanId] || [];
+});
+
+const isLoading = computed(() => {
+  return props.kecamatanId ? !!loadingStates.value[props.kecamatanId] : false;
+});
+
+// Guard the bound value to prevent rendering the raw number while options are loading
+const selectValue = computed({
+  get() {
+    const val = selectedDesa.value;
+    if (val === undefined || val === null) {
+      return undefined;
+    }
+    const exists = daftarDesa.value.some(v => v.id === val);
+    return exists ? val : undefined;
+  },
+  set(val) {
+    selectedDesa.value = val;
+  },
+});
 </script>
 
 <template>
   <USelectMenu
-    v-model="selectedVillages"
-    :items="filteredVillages"
+    v-model="selectValue"
+    :items="daftarDesa"
     label-key="name"
     value-key="id"
-    :disabled="disabled || !districtId"
+    :disabled="disabled || !kecamatanId || isLoading"
+    :loading="isLoading"
     placeholder="Pilih Kelurahan / Desa"
   />
 </template>

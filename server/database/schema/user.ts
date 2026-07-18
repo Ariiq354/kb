@@ -1,6 +1,7 @@
-import { boolean, integer, snakeCase, text } from "drizzle-orm/pg-core";
+import { bigint, boolean, integer, snakeCase, text } from "drizzle-orm/pg-core";
 import { user } from "./auth";
 import { createdUpdated } from "./common";
+import { desa, kecamatan, kota, provinsi } from "./wilayah";
 
 export const userProfile = snakeCase.table("user_profile", {
   id: integer().primaryKey().generatedByDefaultAsIdentity(),
@@ -8,11 +9,11 @@ export const userProfile = snakeCase.table("user_profile", {
   userId: integer().notNull().references(() => user.id, { onDelete: "cascade" }).unique(),
   statusKawin: text().notNull(),
   tanggalLahir: text().notNull(),
-  kelurahan: text().notNull(),
+  kelurahan: bigint({ mode: "number" }).notNull().references(() => desa.id),
   gender: text({ enum: ["Laki-laki", "Perempuan"] }).notNull(),
-  kecamatan: text().notNull(),
-  kota: text().notNull(),
-  provinsi: text().notNull(),
+  kecamatan: integer().notNull().references(() => kecamatan.id),
+  kota: integer().notNull().references(() => kota.id),
+  provinsi: integer().notNull().references(() => provinsi.id),
   namaAyah: text().notNull(),
   anakKe: integer().notNull(),
   dariBersaudara: integer().notNull(),

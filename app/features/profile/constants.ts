@@ -10,11 +10,11 @@ interface UserResponse {
   kodeUser: string | null;
   statusKawin: string | null;
   tanggalLahir: string | null;
-  kelurahan: string | null;
+  kelurahan: number | null;
   gender: "Laki-laki" | "Perempuan" | null;
-  kecamatan: string | null;
-  kota: string | null;
-  provinsi: string | null;
+  kecamatan: number | null;
+  kota: number | null;
+  provinsi: number | null;
   namaAyah: string | null;
   anakKe: number | null;
   dariBersaudara: number | null;
@@ -36,11 +36,11 @@ interface UserResponse {
 export const schema = z.object({
   statusKawin: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
   tanggalLahir: z.instanceof(CalendarDate),
-  kelurahan: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  kelurahan: z.number({ error: "Wajib diisi" }),
   gender: z.enum(["Laki-laki", "Perempuan"], { error: "Wajib diisi" }),
-  kecamatan: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
-  kota: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
-  provinsi: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  kecamatan: z.number({ error: "Wajib diisi" }),
+  kota: z.number({ error: "Wajib diisi" }),
+  provinsi: z.number({ error: "Wajib diisi" }),
   namaAyah: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
   anakKe: z.coerce.number({ error: "Wajib diisi" }),
   dariBersaudara: z.coerce.number({ error: "Wajib diisi" }),

@@ -5,6 +5,7 @@ import { and, desc, eq, ilike, or } from "drizzle-orm";
 import { db } from "~~/server/database";
 import { user } from "~~/server/database/schema/auth";
 import { userProfile } from "~~/server/database/schema/user";
+import { desa, kecamatan, kota, provinsi } from "~~/server/database/schema/wilayah";
 import { generateUniqueCode } from "~~/server/utils/generator";
 
 export abstract class UserRepo {
@@ -52,10 +53,14 @@ export abstract class UserRepo {
         statusKawin: userProfile.statusKawin,
         tanggalLahir: userProfile.tanggalLahir,
         kelurahan: userProfile.kelurahan,
+        kelurahanNama: desa.name,
         gender: userProfile.gender,
         kecamatan: userProfile.kecamatan,
+        kecamatanNama: kecamatan.name,
         kota: userProfile.kota,
+        kotaNama: kota.name,
         provinsi: userProfile.provinsi,
+        provinsiNama: provinsi.name,
         namaAyah: userProfile.namaAyah,
         anakKe: userProfile.anakKe,
         dariBersaudara: userProfile.dariBersaudara,
@@ -75,10 +80,28 @@ export abstract class UserRepo {
       })
       .from(user)
       .leftJoin(userProfile, eq(user.id, userProfile.userId))
+      .leftJoin(provinsi, eq(userProfile.provinsi, provinsi.id))
+      .leftJoin(kota, eq(userProfile.kota, kota.id))
+      .leftJoin(kecamatan, eq(userProfile.kecamatan, kecamatan.id))
+      .leftJoin(desa, eq(userProfile.kelurahan, desa.id))
       .where(eq(user.id, userId))
       .limit(1);
 
-    return result || null;
+    if (!result) {
+      return null;
+    }
+
+    return {
+      ...result,
+      kelurahan: result.kelurahan || null,
+      kelurahanNama: result.kelurahanNama || null,
+      kecamatan: result.kecamatan || null,
+      kecamatanNama: result.kecamatanNama || null,
+      kota: result.kota || null,
+      kotaNama: result.kotaNama || null,
+      provinsi: result.provinsi || null,
+      provinsiNama: result.provinsiNama || null,
+    };
   }
 
   static async banUser(userId: number, payload: { banned: boolean; banReason?: string | null }) {
@@ -124,10 +147,14 @@ export abstract class UserRepo {
         statusKawin: userProfile.statusKawin,
         tanggalLahir: userProfile.tanggalLahir,
         kelurahan: userProfile.kelurahan,
+        kelurahanNama: desa.name,
         gender: userProfile.gender,
         kecamatan: userProfile.kecamatan,
+        kecamatanNama: kecamatan.name,
         kota: userProfile.kota,
+        kotaNama: kota.name,
         provinsi: userProfile.provinsi,
+        provinsiNama: provinsi.name,
         namaAyah: userProfile.namaAyah,
         anakKe: userProfile.anakKe,
         dariBersaudara: userProfile.dariBersaudara,
@@ -147,6 +174,10 @@ export abstract class UserRepo {
       })
       .from(user)
       .leftJoin(userProfile, eq(user.id, userProfile.userId))
+      .leftJoin(provinsi, eq(userProfile.provinsi, provinsi.id))
+      .leftJoin(kota, eq(userProfile.kota, kota.id))
+      .leftJoin(kecamatan, eq(userProfile.kecamatan, kecamatan.id))
+      .leftJoin(desa, eq(userProfile.kelurahan, desa.id))
       .where(and(...conditions))
       .orderBy(desc(user.id));
 
@@ -154,7 +185,19 @@ export abstract class UserRepo {
     const total = await db.$count(qb);
     const data = await qb.limit(query.limit).offset(offset);
 
-    return { total, data };
+    const mappedData = data.map(item => ({
+      ...item,
+      kelurahan: item.kelurahan || null,
+      kelurahanNama: item.kelurahanNama || null,
+      kecamatan: item.kecamatan || null,
+      kecamatanNama: item.kecamatanNama || null,
+      kota: item.kota || null,
+      kotaNama: item.kotaNama || null,
+      provinsi: item.provinsi || null,
+      provinsiNama: item.provinsiNama || null,
+    }));
+
+    return { total, data: mappedData };
   }
 
   static async findById(userId: number) {
@@ -175,10 +218,14 @@ export abstract class UserRepo {
         statusKawin: userProfile.statusKawin,
         tanggalLahir: userProfile.tanggalLahir,
         kelurahan: userProfile.kelurahan,
+        kelurahanNama: desa.name,
         gender: userProfile.gender,
         kecamatan: userProfile.kecamatan,
+        kecamatanNama: kecamatan.name,
         kota: userProfile.kota,
+        kotaNama: kota.name,
         provinsi: userProfile.provinsi,
+        provinsiNama: provinsi.name,
         namaAyah: userProfile.namaAyah,
         anakKe: userProfile.anakKe,
         dariBersaudara: userProfile.dariBersaudara,
@@ -198,9 +245,27 @@ export abstract class UserRepo {
       })
       .from(user)
       .leftJoin(userProfile, eq(user.id, userProfile.userId))
+      .leftJoin(provinsi, eq(userProfile.provinsi, provinsi.id))
+      .leftJoin(kota, eq(userProfile.kota, kota.id))
+      .leftJoin(kecamatan, eq(userProfile.kecamatan, kecamatan.id))
+      .leftJoin(desa, eq(userProfile.kelurahan, desa.id))
       .where(eq(user.id, userId))
       .limit(1);
 
-    return result || null;
+    if (!result) {
+      return null;
+    }
+
+    return {
+      ...result,
+      kelurahan: result.kelurahan || null,
+      kelurahanNama: result.kelurahanNama || null,
+      kecamatan: result.kecamatan || null,
+      kecamatanNama: result.kecamatanNama || null,
+      kota: result.kota || null,
+      kotaNama: result.kotaNama || null,
+      provinsi: result.provinsi || null,
+      provinsiNama: result.provinsiNama || null,
+    };
   }
 }
