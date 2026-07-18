@@ -109,6 +109,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     <div class="md:col-span-8">
       <div class="bg-white rounded-xl border border-gray-200 p-8 shadow-sm dark:bg-gray-900 dark:border-gray-800">
+        <UAlert
+          v-if="!data?.kodeUser"
+          icon="i-lucide-alert-triangle"
+          color="warning"
+          variant="subtle"
+          title="Profil Belum Lengkap"
+          description="Silakan lengkapi profil Anda terlebih dahulu agar dapat melihat anggota lain dan mencari pasangan."
+          class="mb-6"
+        />
         <UForm
           id="form-profile"
           class="space-y-8"

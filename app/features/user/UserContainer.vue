@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { SerializedUser } from "./constants";
 import type { PageSearch } from "~/utils/types";
 import { ref } from "vue";
 import DataTable from "~/components/Custom/DataTable.vue";
@@ -13,9 +14,9 @@ const { data, status, refresh } = await useFetch("/api/v1/users", {
 });
 
 const detailModalOpen = ref(false);
-const selectedUser = ref<any>(null);
+const selectedUser = ref<SerializedUser | null>(null);
 
-function clickDetail(item: any) {
+function clickDetail(item: SerializedUser) {
   selectedUser.value = item;
   detailModalOpen.value = true;
 }
@@ -23,7 +24,7 @@ function clickDetail(item: any) {
 async function handleSuccess() {
   await refresh();
   if (selectedUser.value) {
-    const updated = data.value?.data.find((u: any) => u.id === selectedUser.value.id);
+    const updated = data.value?.data.find(u => u.id === selectedUser.value?.id);
     if (updated) {
       selectedUser.value = updated;
     }

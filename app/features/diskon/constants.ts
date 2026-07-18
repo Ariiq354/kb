@@ -3,7 +3,17 @@ import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
 import z from "zod";
 import { formatDateIndo } from "~/utils";
 
-export const columns: TableColumn<any>[] = [
+export interface DiskonRow {
+  id: number;
+  kode: string;
+  persen: number;
+  batasWaktu: string;
+  jumlahDipakai: number;
+  status: boolean;
+  batasPemakai: number;
+}
+
+export const columns: TableColumn<DiskonRow>[] = [
   { accessorKey: "kode", header: "Kode" },
   {
     accessorKey: "persen",

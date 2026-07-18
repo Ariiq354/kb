@@ -5,6 +5,12 @@ export default defineEventHandler(async (event) => {
     headers: event.headers,
   });
   event.context.user = session?.user as unknown as UserWithId;
+  event.context.user = session?.user
+    ? {
+        ...session.user,
+        id: Number(session.user.id),
+      }
+    : undefined;
 });
 
 declare module "h3" {

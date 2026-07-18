@@ -1,6 +1,6 @@
 import type { UserWithId } from "~~/server/utils/auth";
 import type { PaginationSearchSchema } from "~~/server/utils/schema";
-import type { UserProfileSchema } from "./model";
+import type { CariPasanganQuerySchema, UserProfileSchema } from "./model";
 import { createError } from "h3";
 import { deleteFile, uploadFile } from "~~/server/utils/files";
 import { UserRepo } from "./repo";
@@ -64,5 +64,20 @@ export abstract class UserService {
 
   static async banUser(userId: number, payload: { banned: boolean; banReason?: string | null }) {
     return await UserRepo.banUser(userId, payload);
+  }
+
+  static async findOppositeGenderMembers(user: UserWithId, query: CariPasanganQuerySchema) {
+    const currentUserProfile = await UserRepo.getUserProfile(user.id);
+
+    if (!currentUserProfile || !currentUserProfile.kodeUser) {
+      throw createError({
+        statusCode: 403,
+        message: "Harap lengkapi profil Anda terlebih dahulu.",
+      });
+    }
+
+    const oppositeGender = currentUserProfile.gender === "Laki-laki" ? "Perempuan" : "Laki-laki";
+
+    return await UserRepo.findOppositeGenderMembers(oppositeGender, query);
   }
 }

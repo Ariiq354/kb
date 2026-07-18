@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { UserDetail } from "../constants";
+import type { SerializedUser } from "../constants";
 import { computed, ref } from "vue";
 import { useToastError, useToastSuccess } from "~/composables/toast";
 import { formatDateIndo } from "~/utils";
 
 const props = defineProps<{
-  user: UserDetail | null;
+  user: SerializedUser | null;
 }>();
 
 const emit = defineEmits<{
@@ -52,9 +52,10 @@ async function toggleBanStatus(banned: boolean) {
     banReason.value = "";
     emit("success");
   }
-  catch (error: any) {
+  catch (error: unknown) {
     console.error(error);
-    useToastError("Gagal Mengubah Status", error.data?.message || "Terjadi kesalahan.");
+    const errorDetails = error as { data?: { message?: string } };
+    useToastError("Gagal Mengubah Status", errorDetails.data?.message || "Terjadi kesalahan.");
   }
   finally {
     isSubmittingBan.value = false;

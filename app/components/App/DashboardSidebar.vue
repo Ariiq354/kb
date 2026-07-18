@@ -25,6 +25,8 @@ function closeSidebar() {
   open.value = false;
 }
 
+const { data: me } = await useFetch("/api/v1/users/me");
+
 const links = computed<NavigationMenuItem[][]>(() => {
   const isAdmin = session.value?.user.role === "admin";
   const menu: NavigationMenuItem[][] = [];
@@ -84,7 +86,7 @@ const links = computed<NavigationMenuItem[][]>(() => {
     ]);
   }
 
-  menu.push([
+  const userMenu: NavigationMenuItem[] = [
     {
       label: "User",
       type: "label" as const,
@@ -101,6 +103,19 @@ const links = computed<NavigationMenuItem[][]>(() => {
       to: "/dashboard/user/profile",
       onSelect: closeSidebar,
     },
+  ];
+
+  // Only show "Cari Pasangan" if the user has completed their profile (has a kodeUser)
+  if (me.value?.kodeUser) {
+    userMenu.push({
+      label: "Cari Pasangan",
+      icon: "i-lucide-sparkles",
+      to: "/dashboard/user/cari-pasangan",
+      onSelect: closeSidebar,
+    });
+  }
+
+  userMenu.push(
     {
       label: "Ta'aruf",
       icon: "i-lucide-heart",
@@ -119,7 +134,9 @@ const links = computed<NavigationMenuItem[][]>(() => {
       to: "/dashboard/user/transaksi",
       onSelect: closeSidebar,
     },
-  ]);
+  );
+
+  menu.push(userMenu);
 
   return menu;
 });

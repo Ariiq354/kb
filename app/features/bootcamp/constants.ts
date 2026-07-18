@@ -4,7 +4,22 @@ import { z } from "zod";
 import { UBadge } from "#components";
 import { formatRupiah } from "~/utils/number";
 
-export const columns: TableColumn<any>[] = [
+export interface BootcampRow {
+  id: number;
+  judul: string;
+  harga: number;
+  status: boolean;
+  foto?: string | null;
+  deskripsi?: string | null;
+  tipe: "ONLINE" | "OFFLINE" | "HYBRID";
+  tempat: string;
+  waktu: string;
+  pembicara: string;
+  googleMapLink?: string | null;
+  meetingLink?: string | null;
+}
+
+export const columns: TableColumn<BootcampRow>[] = [
   {
     accessorKey: "judul",
     header: "Judul",

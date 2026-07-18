@@ -4,7 +4,17 @@ import { z } from "zod";
 import { UBadge } from "#components";
 import { formatRupiah } from "~/utils/number";
 
-export const columns: TableColumn<any>[] = [
+export interface EbookRow {
+  id: number;
+  judul: string;
+  harga: number;
+  status: boolean;
+  deskripsi?: string | null;
+  foto?: string | null;
+  pdfUrl?: string | null;
+}
+
+export const columns: TableColumn<EbookRow>[] = [
   {
     accessorKey: "judul",
     header: "Judul",

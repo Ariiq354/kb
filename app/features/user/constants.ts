@@ -6,7 +6,13 @@ import { formatDateIndo } from "~/utils";
 
 export type UserDetail = NonNullable<Awaited<ReturnType<typeof UserRepo.findById>>>;
 
-export const columns: TableColumn<any>[] = [
+export type SerializedUser = Omit<UserDetail, "createdAt" | "updatedAt" | "banExpires"> & {
+  createdAt: string | Date;
+  updatedAt: string | Date;
+  banExpires: string | Date | null;
+};
+
+export const columns: TableColumn<SerializedUser>[] = [
   {
     accessorKey: "kodeUser",
     header: "Kode Anggota",

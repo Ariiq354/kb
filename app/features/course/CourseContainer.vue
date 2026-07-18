@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
-import type { Schema } from "./constants";
+import type { CourseRow, Schema } from "./constants";
 import type { ExtractFetchData, PageSearch } from "~/utils/types";
 import DataTable from "~/components/Custom/DataTable.vue";
 import InputSearch from "~/components/Custom/InputSearch.vue";
@@ -43,7 +43,7 @@ async function clickDelete(ids: number[]) {
   openModal(ModalConfirm, { path: "/api/v1/course", body: { ids }, refresh });
 }
 
-function getDropdownItems(row: any) {
+function getDropdownItems(row: CourseRow) {
   return [
     {
       label: "Kelola Kurikulum",

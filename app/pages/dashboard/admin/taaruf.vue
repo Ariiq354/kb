@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import TaarufAdminContainer from "~/features/taaruf/TaarufAdminContainer.vue";
+
 useHead({
   title: "Kelola Ta'aruf",
 });
@@ -18,9 +20,7 @@ useHead({
       </UDashboardNavbar>
     </template>
     <template #body>
-      <div>
-        Ini Kelola Ta'aruf
-      </div>
+      <TaarufAdminContainer />
     </template>
   </UDashboardPanel>
 </template>

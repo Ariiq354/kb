@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import TaarufUserContainer from "~/features/taaruf/TaarufUserContainer.vue";
+import CariPasanganContainer from "~/features/cari-pasangan/CariPasanganContainer.vue";
 
 useHead({
-  title: "Ta'aruf",
+  title: "Cari Pasangan",
 });
 </script>
 
@@ -13,14 +13,14 @@ useHead({
     }"
   >
     <template #header>
-      <UDashboardNavbar title="Ta'aruf">
+      <UDashboardNavbar title="Cari Pasangan">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
       </UDashboardNavbar>
     </template>
     <template #body>
-      <TaarufUserContainer />
+      <CariPasanganContainer />
     </template>
   </UDashboardPanel>
 </template>
