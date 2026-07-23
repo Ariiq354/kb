@@ -1,6 +1,11 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: false },
+
+  future: {
+    compatibilityVersion: 5,
+  },
+
   modules: [
     "nuxt-security",
     "@nuxt/image",
