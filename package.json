@@ -52,6 +52,10 @@
   },
   "trustedDependencies": [
     "@parcel/watcher",
-    "unrs-resolver"
+    "esbuild",
+    "maplibre-gl",
+    "sharp",
+    "unrs-resolver",
+    "vue-demi"
   ]
 }

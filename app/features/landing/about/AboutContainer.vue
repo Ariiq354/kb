@@ -35,14 +35,14 @@ const mentors = [
         <!-- Left -->
         <div class="text-center lg:text-left">
           <span
-            class="inline-flex rounded-full bg-eastern-blue-100 px-4 py-1 text-sm font-medium text-eastern-blue-600"
+            class="inline-flex rounded-full bg-primary/10 px-4 py-1 text-sm font-medium text-primary"
           >
             Tentang Kami
           </span>
 
           <h1 class="mt-5 text-3xl font-bold leading-tight text-default sm:text-4xl lg:mt-6 lg:text-5xl">
             Membangun keluarga harmonis untuk
-            <span class="text-eastern-blue-500">
+            <span class="text-primary">
               Indonesia Emas 2045
             </span>
           </h1>
@@ -73,18 +73,18 @@ const mentors = [
         <!-- Right -->
         <div class="relative mx-auto w-full max-w-md lg:max-w-none">
           <!-- background layer -->
-          <div class="absolute inset-0 rotate-3 rounded-3xl bg-eastern-blue-100" />
+          <div class="absolute inset-0 rotate-3 rounded-3xl bg-primary/10" />
 
           <!-- main card -->
           <div
-            class="relative overflow-hidden rounded-3xl bg-eastern-blue-200 p-4 shadow-xl sm:p-6"
+            class="relative overflow-hidden rounded-3xl bg-primary/20 p-4 shadow-xl sm:p-6"
           >
             <div
-              class="flex aspect-4/3 items-center justify-center rounded-2xl bg-eastern-blue-50"
+              class="flex aspect-4/3 items-center justify-center rounded-2xl bg-primary/5"
             >
               <UIcon
                 name="i-material-symbols-favorite-rounded"
-                class="size-14 text-eastern-blue-400 sm:size-18"
+                class="size-14 text-primary sm:size-18"
               />
             </div>
           </div>
@@ -111,15 +111,15 @@ const mentors = [
           <div
             v-for="mentor in mentors"
             :key="mentor.name"
-            class="rounded-3xl border border-eastern-blue-100 bg-white p-5 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-md sm:p-6"
+            class="rounded-3xl border border-primary/10 bg-white p-5 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-md sm:p-6"
           >
             <!-- Placeholder -->
             <div
-              class="mx-auto flex size-20 items-center justify-center rounded-full bg-eastern-blue-100 sm:size-24"
+              class="mx-auto flex size-20 items-center justify-center rounded-full bg-primary/10 sm:size-24"
             >
               <UIcon
                 name="i-material-symbols-person-rounded"
-                class="size-10 text-eastern-blue-400"
+                class="size-10 text-primary"
               />
             </div>
 
@@ -127,7 +127,7 @@ const mentors = [
               {{ mentor.name }}
             </h3>
 
-            <p class="text-sm font-medium text-eastern-blue-500">
+            <p class="text-sm font-medium text-primary">
               {{ mentor.role }}
             </p>
 

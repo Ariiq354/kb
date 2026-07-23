@@ -17,7 +17,7 @@ export const user = snakeCase.table("user", {
   emailVerified: boolean().notNull(),
   image: text(),
   role: text(),
-  banned: boolean(),
+  banned: boolean().default(false),
   banReason: text(),
   banExpires: timestamp({ withTimezone: true }),
   ...createdUpdated,
@@ -41,7 +41,7 @@ export const session = snakeCase.table("session", {
 
 export const account = snakeCase.table("account", {
   id: integer().primaryKey().generatedByDefaultAsIdentity(),
-  accountId: text().notNull(),
+  providerAccountId: text().notNull(),
   providerId: text().notNull(),
   userId: integer()
     .notNull()
@@ -49,6 +49,7 @@ export const account = snakeCase.table("account", {
   accessToken: text(),
   refreshToken: text(),
   idToken: text(),
+  issuer: text().notNull(),
   accessTokenExpiresAt: timestamp({ withTimezone: true }),
   refreshTokenExpiresAt: timestamp({ withTimezone: true }),
   scope: text(),
@@ -62,4 +63,4 @@ export const verification = snakeCase.table("verification", {
   value: text().notNull(),
   expiresAt: timestamp({ withTimezone: true }).notNull(),
   ...createdUpdated,
-}, table => [index("identifier_idx").on(table.identifier)]);
+}, table => [index("verification_identifier_idx").on(table.identifier)]);

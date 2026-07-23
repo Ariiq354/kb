@@ -77,7 +77,7 @@ function viewHistory(id: number) {
         v-if="!processes || processes.length === 0"
         class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-12 text-center shadow-xs flex flex-col items-center justify-center space-y-4"
       >
-        <div class="bg-primary-50 dark:bg-primary-950/20 p-4 rounded-full text-primary">
+        <div class="bg-primary-50 dark:bg-primary-950/20 p-4 flex items-center justify-center rounded-full text-primary">
           <UIcon name="i-lucide-heart-handshake" class="size-10" />
         </div>
         <div class="space-y-1">

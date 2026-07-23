@@ -7,23 +7,23 @@
   padding-inline: 2rem;
 }
 
-@theme {
+@theme static {
   --font-plus-jakarta-sans: "Plus Jakarta Sans", sans-serif;
 
   --color-just-right: #fad9c1;
   --color-wewak: #e35079;
 
-  --color-eastern-blue-50: #f1f9fa;
-  --color-eastern-blue-100: #dcf0f1;
-  --color-eastern-blue-200: #bee0e3;
-  --color-eastern-blue-300: #90cad0;
-  --color-eastern-blue-400: #5caab4;
-  --color-eastern-blue-500: #42929d;
-  --color-eastern-blue-600: #387582;
-  --color-eastern-blue-700: #33606b;
-  --color-eastern-blue-800: #30515a;
-  --color-eastern-blue-900: #2c454d;
-  --color-eastern-blue-950: #192d33;
+  --color-wewak-50: #fdf2f5;
+  --color-wewak-100: #fbe5eb;
+  --color-wewak-200: #f8ccd7;
+  --color-wewak-300: #f4a2b9;
+  --color-wewak-400: #ed7395;
+  --color-wewak-500: #e35079;
+  --color-wewak-600: #cb315c;
+  --color-wewak-700: #aa2146;
+  --color-wewak-800: #8e1d3d;
+  --color-wewak-900: #771a36;
+  --color-wewak-950: #430a1b;
 }
 
 body {

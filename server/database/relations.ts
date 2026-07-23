@@ -22,8 +22,14 @@ export const relations = defineRelations({
 }, r => ({
   user: {
     profile: r.one.userProfile(),
-    sessions: r.many.session(),
-    accounts: r.many.account(),
+    sessions: r.many.session({
+      from: r.user.id,
+      to: r.session.userId,
+    }),
+    accounts: r.many.account({
+      from: r.user.id,
+      to: r.account.userId,
+    }),
     orders: r.many.orders(),
     courseProgresses: r.many.courseProgress(),
     requestedTaarufProses: r.many.taarufProses({ alias: "requesterUser" }),

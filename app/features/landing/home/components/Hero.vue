@@ -2,7 +2,7 @@
   <section class="container flex flex-col items-center gap-10 lg:flex-row lg:gap-12">
     <div class="w-full text-center lg:w-1/2 lg:text-left">
       <h1 class="text-4xl font-bold leading-tight sm:text-5xl lg:leading-14">
-        Selamat Datang di <br class="hidden sm:block"><span class="text-eastern-blue-500">Keluarga</span> Bahagia
+        Selamat Datang di <br class="hidden sm:block"><span class="text-primary">Keluarga</span> Bahagia
       </h1>
       <p class="mx-auto mt-5 max-w-md text-base leading-relaxed sm:mt-6 sm:text-lg lg:mx-0 bg-white">
         Temukan perjalanan menuju keluarga yang harmonis melalui bimbingan, pembelajaran, dan dukungan untuk membangun hubungan yang penuh cinta, keberkahan, dan kebahagiaan.

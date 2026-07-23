@@ -79,7 +79,7 @@ function toggleMenu() {
           :key="link.to"
           :to="link.to"
           active-class="active-mobile"
-          class="rounded-xl px-4 py-3 font-semibold text-eastern-blue-700 transition hover:bg-primary/10"
+          class="rounded-xl px-4 py-3 font-semibold text-primary-700 transition hover:bg-primary/10"
           @click="closeMenu"
         >
           {{ link.label }}
@@ -103,7 +103,7 @@ function toggleMenu() {
   position: relative;
   padding-bottom: 4px;
   font-weight: 600;
-  color: var(--color-eastern-blue-700);
+  color: var(--ui-color-primary-700);
   text-decoration: none;
   transition:
     color 0.3s ease,
@@ -118,7 +118,7 @@ function toggleMenu() {
   bottom: 0;
   width: 0%;
   height: 2px;
-  background-color: var(--color-eastern-blue-700);
+  background-color: var(--ui-color-primary-700);
   transition: width 0.3s ease;
 }
 

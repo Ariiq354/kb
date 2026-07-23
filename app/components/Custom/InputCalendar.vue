@@ -21,7 +21,7 @@ const tanggal = defineModel<CalendarDate>();
       icon="i-lucide-calendar"
       :label="tanggal ? df.format(tanggal.toDate(getLocalTimeZone())) : 'Pilih Tanggal'"
       :disabled="disabled"
-      class="w-full justify-start"
+      class="w-full justify-start rounded-xl"
     />
 
     <template #content>
