@@ -48,6 +48,14 @@ export abstract class DiskonRepo {
     return { total, data };
   }
 
+  static async findByKode(kode: string) {
+    return await db
+      .select()
+      .from(diskon)
+      .where(ilike(diskon.kode, kode))
+      .then(rows => rows[0]);
+  }
+
   static async delete(id: number[]) {
     return await db
       .delete(diskon)

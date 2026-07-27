@@ -1,6 +1,23 @@
 <script setup lang="ts">
-import { DUMMY_COURSE } from "../constant";
+import { useFetch, useRuntimeConfig } from "#imports";
 import CardCourse from "./CardCourse.vue";
+
+const config = useRuntimeConfig();
+
+const { data, status } = await useFetch<{ total: number; data: any[] }>("/api/v1/produk", {
+  query: {
+    type: "COURSE",
+    status: true,
+  },
+});
+
+function getImageUrl(foto?: string) {
+  if (!foto)
+    return "/images/course-image-1.webp";
+  if (foto.startsWith("http") || foto.startsWith("/"))
+    return foto;
+  return `${config.public.imageUrl}/${foto}`;
+}
 </script>
 
 <template>
@@ -12,9 +29,18 @@ import CardCourse from "./CardCourse.vue";
   </div>
 
   <div class="py-4 sm:py-5">
+    <div v-if="status === 'pending'" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <USkeleton v-for="i in 3" :key="i" class="h-80 w-full rounded-xl" />
+    </div>
+
+    <div v-else-if="!data?.data || data.data.length === 0" class="py-8 text-center text-muted">
+      Belum ada course yang tersedia saat ini.
+    </div>
+
     <UCarousel
+      v-else
       v-slot="{ item }"
-      :items="DUMMY_COURSE"
+      :items="data.data"
       :ui="{
         item: 'basis-full sm:basis-1/2 lg:basis-1/3',
         prev: 'start-2 sm:-start-5 lg:-start-12',
@@ -23,12 +49,12 @@ import CardCourse from "./CardCourse.vue";
       arrows
     >
       <CardCourse
-        :id="item.id"
-        :key="item.title"
-        :title="item.title"
-        :total-video="item.totalVideo"
+        :id="item.produkId || item.id"
+        :key="item.id"
+        :title="item.judul"
+        :total-video="item.totalVideo || 0"
         :harga="item.harga"
-        :image="item.image"
+        :image="getImageUrl(item.foto)"
       />
     </UCarousel>
   </div>

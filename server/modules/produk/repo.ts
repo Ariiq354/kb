@@ -3,6 +3,9 @@ import type { ProdukQuerySchema } from "./model";
 import { and, desc, eq, ilike } from "drizzle-orm";
 import { db } from "~~/server/database";
 import { produk } from "~~/server/database/schema/produk";
+import { BootcampRepo } from "~~/server/modules/bootcamp/repo";
+import { CourseRepo } from "~~/server/modules/course/repo";
+import { EbookRepo } from "~~/server/modules/ebook/repo";
 
 export abstract class ProdukRepo {
   static async findAll(query: ProdukQuerySchema) {
@@ -40,5 +43,47 @@ export abstract class ProdukRepo {
     const data = await qb.limit(query.limit).offset(offset);
 
     return { total, data };
+  }
+
+  static async findByType(type: "BOOTCAMP" | "COURSE" | "EBOOK", page = 1, limit = 10, search?: string) {
+    const query = { page, limit, search, status: true };
+
+    if (type === "BOOTCAMP") {
+      return await BootcampRepo.findAll(query);
+    }
+    if (type === "COURSE") {
+      return await CourseRepo.findAll(query);
+    }
+    if (type === "EBOOK") {
+      return await EbookRepo.findAll(query);
+    }
+
+    return await this.findAll({ page, limit, search, type, status: true });
+  }
+
+  static async findById(id: number) {
+    const prod = await db
+      .select({
+        id: produk.id,
+        type: produk.type,
+      })
+      .from(produk)
+      .where(eq(produk.id, id))
+      .then(rows => rows[0]);
+
+    if (!prod)
+      return null;
+
+    if (prod.type === "BOOTCAMP") {
+      return await BootcampRepo.findById(id);
+    }
+    if (prod.type === "COURSE") {
+      return await CourseRepo.findById(id);
+    }
+    if (prod.type === "EBOOK") {
+      return await EbookRepo.findById(id);
+    }
+
+    return null;
   }
 }

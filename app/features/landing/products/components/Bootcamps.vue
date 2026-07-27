@@ -1,6 +1,23 @@
 <script setup lang="ts">
-import { DUMMY_BOOTCAMP } from "../constant";
+import { useFetch, useRuntimeConfig } from "#imports";
 import CardBootcamp from "./CardBootcamp.vue";
+
+const config = useRuntimeConfig();
+
+const { data, status } = await useFetch<{ total: number; data: any[] }>("/api/v1/produk", {
+  query: {
+    type: "BOOTCAMP",
+    status: true,
+  },
+});
+
+function getImageUrl(foto?: string) {
+  if (!foto)
+    return "/images/bootcamp-dummy.webp";
+  if (foto.startsWith("http") || foto.startsWith("/"))
+    return foto;
+  return `${config.public.imageUrl}/${foto}`;
+}
 </script>
 
 <template>
@@ -12,9 +29,18 @@ import CardBootcamp from "./CardBootcamp.vue";
   </div>
 
   <div class="py-4 sm:py-5">
+    <div v-if="status === 'pending'" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <USkeleton v-for="i in 3" :key="i" class="h-80 w-full rounded-xl" />
+    </div>
+
+    <div v-else-if="!data?.data || data.data.length === 0" class="py-8 text-center text-muted">
+      Belum ada bootcamp yang tersedia saat ini.
+    </div>
+
     <UCarousel
+      v-else
       v-slot="{ item }"
-      :items="DUMMY_BOOTCAMP"
+      :items="data.data"
       :ui="{
         item: 'basis-full sm:basis-1/2 lg:basis-1/3',
         prev: 'start-2 sm:-start-5 lg:-start-12',
@@ -24,13 +50,13 @@ import CardBootcamp from "./CardBootcamp.vue";
     >
       <CardBootcamp
         :id="item.id"
-        :key="item.title"
-        :title="item.title"
-        :deskripsi="item.deskripsi"
+        :key="item.id"
+        :title="item.judul"
+        :deskripsi="item.deskripsi || '-'"
         :harga="item.harga"
-        :tempat="item.tempat"
-        :tanggal="item.tanggal"
-        :image="item.image"
+        :tempat="item.tempat || '-'"
+        :tanggal="item.waktu || '-'"
+        :image="getImageUrl(item.foto)"
       />
     </UCarousel>
   </div>
