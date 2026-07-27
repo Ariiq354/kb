@@ -10,7 +10,6 @@ defineProps<{
 
 defineEmits<{
   riwayat: [prosesId: number];
-  batal: [prosesId: number, partnerName: string];
 }>();
 
 const config = useRuntimeConfig();
@@ -70,16 +69,6 @@ const isDetailOpen = ref(false);
         @click="$emit('riwayat', proses.id)"
       >
         Riwayat
-      </UButton>
-      <UButton
-        v-if="!['REJECTED', 'CANCELLED', 'MARRIED'].includes(proses.status)"
-        variant="subtle"
-        color="error"
-        size="xs"
-        icon="i-lucide-x-circle"
-        @click="$emit('batal', proses.id, proses.otherUser.name || 'Calon')"
-      >
-        Batalkan
       </UButton>
     </div>
 

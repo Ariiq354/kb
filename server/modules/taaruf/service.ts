@@ -121,44 +121,12 @@ export abstract class TaarufService {
     return await TaarufRepo.getAdminProcesses();
   }
 
-  // 4. Cancel a ta'aruf process by a user
-  static async cancelProcess(prosesId: number, userId: number) {
-    const proses = await TaarufRepo.findById(prosesId);
-
-    if (!proses) {
-      throw createError({
-        statusCode: 404,
-        message: "Proses ta'aruf tidak ditemukan.",
-      });
-    }
-
-    const isRequester = proses.requesterUserId === userId;
-    const isTarget = proses.targetUserId === userId;
-
-    if (!isRequester && !isTarget) {
-      throw createError({
-        statusCode: 403,
-        message: "Anda tidak berhak mengakses proses ta'aruf ini.",
-      });
-    }
-
-    // Validate active status
-    if (["REJECTED", "CANCELLED", "MARRIED"].includes(proses.status)) {
-      throw createError({
-        statusCode: 400,
-        message: "Proses ta'aruf ini sudah selesai / tidak aktif.",
-      });
-    }
-
-    return await TaarufRepo.updateStatus(prosesId, "CANCELLED", "Ta'aruf dibatalkan oleh pengguna.");
-  }
-
-  // 5. Update process status by admin
+  // 4. Update process status by admin
   static async updateStatusByAdmin(prosesId: number, status: "PENDING" | "APPROVED" | "PROFILE_EXCHANGE" | "TAARUF" | "REJECTED" | "CANCELLED" | "MARRIED", keterangan?: string) {
     return await TaarufRepo.updateStatus(prosesId, status, keterangan);
   }
 
-  // 6. Find details by ID
+  // 5. Find details by ID
   static async findById(prosesId: number, userId: number, isAdmin: boolean) {
     const proses = await TaarufRepo.findById(prosesId);
 

@@ -1,36 +1,13 @@
 <script setup lang="ts">
 import type { TaarufProcess } from "./types";
 import { openModal } from "~/composables/modal";
-import { useToastError, useToastSuccess } from "~/composables/toast";
-import TaarufCancelModal from "./components/TaarufCancelModal.vue";
 import TaarufHistoryModal from "./components/TaarufHistoryModal.vue";
 import TaarufUserCard from "./components/TaarufUserCard.vue";
 
 // 1. Fetch user's ta'aruf processes
-const { data: processes, refresh, pending } = await useFetch<TaarufProcess[]>("/api/v1/taaruf");
+const { data: processes, pending } = await useFetch<TaarufProcess[]>("/api/v1/taaruf");
 
-// 2. Cancellation action
-function cancelTaaruf(id: number, partnerName: string) {
-  openModal(TaarufCancelModal, {
-    partnerName,
-    onConfirm: async () => {
-      try {
-        await $fetch(`/api/v1/taaruf/${id}/cancel`, {
-          method: "POST",
-        });
-        useToastSuccess("Ta'aruf Dibatalkan", "Proses ta'aruf berhasil dibatalkan.");
-        await refresh();
-      }
-      catch (err: unknown) {
-        const errorDetails = err as { data?: { message?: string } };
-        useToastError("Gagal Membatalkan", errorDetails.data?.message || "Terjadi kesalahan.");
-        throw err;
-      }
-    },
-  });
-}
-
-// 3. Log History Modal Action
+// 2. Log History Modal Action
 function viewHistory(id: number) {
   openModal(TaarufHistoryModal, { prosesId: id });
 }
@@ -100,7 +77,6 @@ function viewHistory(id: number) {
           :key="p.id"
           :proses="p"
           @riwayat="viewHistory"
-          @batal="cancelTaaruf"
         />
       </div>
     </div>
