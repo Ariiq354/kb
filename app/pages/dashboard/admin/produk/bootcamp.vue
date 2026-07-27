@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BootcampContainer from "~/features/bootcamp/BootcampContainer.vue";
+import BootcampAdminContainer from "~/features/bootcamp/BootcampAdminContainer.vue";
 
 useHead({
   title: "Daftar Bootcamp",
@@ -7,5 +7,5 @@ useHead({
 </script>
 
 <template>
-  <BootcampContainer />
+  <BootcampAdminContainer />
 </template>
