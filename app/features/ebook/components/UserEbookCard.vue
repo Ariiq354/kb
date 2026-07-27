@@ -4,17 +4,19 @@ import { formatRupiah } from "~/utils/number";
 defineProps<{
   id: number;
   title: string;
-  penulis: string;
   harga: number;
   image: string;
+  penulis?: string;
 }>();
+
+const config = useRuntimeConfig();
 </script>
 
 <template>
   <div class="group flex flex-col overflow-hidden rounded-xl border border-muted bg-white dark:bg-gray-800 p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-1">
     <div class="relative overflow-hidden aspect-3/4 w-full rounded-lg bg-gray-100 dark:bg-gray-700 mb-3">
       <NuxtImg
-        :src="image"
+        :src="image ? (image.startsWith('http') ? image : `${config.public.imageUrl}/${image}`) : undefined"
         :alt="title"
         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
       />
@@ -25,7 +27,7 @@ defineProps<{
         <h3 class="line-clamp-2 text-base font-semibold text-default mb-1">
           {{ title }}
         </h3>
-        <p class="line-clamp-1 text-xs text-muted mb-3">
+        <p v-if="penulis" class="line-clamp-1 text-xs text-muted mb-3">
           {{ penulis }}
         </p>
       </div>

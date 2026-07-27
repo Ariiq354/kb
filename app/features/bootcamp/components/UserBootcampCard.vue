@@ -4,19 +4,21 @@ import { formatRupiah } from "~/utils/number";
 defineProps<{
   id: number;
   title: string;
-  deskripsi: string;
   harga: number;
-  tempat: string;
-  tanggal: string;
   image: string;
+  deskripsi?: string;
+  tempat?: string;
+  tanggal?: string;
 }>();
+
+const config = useRuntimeConfig();
 </script>
 
 <template>
   <div class="group flex flex-col overflow-hidden rounded-xl border border-muted bg-white dark:bg-gray-800 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-1">
     <div class="relative overflow-hidden aspect-video w-full bg-gray-100 dark:bg-gray-700">
       <NuxtImg
-        :src="image"
+        :src="image ? (image.startsWith('http') ? image : `${config.public.imageUrl}/${image}`) : undefined"
         :alt="title"
         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
       />
@@ -29,12 +31,12 @@ defineProps<{
         </h3>
       </div>
 
-      <div class="flex items-center gap-1.5 text-xs text-muted mb-3">
+      <div v-if="tanggal" class="flex items-center gap-1.5 text-xs text-muted mb-3">
         <UIcon name="i-lucide-calendar" class="text-sm shrink-0" />
         <span>{{ tanggal }}</span>
       </div>
 
-      <p class="line-clamp-2 text-xs text-muted mb-4 flex-1">
+      <p v-if="deskripsi" class="line-clamp-2 text-xs text-muted mb-4 flex-1">
         {{ deskripsi }}
       </p>
 
