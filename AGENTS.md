@@ -1,276 +1,60 @@
 # AGENTS.md
 
-## Project Overview
-
-This project is built with:
-
-- Nuxt 4
-- Vue 3
-- TypeScript
-- Nuxt UI 4
-- Tailwind CSS v4
-- Drizzle ORM
-- Better Auth
-- Neon PostgreSQL
-- Bun as the package manager
-
----
-
-## Package Manager
-
-Use **Bun** for every dependency and script.
-
-Never use:
-
-- npm
-- yarn
-- pnpm
-
-Examples:
+## Quick reference
 
 ```bash
-bun install
-bun add <package>
-bun remove <package>
-
-bun run dev
-bun run build
-bun run lint
-bun run check
+bun install          # install deps
+bun run dev          # dev server at localhost:3000
+bun run build        # production build
+bun run lint         # eslint --fix
+bun run check        # nuxt typecheck
+bun run db:push      # push schema changes to DB
+bun run db:studio    # drizzle-kit studio
+bun run db:seed      # seed database (bun server/database/seed.ts)
 ```
 
----
+No test suite exists. Lint + typecheck are the only verification steps.
 
-## Development Commands
+## Architecture
 
-Install dependencies
+Nuxt 4 app. Package manager is **bun** (see `bun.lock`). Do not use npm/yarn/pnpm.
 
-```bash
-bun install
-```
+**Auto-imports are disabled** (`nuxt.config.ts`: `imports.scan: false`, `components.dirs: []`). Every composable, utility, and component must be explicitly imported. This is intentional — do not re-enable auto-imports.
 
-Development
+### Directory map
 
-```bash
-bun run dev
-```
+- `app/features/` — feature-organized frontend code (auth, bootcamp, course, ebook, taaruf, etc.)
+- `app/pages/` — file-based routes: `(Auth)/`, `(Landing)/`, `dashboard/`
+- `app/layouts/` — `auth.vue`, `default.vue`, `landing.vue`
+- `app/composables/` — shared composables (`auth.ts`, `modal.ts`, `toast.ts`, `wilayah.ts`)
+- `server/api/` — API routes: `auth/[...all].ts` (better-auth catch-all), `v1/` (feature endpoints)
+- `server/modules/` — server-side business logic, mirrors `app/features/`
+- `server/database/schema/` — Drizzle table definitions, one file per domain
+- `server/database/relations.ts` — all relations defined here via `defineRelations`
+- `server/utils/` — `auth.ts` (better-auth instance), `guard.ts` (auth/admin guards), `validator.ts`, `files.ts`
+- `shared/env.ts` — Zod-validated env, throws on missing vars at startup
 
-Production build
+### Auth
 
-```bash
-bun run build
-```
+Better Auth with email/password + admin plugin. User IDs are **numeric** (converted from string in `server/middleware/auth.ts:8-13`). Use `authGuard(event)` / `adminGuard(event)` from `server/utils/guard.ts` in API routes.
 
-Preview
+Client auth state: `useAuthSession()` composable. Route protection via `app/middleware/auth.global.ts` — dashboard requires login, admin routes require `role === "admin"`.
 
-```bash
-bun run preview
-```
+### Database
 
-Generate static site
+Drizzle ORM + PostgreSQL. Schema casing is **snake_case** (`drizzle.config.ts`). All tables use `createdUpdated` timestamps from `server/database/schema/common.ts`. Relations are centralized in `server/database/relations.ts`, not co-located with schema files.
 
-```bash
-bun run generate
-```
+### File storage
 
-Lint
+Cloudflare R2 via `@aws-sdk/client-s3`. Config in `shared/env.ts` (CLOUDFLARE_* vars).
 
-```bash
-bun run lint
-```
+## Code style
 
-Type check
+ESLint config: `@antfu/eslint-config` with **double quotes**, **2-space indent**, **semicolons**. Formatters enabled. Run `bun run lint` to auto-fix.
 
-```bash
-bun run check
-```
+## Key quirks
 
-Database
-
-```bash
-bun run db:push
-bun run db:studio
-```
-
----
-
-## Tech Stack
-
-### Frontend
-
-- Nuxt 4
-- Vue 3 Composition API
-- TypeScript
-- Nuxt UI 4
-- Tailwind CSS v4
-- VueUse
-- Nuxt Image
-- Nuxt Charts
-
-### Backend
-
-- Nuxt Server Routes
-- Better Auth
-- Drizzle ORM
-- PostgreSQL (Neon)
-
----
-
-## Code Style
-
-- Use TypeScript everywhere.
-- Prefer Composition API.
-- Prefer `<script setup lang="ts">`.
-- Prefer async/await over Promise chains.
-- Prefer Zod for request validation.
-- Keep functions small and focused.
-- Avoid `any` unless absolutely necessary.
-- Prefer explicit types when inference is unclear.
-- Use double quotes (`"`) and semicolons (`;`) as enforced by ESLint.
-
----
-
-## Nuxt Guidelines
-
-- Nuxt auto-imports are **DISABLED** in this project (`imports: { scan: false }, components: { dirs: [] }`). You must explicitly import components, composables, and utilities (e.g., `import MyComponent from "~/features/MyComponent.vue"`).
-- Follow the Nuxt 4 standard project directory structure:
-  - `app/`: Frontend application code (pages, components, layouts, features).
-  - `server/`: Backend API routes, database operations, and server-side modules (`server/modules/`).
-  - `shared/`: Code shared between the client and server (types, constants, schemas).
-- Prefer composables over duplicated logic.
-- Use server routes (`server/api/`) for backend API endpoints.
-- Keep business logic and database queries inside domain-specific modules in `server/modules/` (using `service.ts` and `repo.ts`).
-- Keep feature-specific UI inside `app/features/` and generic reusable UI inside `app/components/`.
-- Keep reusable state inside `app/composables/`.
-- Use `useFetch` or `$fetch` appropriately.
-- Use runtime config for secrets.
-- Never hardcode secrets.
-
----
-
-## Database
-
-- ORM: Drizzle ORM
-- Database: PostgreSQL (Neon)
-
-Guidelines:
-
-- Never write raw SQL if Drizzle supports it.
-- Keep schema inside `server/database/schema/`.
-- Keep queries inside `repo.ts` and business logic inside `service.ts` within `server/modules/<feature-name>/`.
-- Use migrations via Drizzle Kit.
-- The schema uses Drizzle's `casing: "snake_case"`. Write your TypeScript models using `camelCase` and Drizzle will automatically map them to `snake_case` in the database.
-
-Commands
-
-```bash
-bun run db:push
-bun run db:studio
-```
-
----
-
-## Authentication
-
-Use Better Auth.
-
-Guidelines:
-
-- Never implement custom authentication when Better Auth provides the feature.
-- Keep auth logic centralized.
-- Protect server routes appropriately.
-
----
-
-## UI
-
-Use Nuxt UI components whenever possible.
-
-Before creating custom components:
-
-1. Check whether Nuxt UI already provides it.
-2. Extend existing components rather than rebuilding them.
-
----
-
-## Styling
-
-- Tailwind CSS v4 only.
-- Prefer utility classes.
-- Avoid inline styles.
-- Keep class names readable.
-- Reuse design tokens.
-
----
-
-## Validation
-
-Use Zod for:
-
-- request validation
-- form validation
-- API validation
-
-Avoid manual validation whenever possible.
-
----
-
-## Linting
-
-Before finishing changes always run:
-
-```bash
-bun run lint
-bun run check
-```
-
-Code should pass both linting and type checking.
-
----
-
-## Dependencies
-
-Prefer existing dependencies before adding new ones.
-
-Current notable libraries include:
-
-- Better Auth
-- Drizzle ORM
-- date-fns
-- VueUse
-- Zod
-- AWS SDK S3
-
-Do not introduce another library if the existing stack already solves the problem.
-
----
-
-## Best Practices
-
-- Write readable code.
-- Prefer composition over duplication.
-- Keep components focused.
-- Keep server logic separated from UI.
-- Use strong typing.
-- Follow Nuxt conventions.
-- Avoid premature optimization.
-- Minimize unnecessary dependencies.
-- Keep files organized by feature when possible.
-
----
-
-## Agent Instructions
-
-When modifying this project:
-
-1. Use Bun commands only.
-2. Follow Nuxt 4 conventions (including `app/`, `server/`, and `shared/` directories).
-3. Preserve TypeScript type safety.
-4. Reuse existing composables and components.
-5. Explicitly import components and composables since auto-imports are disabled.
-6. Prefer Nuxt UI before creating custom UI.
-7. Validate inputs with Zod.
-8. Use Drizzle ORM for database operations and organize backend logic in `server/modules/`.
-9. Do not introduce new dependencies unless necessary.
-10. Ensure `bun run lint` and `bun run check` pass before considering work complete.
-11. Keep changes minimal, idiomatic, and maintainable.
+- `shared/env.ts` is imported directly (not auto-imported) — by drizzle.config.ts, server database/index.ts, etc.
+- Nuxt UI v4 theme customization is in `app/app.config.ts` (not tailwind config). Primary color is `"wewak"`.
+- `nuxt-security` module is active with SRI disabled and custom CSP headers.
+- The `@better-auth/drizzle-adapter` uses `relations-v2` import path, not the default.
