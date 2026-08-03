@@ -2,10 +2,17 @@
 import { computed, ref } from "vue";
 import { useFetch, useRoute, useRuntimeConfig } from "#imports";
 import FormatRupiah from "~/components/FormatRupiah.vue";
+import ModalAlreadyPurchased from "~/components/Modal/ModalAlreadyPurchased.vue";
+import ModalCheckoutPayment from "~/components/Modal/ModalCheckoutPayment.vue";
+import ModalLoginRequired from "~/components/Modal/ModalLoginRequired.vue";
+import ModalPendingOrder from "~/components/Modal/ModalPendingOrder.vue";
+import { useAuthSession } from "~/composables/auth";
+import { openModal } from "~/composables/modal";
 import { formatRupiah } from "~/utils/number";
 
 const route = useRoute();
 const config = useRuntimeConfig();
+const { session } = await useAuthSession();
 
 const { data: item, status } = await useFetch<any>(() => `/api/v1/produk/${route.params.id}`);
 
@@ -24,6 +31,59 @@ const imageUrl = computed(() => {
 });
 
 const total = computed(() => Math.max(0, (item.value?.harga || 0) - diskon.value));
+
+async function handleCheckout() {
+  if (!session.value) {
+    openModal(ModalLoginRequired);
+    return;
+  }
+
+  if (!item.value)
+    return;
+
+  try {
+    const checkRes = await $fetch<any>("/api/v1/order/check", {
+      query: { produkId: item.value.id },
+    });
+
+    if (checkRes.hasOrder && checkRes.status === "PAID") {
+      openModal(ModalAlreadyPurchased, {
+        produk: {
+          id: item.value.id,
+          type: "BOOTCAMP",
+          judul: item.value.judul,
+        },
+      });
+      return;
+    }
+
+    if (checkRes.hasOrder && (checkRes.status === "WAITING_VERIFICATION" || checkRes.status === "PENDING_PAYMENT")) {
+      openModal(ModalPendingOrder, {
+        produk: {
+          id: item.value.id,
+          type: "BOOTCAMP",
+          judul: item.value.judul,
+        },
+        order: checkRes.order,
+      });
+      return;
+    }
+  }
+  catch {}
+
+  openModal(ModalCheckoutPayment, {
+    produk: {
+      id: item.value.id,
+      type: "BOOTCAMP",
+      judul: item.value.judul,
+      harga: item.value.harga,
+      foto: item.value.foto,
+    },
+    diskon: diskon.value,
+    kodeKupon: kodeKupon.value.trim() || undefined,
+    total: total.value,
+  });
+}
 
 async function checkKupon() {
   if (!kodeKupon.value.trim()) {
@@ -153,7 +213,7 @@ async function checkKupon() {
           />
         </div>
 
-        <UButton class="flex w-full justify-center">
+        <UButton class="flex w-full justify-center" @click="handleCheckout">
           Checkout
         </UButton>
       </div>
