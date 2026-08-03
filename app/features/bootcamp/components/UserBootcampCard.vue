@@ -47,7 +47,7 @@ const config = useRuntimeConfig();
         </div>
 
         <UButton
-          :to="`/products/detail/bootcamp/${id}`"
+          :to="`/dashboard/user/produk/bootcamp/${id}`"
           size="sm"
           color="primary"
         >

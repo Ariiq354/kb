@@ -36,7 +36,7 @@ const config = useRuntimeConfig();
         <span class="text-sm font-bold text-primary">{{ formatRupiah(harga) }}</span>
 
         <UButton
-          :to="`/products/detail/ebook/${id}`"
+          :to="`/dashboard/user/produk/ebook/${id}`"
           size="sm"
           variant="outline"
           color="primary"

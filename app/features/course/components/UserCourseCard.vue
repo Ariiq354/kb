@@ -41,7 +41,7 @@ const config = useRuntimeConfig();
         </div>
 
         <UButton
-          :to="`/products/detail/course/${id}`"
+          :to="`/dashboard/user/produk/course/${id}`"
           size="sm"
           variant="subtle"
           color="primary"
