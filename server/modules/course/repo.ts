@@ -1,7 +1,7 @@
 import type { SQL } from "drizzle-orm";
 import type { PaginationSearchSchema } from "~~/server/utils/schema";
 import type { CreateCourseSchema, CreateLessonSchema, CreateSectionSchema, UpdateCourseSchema, UpdateLessonSchema, UpdateSectionSchema } from "./model";
-import { and, desc, eq, ilike, inArray } from "drizzle-orm";
+import { and, count, desc, eq, ilike, inArray, or } from "drizzle-orm";
 import { db } from "~~/server/database";
 import { course, courseLesson, courseSection } from "~~/server/database/schema/course";
 import { produk } from "~~/server/database/schema/produk";
@@ -36,9 +36,9 @@ export abstract class CourseRepo {
   static async update(courseId: number, payload: Omit<UpdateCourseSchema, "file">, foto?: string) {
     return await db.transaction(async (tx) => {
       const courseRecord = await tx
-        .select({ produkId: course.produkId })
+        .select({ produkId: course.produkId, courseId: course.id })
         .from(course)
-        .where(eq(course.id, courseId))
+        .where(or(eq(course.id, courseId), eq(course.produkId, courseId)))
         .then(rows => rows[0]);
 
       if (!courseRecord)
@@ -62,16 +62,17 @@ export abstract class CourseRepo {
           deskripsi: payload.deskripsi,
           namaPublisher: payload.namaPublisher,
         })
-        .where(eq(course.id, courseId));
+        .where(eq(course.id, courseRecord.courseId));
 
       return result;
     });
   }
 
-  static async findById(courseId: number) {
-    return await db
+  static async findById(id: number) {
+    const item = await db
       .select({
-        id: course.id,
+        id: produk.id,
+        courseId: course.id,
         produkId: produk.id,
         judul: produk.judul,
         harga: produk.harga,
@@ -84,8 +85,22 @@ export abstract class CourseRepo {
       })
       .from(course)
       .innerJoin(produk, eq(course.produkId, produk.id))
-      .where(eq(course.id, courseId))
+      .where(or(eq(course.id, id), eq(produk.id, id)))
       .then(rows => rows[0]);
+
+    if (!item)
+      return null;
+
+    const [res] = await db
+      .select({ totalLessons: count(courseLesson.id) })
+      .from(courseLesson)
+      .innerJoin(courseSection, eq(courseLesson.sectionId, courseSection.id))
+      .where(eq(courseSection.courseId, item.courseId));
+
+    return {
+      ...item,
+      totalVideo: Number(res?.totalLessons || 0),
+    };
   }
 
   static async findAll(query: PaginationSearchSchema) {
@@ -97,7 +112,8 @@ export abstract class CourseRepo {
 
     const qb = db
       .select({
-        id: course.id,
+        id: produk.id,
+        courseId: course.id,
         produkId: produk.id,
         judul: produk.judul,
         harga: produk.harga,
@@ -130,7 +146,7 @@ export abstract class CourseRepo {
         })
         .from(course)
         .innerJoin(produk, eq(course.produkId, produk.id))
-        .where(inArray(course.id, courseIds));
+        .where(or(inArray(course.id, courseIds), inArray(produk.id, courseIds)));
 
       if (rows.length === 0)
         return [];

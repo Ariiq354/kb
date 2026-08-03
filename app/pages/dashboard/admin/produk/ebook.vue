@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import EbookContainer from "~/features/ebook/EbookContainer.vue";
+import EbookAdminContainer from "~/features/ebook/EbookAdminContainer.vue";
 
 useHead({
   title: "Daftar Ebook",
@@ -7,5 +7,5 @@ useHead({
 </script>
 
 <template>
-  <EbookContainer />
+  <EbookAdminContainer />
 </template>

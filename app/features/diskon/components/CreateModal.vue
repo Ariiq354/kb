@@ -52,7 +52,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <template>
   <LazyUModal
     v-model:open="openModel"
-    title="Tambah Pengeluaran"
+    :title="state.id ? 'Edit Diskon' : 'Tambah Diskon'"
     class="max-w-4xl"
   >
     <template #body>
@@ -69,13 +69,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             :disabled="isLoading"
           />
         </UFormField>
-        <UFormField label="Persen" name="persen">
+        <UFormField label="Persen (%)" name="persen">
           <UInputNumber
             v-model="state.persen"
+            :min="1"
+            :max="100"
             :disabled="isLoading"
-            :format-options="{
-              style: 'percent',
-            }"
           />
         </UFormField>
         <UFormField label="Batas Waktu" name="batasWaktu">

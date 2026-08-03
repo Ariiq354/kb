@@ -125,8 +125,24 @@ const links = computed<NavigationMenuItem[][]>(() => {
     {
       label: "Produk",
       icon: "i-lucide-shopping-bag",
-      to: "/dashboard/user/produk",
-      onSelect: closeSidebar,
+      type: "trigger",
+      children: [
+        {
+          label: "Bootcamp",
+          to: "/dashboard/user/produk/bootcamp",
+          onSelect: closeSidebar,
+        },
+        {
+          label: "E-Book",
+          to: "/dashboard/user/produk/ebook",
+          onSelect: closeSidebar,
+        },
+        {
+          label: "Course",
+          to: "/dashboard/user/produk/course",
+          onSelect: closeSidebar,
+        },
+      ],
     },
     {
       label: "Transaksi",

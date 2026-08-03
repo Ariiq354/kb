@@ -68,15 +68,27 @@ export abstract class BootcampRepo {
   }
 
   static async findById(id: number) {
-    return await db.query.produk.findFirst({
-      where: {
-        id,
-      },
-      columns: {
-        id: true,
-        foto: true,
-      },
-    });
+    return await db
+      .select({
+        id: produk.id,
+        judul: produk.judul,
+        harga: produk.harga,
+        status: produk.status,
+        foto: produk.foto,
+        deskripsi: bootcamp.deskripsi,
+        tipe: bootcamp.tipe,
+        tempat: bootcamp.tempat,
+        waktu: bootcamp.waktu,
+        pembicara: bootcamp.pembicara,
+        googleMapLink: bootcamp.googleMapLink,
+        meetingLink: bootcamp.meetingLink,
+        createdAt: produk.createdAt,
+        updatedAt: produk.updatedAt,
+      })
+      .from(bootcamp)
+      .innerJoin(produk, eq(bootcamp.produkId, produk.id))
+      .where(eq(produk.id, id))
+      .then(rows => rows[0]);
   }
 
   static async findAll(query: PaginationSearchSchema) {

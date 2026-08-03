@@ -61,8 +61,14 @@ export abstract class EbookRepo {
     return await db
       .select({
         id: produk.id,
+        judul: produk.judul,
+        harga: produk.harga,
+        status: produk.status,
         foto: produk.foto,
+        deskripsi: ebook.deskripsi,
         pdfUrl: ebook.pdfUrl,
+        createdAt: produk.createdAt,
+        updatedAt: produk.updatedAt,
       })
       .from(ebook)
       .innerJoin(produk, eq(ebook.produkId, produk.id))

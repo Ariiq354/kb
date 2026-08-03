@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CourseContainer from "~/features/course/CourseContainer.vue";
+import CourseAdminContainer from "~/features/course/CourseAdminContainer.vue";
 
 useHead({
   title: "Daftar Course",
@@ -7,5 +7,5 @@ useHead({
 </script>
 
 <template>
-  <CourseContainer />
+  <CourseAdminContainer />
 </template>
