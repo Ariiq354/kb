@@ -26,7 +26,7 @@ const { data, status } = await useFetch("/api/v1/user/produk", {
         </p>
       </div>
       <UButton
-        to="/"
+        to="/products"
         color="primary"
         variant="soft"
         icon="i-lucide-shopping-bag"
@@ -42,6 +42,7 @@ const { data, status } = await useFetch("/api/v1/user/produk", {
         :title="item.judul"
         :harga="item.harga"
         :image="item.foto"
+        :order-status="item.orderStatus"
       />
     </div>
   </div>

@@ -96,7 +96,6 @@ export abstract class OrderRepo {
   static async findUserPurchasedProducts(userId: number, type?: "BOOTCAMP" | "EBOOK" | "COURSE") {
     const conditions: (SQL<unknown> | undefined)[] = [
       eq(orders.userId, userId),
-      eq(orders.status, "PAID"),
     ];
 
     if (type) {
@@ -111,6 +110,7 @@ export abstract class OrderRepo {
         harga: produk.harga,
         foto: produk.foto,
         orderId: orders.id,
+        orderStatus: orders.status,
         purchasedAt: orders.createdAt,
       })
       .from(orders)
@@ -125,6 +125,7 @@ export abstract class OrderRepo {
         return {
           ...row,
           ...fullDetail,
+          orderStatus: row.orderStatus,
           // ensure id is produk.id
           id: row.id,
         };

@@ -69,7 +69,7 @@ const newColumns = computed<TableColumn<any>[]>(() => [
       ]
     : []),
   ...columns,
-  ...(viewable || deletable || editable
+  ...(viewable || deletable || editable || dropdownItems
     ? [
         {
           header: "",

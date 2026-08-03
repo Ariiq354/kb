@@ -9,6 +9,7 @@ defineProps<{
   deskripsi?: string;
   tempat?: string;
   tanggal?: string;
+  orderStatus?: string;
 }>();
 
 const config = useRuntimeConfig();
@@ -17,6 +18,11 @@ const config = useRuntimeConfig();
 <template>
   <div class="group flex flex-col overflow-hidden rounded-xl border border-muted bg-white dark:bg-gray-800 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-1">
     <div class="relative overflow-hidden aspect-video w-full bg-gray-100 dark:bg-gray-700">
+      <div v-if="orderStatus && orderStatus !== 'PAID'" class="absolute top-2.5 right-2.5 z-10">
+        <UBadge color="warning" variant="solid" size="sm" icon="i-lucide-clock">
+          Menunggu Verifikasi
+        </UBadge>
+      </div>
       <NuxtImg
         :src="image ? (image.startsWith('http') ? image : `${config.public.imageUrl}/${image}`) : undefined"
         :alt="title"
@@ -47,11 +53,22 @@ const config = useRuntimeConfig();
         </div>
 
         <UButton
+          v-if="orderStatus && orderStatus !== 'PAID'"
+          disabled
+          size="sm"
+          color="warning"
+          variant="soft"
+          icon="i-lucide-clock"
+        >
+          Menunggu Verifikasi
+        </UButton>
+        <UButton
+          v-else
           :to="`/dashboard/user/produk/bootcamp/${id}`"
           size="sm"
           color="primary"
         >
-          Daftar
+          Lihat Detail
         </UButton>
       </div>
     </div>

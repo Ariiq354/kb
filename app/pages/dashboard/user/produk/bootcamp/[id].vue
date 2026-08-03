@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import ProductDetailContainer from "~/features/produk/ProductDetailContainer.vue";
+import ProductBootcampDetailContainer from "~/features/bootcamp/ProductBootcampDetailContainer.vue";
 </script>
 
 <template>
-  <ProductDetailContainer />
+  <ProductBootcampDetailContainer />
 </template>

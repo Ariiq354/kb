@@ -7,6 +7,7 @@ defineProps<{
   harga: number;
   image: string;
   penulis?: string;
+  orderStatus?: string;
 }>();
 
 const config = useRuntimeConfig();
@@ -15,6 +16,11 @@ const config = useRuntimeConfig();
 <template>
   <div class="group flex flex-col overflow-hidden rounded-xl border border-muted bg-white dark:bg-gray-800 p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-1">
     <div class="relative overflow-hidden aspect-3/4 w-full rounded-lg bg-gray-100 dark:bg-gray-700 mb-3">
+      <div v-if="orderStatus && orderStatus !== 'PAID'" class="absolute top-2.5 right-2.5 z-10">
+        <UBadge color="warning" variant="solid" size="sm" icon="i-lucide-clock">
+          Menunggu Verifikasi
+        </UBadge>
+      </div>
       <NuxtImg
         :src="image ? (image.startsWith('http') ? image : `${config.public.imageUrl}/${image}`) : undefined"
         :alt="title"
@@ -36,6 +42,17 @@ const config = useRuntimeConfig();
         <span class="text-sm font-bold text-primary">{{ formatRupiah(harga) }}</span>
 
         <UButton
+          v-if="orderStatus && orderStatus !== 'PAID'"
+          disabled
+          size="sm"
+          color="warning"
+          variant="soft"
+          icon="i-lucide-clock"
+        >
+          Menunggu Verifikasi
+        </UButton>
+        <UButton
+          v-else
           :to="`/dashboard/user/produk/ebook/${id}`"
           size="sm"
           variant="outline"
