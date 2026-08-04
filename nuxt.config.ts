@@ -11,6 +11,9 @@ export default defineNuxtConfig({
     "nuxt-charts",
     "nuxt-maplibre",
   ],
+  build: {
+    transpile: ["nuxt-maplibre"],
+  },
 
   css: ["~/assets/css/main.css"],
 
