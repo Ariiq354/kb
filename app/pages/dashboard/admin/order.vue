@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import OrderAdminContainer from "~/features/order/OrderAdminContainer.vue";
+
 useHead({
   title: "Kelola Order",
 });
@@ -18,9 +20,7 @@ useHead({
       </UDashboardNavbar>
     </template>
     <template #body>
-      <div>
-        Ini Kelola Order
-      </div>
+      <OrderAdminContainer />
     </template>
   </UDashboardPanel>
 </template>

@@ -36,7 +36,7 @@ export const columns: TableColumn<DiskonRow>[] = [
 export const schema = z.object({
   id: z.number().optional(),
   kode: z.string().min(1, "Kode tidak boleh kosong!"),
-  persen: z.number().min(1, "Persen tidak boleh kosong!"),
+  persen: z.number().min(1, "Persen tidak boleh kosong!").max(100, "Persen maksimal 100%!"),
   batasWaktu: z.instanceof(CalendarDate),
   batasPemakai: z.number().min(1, "Batas pemakai tidak boleh kosong!"),
   status: z.boolean(),

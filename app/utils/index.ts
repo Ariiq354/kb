@@ -16,6 +16,15 @@ export function formatDateIndo(value: string | Date | null) {
   });
 }
 
+export function formatDateTimeIndo(value: string | Date | null) {
+  if (!value)
+    return "-";
+
+  return format(new Date(value), "d MMMM yyyy, HH:mm", {
+    locale: id,
+  });
+}
+
 export function formatTanggal(tanggal: CalendarDate) {
   return new Intl.DateTimeFormat("id-ID", {
     day: "numeric",

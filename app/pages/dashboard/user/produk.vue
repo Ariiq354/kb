@@ -1,7 +1,23 @@
 <script setup lang="ts">
-useHead({
-  title: "Produk",
-});
+import type { NavigationMenuItem } from "@nuxt/ui";
+
+const links = [
+  {
+    label: "Bootcamp",
+    icon: "i-lucide-graduation-cap",
+    to: "/dashboard/user/produk/bootcamp",
+  },
+  {
+    label: "E-Book",
+    icon: "i-lucide-book-open",
+    to: "/dashboard/user/produk/ebook",
+  },
+  {
+    label: "Course",
+    icon: "i-lucide-monitor-play",
+    to: "/dashboard/user/produk/course",
+  },
+] satisfies NavigationMenuItem[];
 </script>
 
 <template>
@@ -16,11 +32,12 @@ useHead({
           <UDashboardSidebarCollapse />
         </template>
       </UDashboardNavbar>
+      <UDashboardToolbar>
+        <UNavigationMenu :items="links" highlight class="-mx-1 flex-1" />
+      </UDashboardToolbar>
     </template>
     <template #body>
-      <div>
-        Ini Produk
-      </div>
+      <NuxtPage />
     </template>
   </UDashboardPanel>
 </template>

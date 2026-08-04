@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import OrderUserContainer from "~/features/order/OrderUserContainer.vue";
+
 useHead({
-  title: "Transaksi",
+  title: "Transaksi Saya",
 });
 </script>
 
@@ -11,16 +13,14 @@ useHead({
     }"
   >
     <template #header>
-      <UDashboardNavbar title="Transaksi">
+      <UDashboardNavbar title="Transaksi Saya">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
       </UDashboardNavbar>
     </template>
     <template #body>
-      <div>
-        Ini Transaksi
-      </div>
+      <OrderUserContainer />
     </template>
   </UDashboardPanel>
 </template>
