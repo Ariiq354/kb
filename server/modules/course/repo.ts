@@ -3,7 +3,7 @@ import type { PaginationSearchSchema } from "~~/server/utils/schema";
 import type { CreateCourseSchema, CreateLessonSchema, CreateSectionSchema, UpdateCourseSchema, UpdateLessonSchema, UpdateSectionSchema } from "./model";
 import { and, count, desc, eq, ilike, inArray, or } from "drizzle-orm";
 import { db } from "~~/server/database";
-import { course, courseLesson, courseSection } from "~~/server/database/schema/course";
+import { course, courseLesson, courseProgress, courseSection } from "~~/server/database/schema/course";
 import { produk } from "~~/server/database/schema/produk";
 
 export abstract class CourseRepo {
@@ -273,5 +273,103 @@ export abstract class CourseRepo {
       ...s,
       lessons: lessons.filter(l => l.sectionId === s.id),
     }));
+  }
+
+  // --- Progress Repo Operations ---
+
+  static async getCurriculumWithProgress(courseId: number, userId: number) {
+    const sections = await db
+      .select()
+      .from(courseSection)
+      .where(eq(courseSection.courseId, courseId))
+      .orderBy(courseSection.order);
+
+    if (sections.length === 0)
+      return [];
+
+    const sectionIds = sections.map(s => s.id);
+
+    const lessons = await db
+      .select({
+        id: courseLesson.id,
+        sectionId: courseLesson.sectionId,
+        judul: courseLesson.judul,
+        videoUrl: courseLesson.videoUrl,
+        duration: courseLesson.duration,
+        order: courseLesson.order,
+        completedAt: courseProgress.completedAt,
+      })
+      .from(courseLesson)
+      .leftJoin(courseProgress, and(
+        eq(courseProgress.lessonId, courseLesson.id),
+        eq(courseProgress.userId, userId),
+      ))
+      .where(inArray(courseLesson.sectionId, sectionIds))
+      .orderBy(courseLesson.order);
+
+    return sections.map(s => ({
+      ...s,
+      lessons: lessons.filter(l => l.sectionId === s.id),
+    }));
+  }
+
+  static async getProgressStats(courseId: number, userId: number) {
+    const [totalRes] = await db
+      .select({ total: count(courseLesson.id) })
+      .from(courseLesson)
+      .innerJoin(courseSection, eq(courseLesson.sectionId, courseSection.id))
+      .where(eq(courseSection.courseId, courseId));
+
+    const totalLessons = Number(totalRes?.total || 0);
+
+    if (totalLessons === 0) {
+      return { totalLessons: 0, completedLessons: 0 };
+    }
+
+    const lessonIds = await db
+      .select({ id: courseLesson.id })
+      .from(courseLesson)
+      .innerJoin(courseSection, eq(courseLesson.sectionId, courseSection.id))
+      .where(eq(courseSection.courseId, courseId));
+
+    const ids = lessonIds.map(l => l.id);
+
+    const [completedRes] = await db
+      .select({ completed: count(courseProgress.id) })
+      .from(courseProgress)
+      .where(and(
+        inArray(courseProgress.lessonId, ids),
+        eq(courseProgress.userId, userId),
+      ));
+
+    return {
+      totalLessons,
+      completedLessons: Number(completedRes?.completed || 0),
+    };
+  }
+
+  static async markLessonComplete(lessonId: number, userId: number) {
+    const existing = await db
+      .select()
+      .from(courseProgress)
+      .where(and(
+        eq(courseProgress.lessonId, lessonId),
+        eq(courseProgress.userId, userId),
+      ))
+      .then(rows => rows[0]);
+
+    if (existing) {
+      return existing;
+    }
+
+    const [result] = await db
+      .insert(courseProgress)
+      .values({
+        userId,
+        lessonId,
+      })
+      .returning();
+
+    return result;
   }
 }

@@ -1,15 +1,18 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { useFetch, useRuntimeConfig } from "#imports";
 import CardEbook from "./CardEbook.vue";
 
 const config = useRuntimeConfig();
 
-const { data, status } = await useFetch<{ total: number; data: any[] }>("/api/v1/produk", {
+const { data, status } = await useFetch("/api/v1/produk", {
   query: {
     type: "EBOOK",
     status: true,
   },
 });
+
+const items = computed(() => (data.value?.data ?? []) as any[]);
 
 function getImageUrl(foto?: string) {
   if (!foto)
@@ -33,14 +36,14 @@ function getImageUrl(foto?: string) {
       <USkeleton v-for="i in 4" :key="i" class="h-80 w-full rounded-xl" />
     </div>
 
-    <div v-else-if="!data?.data || data.data.length === 0" class="py-8 text-center text-muted">
+    <div v-else-if="!items || items.length === 0" class="py-8 text-center text-muted">
       Belum ada e-book yang tersedia saat ini.
     </div>
 
     <UCarousel
       v-else
       v-slot="{ item }"
-      :items="data.data"
+      :items="items"
       :ui="{
         item: 'basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4',
         prev: 'start-2 sm:-start-5 lg:-start-12',

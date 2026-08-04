@@ -176,4 +176,25 @@ export abstract class CourseService {
   static async getCurriculum(courseId: number) {
     return await CourseRepo.getCurriculum(courseId);
   }
+
+  // --- Progress Service Operations ---
+
+  static async getCurriculumWithProgress(courseId: number, userId: number) {
+    return await CourseRepo.getCurriculumWithProgress(courseId, userId);
+  }
+
+  static async getProgressStats(courseId: number, userId: number) {
+    return await CourseRepo.getProgressStats(courseId, userId);
+  }
+
+  static async markLessonComplete(lessonId: number, userId: number) {
+    const lesson = await CourseRepo.findLessonById(lessonId);
+    if (!lesson) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: "Lesson tidak ditemukan",
+      });
+    }
+    return await CourseRepo.markLessonComplete(lessonId, userId);
+  }
 }
