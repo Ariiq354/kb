@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import ProductCourseDetailContainer from "~/features/course/ProductCourseDetailContainer.vue";
+import CoursePlayerContainer from "~/features/course/CoursePlayerContainer.vue";
 </script>
 
 <template>
-  <ProductCourseDetailContainer />
+  <CoursePlayerContainer />
 </template>

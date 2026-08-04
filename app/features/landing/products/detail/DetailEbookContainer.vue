@@ -4,10 +4,10 @@ import { useFetch, useRoute, useRuntimeConfig } from "#imports";
 import FormatRupiah from "~/components/FormatRupiah.vue";
 import ModalAlreadyPurchased from "~/components/Modal/ModalAlreadyPurchased.vue";
 import ModalCheckoutPayment from "~/components/Modal/ModalCheckoutPayment.vue";
-import ModalLoginRequired from "~/components/Modal/ModalLoginRequired.vue";
 import ModalPendingOrder from "~/components/Modal/ModalPendingOrder.vue";
 import { useAuthSession } from "~/composables/auth";
 import { openModal } from "~/composables/modal";
+import { useToastError } from "~/composables/toast";
 import { formatRupiah } from "~/utils/number";
 
 const route = useRoute();
@@ -33,11 +33,6 @@ const imageUrl = computed(() => {
 const total = computed(() => Math.max(0, (item.value?.harga || 0) - diskon.value));
 
 async function handleCheckout() {
-  if (!session.value) {
-    openModal(ModalLoginRequired);
-    return;
-  }
-
   if (!item.value)
     return;
 
@@ -70,6 +65,37 @@ async function handleCheckout() {
     }
   }
   catch {}
+
+  if (total.value === 0) {
+    try {
+      await $fetch("/api/v1/order", {
+        method: "POST",
+        body: {
+          produkId: item.value.id,
+          kodeKupon: kodeKupon.value.trim() || undefined,
+        },
+      });
+    }
+    catch (error: any) {
+      useToastError("Gagal Membuat Pesanan", error?.data?.message || "Terjadi kesalahan saat memproses pesanan.");
+      return;
+    }
+
+    openModal(ModalCheckoutPayment, {
+      produk: {
+        id: item.value.id,
+        type: "EBOOK",
+        judul: item.value.judul,
+        harga: item.value.harga,
+        foto: item.value.foto,
+      },
+      diskon: diskon.value,
+      kodeKupon: kodeKupon.value.trim() || undefined,
+      total: 0,
+      initialSuccess: true,
+    });
+    return;
+  }
 
   openModal(ModalCheckoutPayment, {
     produk: {
@@ -150,7 +176,7 @@ async function checkKupon() {
       <div class="h-fit rounded-xl border border-gray-300 bg-white px-5 py-5 shadow-md md:px-8 lg:col-span-2">
         <NuxtImg
           :src="imageUrl"
-          class="mx-auto w-full max-w-80 rounded-xl object-cover aspect-[3/4]"
+          class="mx-auto w-full max-w-80 rounded-xl object-cover aspect-3/4"
         />
 
         <div v-if="item.namaPublisher" class="mt-4">
@@ -207,9 +233,12 @@ async function checkKupon() {
           />
         </div>
 
-        <UButton class="flex w-full justify-center" @click="handleCheckout">
+        <UButton v-if="session" class="flex w-full justify-center" @click="handleCheckout">
           Checkout
         </UButton>
+        <p v-else class="text-center text-sm text-gray-500">
+          Harus login terlebih dahulu untuk checkout
+        </p>
       </div>
     </section>
   </main>

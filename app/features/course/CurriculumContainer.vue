@@ -137,7 +137,7 @@ async function saveSection() {
       await $fetch("/api/v1/course/section", {
         method: "POST",
         body: {
-          courseId: props.courseId,
+          courseId: course.value?.courseId,
           ...sectionForm.value,
         },
       });

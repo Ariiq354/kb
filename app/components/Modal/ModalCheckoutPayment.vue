@@ -16,12 +16,13 @@ const props = defineProps<{
   diskon: number;
   kodeKupon?: string;
   total: number;
+  initialSuccess?: boolean;
 }>();
 
 const emit = defineEmits(["close"]);
 
 const loading = ref(false);
-const isSuccess = ref(false);
+const isSuccess = ref(props.initialSuccess ?? false);
 const createdOrder = ref<any>(null);
 
 const productTypePath = computed(() => {

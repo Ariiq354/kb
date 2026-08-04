@@ -18,7 +18,7 @@ function goToDetail(id: number) {
   <div class="mt-3 w-full cursor-pointer overflow-hidden rounded-xl border border-muted p-4 shadow-sm transition-transform hover:-translate-y-2 sm:p-5" @click="goToDetail(id)">
     <NuxtImg
       :src="image"
-      class="mx-auto aspect-[3/4] w-full object-cover"
+      class="mx-auto aspect-3/4 w-full object-cover"
     />
 
     <div class="flex flex-col gap-2 mt-2">
