@@ -11,7 +11,6 @@ export const createEbookSchema = z.object({
     fileTypes: ["image/jpeg", "image/png", "image/webp"],
   }),
   pdfFile: multipartFile({
-    maxSize: 50 * 1024 * 1024,
     fileTypes: ["application/pdf"],
   }),
 });
