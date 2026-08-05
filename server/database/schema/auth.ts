@@ -41,7 +41,7 @@ export const session = snakeCase.table("session", {
 
 export const account = snakeCase.table("account", {
   id: integer().primaryKey().generatedByDefaultAsIdentity(),
-  providerAccountId: text().notNull(),
+  accountId: text().notNull(),
   providerId: text().notNull(),
   userId: integer()
     .notNull()
