@@ -5,6 +5,7 @@ import { FetchError } from "ofetch";
 import { ref } from "vue";
 import UploadImage from "~/components/Custom/UploadImage.vue";
 import { useToastError, useToastSuccess } from "~/composables/toast";
+import { uploadFileToR2 } from "~/composables/upload";
 import { schema } from "../constants";
 
 const emit = defineEmits(["submit"]);
@@ -33,28 +34,27 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     const isEdit = !!state.value.id;
     const url = `/api/v1/ebook/${isEdit ? state.value.id : ""}`;
 
-    const formData = new FormData();
+    const body: Record<string, unknown> = {
+      judul: event.data.judul,
+      harga: event.data.harga,
+      status: event.data.status,
+    };
 
-    // Append regular fields
-    for (const [key, value] of Object.entries(event.data)) {
-      if (value !== undefined && value !== null && key !== "file" && key !== "foto" && key !== "pdfFile" && key !== "pdfUrl") {
-        formData.append(key, value.toString());
-      }
+    if (event.data.deskripsi) {
+      body.deskripsi = event.data.deskripsi;
     }
 
-    // Append cover image file if it was uploaded
     if (state.value.file) {
-      formData.append("file", state.value.file);
+      body.fileKey = await uploadFileToR2(state.value.file, "ebook");
     }
 
-    // Append PDF file if it was uploaded
     if (state.value.pdfFile) {
-      formData.append("pdfFile", state.value.pdfFile);
+      body.pdfFileKey = await uploadFileToR2(state.value.pdfFile, "ebook");
     }
 
     await $fetch(url, {
       method: isEdit ? "PATCH" : "POST",
-      body: formData,
+      body,
     });
 
     useToastSuccess("Sukses", isEdit ? "Data ebook berhasil diubah" : "Data ebook berhasil ditambahkan");

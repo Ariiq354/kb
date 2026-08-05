@@ -1,28 +1,40 @@
 import type { PaginationSearchSchema } from "~~/server/utils/schema";
 import type { CreateEbookSchema, UpdateEbookSchema } from "./model";
 import { createError } from "h3";
-import { deleteFile, uploadFile } from "~~/server/utils/files";
+import { commitUploadedFile, deleteFile } from "~~/server/utils/files";
 import { EbookRepo } from "./repo";
 
 export abstract class EbookService {
   static async create(payload: CreateEbookSchema) {
-    const { file, pdfFile, ...data } = payload;
+    const { fileKey, pdfFileKey, ...data } = payload;
 
-    const { key: coverKey } = await uploadFile(
-      "ebook",
-      file.filename!,
-      file.data,
-      file.type!,
-    );
+    const keys: { coverKey?: string; pdfKey?: string } = {};
 
-    const { key: pdfKey } = await uploadFile(
-      "ebook",
-      pdfFile.filename!,
-      pdfFile.data,
-      pdfFile.type!,
-    );
+    await Promise.all([
+      commitUploadedFile(fileKey, "ebook").then((key) => {
+        keys.coverKey = key;
+      }),
+      commitUploadedFile(pdfFileKey, "ebook").then((key) => {
+        keys.pdfKey = key;
+      }),
+    ]).catch(async (error) => {
+      if (keys.coverKey) {
+        await deleteFile(keys.coverKey);
+      }
+      if (keys.pdfKey) {
+        await deleteFile(keys.pdfKey);
+      }
+      throw error;
+    });
 
-    return await EbookRepo.create(data, coverKey, pdfKey);
+    try {
+      return await EbookRepo.create(data, keys.coverKey!, keys.pdfKey!);
+    }
+    catch (error) {
+      await deleteFile(keys.coverKey!);
+      await deleteFile(keys.pdfKey!);
+      throw error;
+    }
   }
 
   static async update(produkId: number, payload: UpdateEbookSchema) {
@@ -35,39 +47,46 @@ export abstract class EbookService {
       });
     }
 
-    const { file, pdfFile, ...data } = payload;
-    let coverKey: string | undefined;
-    let pdfKey: string | undefined;
+    const { fileKey, pdfFileKey, ...data } = payload;
+    const keys: { coverKey?: string; pdfKey?: string } = {};
 
-    if (file) {
-      const { key } = await uploadFile(
-        "ebook",
-        file.filename!,
-        file.data,
-        file.type!,
-      );
-
-      if (existing.foto) {
-        await deleteFile(existing.foto);
+    try {
+      if (fileKey) {
+        keys.coverKey = await commitUploadedFile(fileKey, "ebook");
       }
-      coverKey = key;
+      if (pdfFileKey) {
+        keys.pdfKey = await commitUploadedFile(pdfFileKey, "ebook");
+      }
+    }
+    catch (error) {
+      if (keys.coverKey) {
+        await deleteFile(keys.coverKey);
+      }
+      if (keys.pdfKey) {
+        await deleteFile(keys.pdfKey);
+      }
+      throw error;
     }
 
-    if (pdfFile) {
-      const { key } = await uploadFile(
-        "ebook",
-        pdfFile.filename!,
-        pdfFile.data,
-        pdfFile.type!,
-      );
-
-      if (existing.pdfUrl) {
-        await deleteFile(existing.pdfUrl);
+    try {
+      await EbookRepo.update(produkId, data, keys.coverKey, keys.pdfKey);
+    }
+    catch (error) {
+      if (keys.coverKey) {
+        await deleteFile(keys.coverKey);
       }
-      pdfKey = key;
+      if (keys.pdfKey) {
+        await deleteFile(keys.pdfKey);
+      }
+      throw error;
     }
 
-    await EbookRepo.update(produkId, data, coverKey, pdfKey);
+    if (keys.coverKey && existing.foto) {
+      await deleteFile(existing.foto);
+    }
+    if (keys.pdfKey && existing.pdfUrl) {
+      await deleteFile(existing.pdfUrl);
+    }
   }
 
   static async findAll(query: PaginationSearchSchema) {

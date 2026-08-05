@@ -5,6 +5,7 @@ import { FetchError } from "ofetch";
 import { ref } from "vue";
 import UploadImage from "~/components/Custom/UploadImage.vue";
 import { useToastError, useToastSuccess } from "~/composables/toast";
+import { uploadFileToR2 } from "~/composables/upload";
 import { schema } from "../constants";
 
 const emit = defineEmits(["submit"]);
@@ -25,23 +26,26 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     const isEdit = !!state.value.id;
     const url = `/api/v1/course/${isEdit ? state.value.id : ""}`;
 
-    const formData = new FormData();
+    const body: Record<string, unknown> = {
+      judul: event.data.judul,
+      harga: event.data.harga,
+      status: event.data.status,
+    };
 
-    // Append regular fields
-    for (const [key, value] of Object.entries(event.data)) {
-      if (value !== undefined && value !== null && key !== "file" && key !== "foto") {
-        formData.append(key, value.toString());
-      }
+    if (event.data.deskripsi) {
+      body.deskripsi = event.data.deskripsi;
+    }
+    if (event.data.namaPublisher) {
+      body.namaPublisher = event.data.namaPublisher;
     }
 
-    // Append cover image file if it was uploaded
     if (state.value.file) {
-      formData.append("file", state.value.file);
+      body.fileKey = await uploadFileToR2(state.value.file, "course");
     }
 
     await $fetch(url, {
       method: isEdit ? "PATCH" : "POST",
-      body: formData,
+      body,
     });
 
     useToastSuccess("Sukses", isEdit ? "Data course berhasil diubah" : "Data course berhasil ditambahkan");

@@ -4,6 +4,7 @@ import { FetchError } from "ofetch";
 import { computed, ref } from "vue";
 import { navigateTo, useFetch, useRuntimeConfig } from "#imports";
 import { useToastError, useToastSuccess } from "~/composables/toast";
+import { uploadFileToR2 } from "~/composables/upload";
 
 // Component imports
 import CurriculumTree from "~/features/course/components/CurriculumTree.vue";
@@ -214,34 +215,34 @@ async function saveLesson() {
     return;
   }
 
+  const isEdit = activeMode.value === "edit-lesson";
+
+  if (!isEdit && !lessonForm.value.videoFile) {
+    useToastError("Gagal", "File video wajib diunggah!");
+    return;
+  }
+
   isLoading.value = true;
   try {
-    const isEdit = activeMode.value === "edit-lesson";
     const url = isEdit ? `/api/v1/course/lesson/${selectedLesson.value!.id}` : "/api/v1/course/lesson";
 
-    const formData = new FormData();
-    formData.append("judul", lessonForm.value.judul);
-    formData.append("duration", lessonForm.value.duration.toString());
-    formData.append("order", lessonForm.value.order.toString());
+    const body: Record<string, unknown> = {
+      judul: lessonForm.value.judul,
+      duration: lessonForm.value.duration,
+      order: lessonForm.value.order,
+    };
 
-    if (isEdit) {
-      if (lessonForm.value.videoFile) {
-        formData.append("videoFile", lessonForm.value.videoFile);
-      }
+    if (!isEdit) {
+      body.sectionId = activeSectionId.value;
     }
-    else {
-      formData.append("sectionId", activeSectionId.value!.toString());
-      if (!lessonForm.value.videoFile) {
-        useToastError("Gagal", "File video wajib diunggah!");
-        isLoading.value = false;
-        return;
-      }
-      formData.append("videoFile", lessonForm.value.videoFile);
+
+    if (lessonForm.value.videoFile) {
+      body.videoFileKey = await uploadFileToR2(lessonForm.value.videoFile, "course");
     }
 
     await $fetch(url, {
       method: isEdit ? "PATCH" : "POST",
-      body: formData,
+      body,
     });
 
     useToastSuccess("Sukses", isEdit ? "Lesson berhasil diperbarui" : "Lesson berhasil ditambahkan");

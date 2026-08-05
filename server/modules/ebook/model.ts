@@ -1,18 +1,12 @@
 import { z } from "zod";
-import { multipartFile } from "~~/server/utils/schema";
 
 export const createEbookSchema = z.object({
   judul: z.string().min(1, "Judul tidak boleh kosong!"),
   harga: z.coerce.number().min(0, "Harga tidak boleh kosong!"),
   status: z.stringbool(),
   deskripsi: z.string().optional(),
-  file: multipartFile({
-    maxSize: 5 * 1024 * 1024,
-    fileTypes: ["image/jpeg", "image/png", "image/webp"],
-  }),
-  pdfFile: multipartFile({
-    fileTypes: ["application/pdf"],
-  }),
+  fileKey: z.string().min(1, "Cover ebook wajib diunggah!"),
+  pdfFileKey: z.string().min(1, "File PDF ebook wajib diunggah!"),
 });
 
 export type CreateEbookSchema = z.infer<typeof createEbookSchema>;

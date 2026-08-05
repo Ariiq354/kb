@@ -7,7 +7,7 @@ import { course, courseLesson, courseProgress, courseSection } from "~~/server/d
 import { produk } from "~~/server/database/schema/produk";
 
 export abstract class CourseRepo {
-  static async create(payload: Omit<CreateCourseSchema, "file">, foto: string) {
+  static async create(payload: Omit<CreateCourseSchema, "fileKey">, foto: string) {
     return await db.transaction(async (tx) => {
       const [res] = await tx
         .insert(produk)
@@ -33,7 +33,7 @@ export abstract class CourseRepo {
     });
   }
 
-  static async update(courseId: number, payload: Omit<UpdateCourseSchema, "file">, foto?: string) {
+  static async update(courseId: number, payload: Omit<UpdateCourseSchema, "fileKey">, foto?: string) {
     return await db.transaction(async (tx) => {
       const courseRecord = await tx
         .select({ produkId: course.produkId, courseId: course.id })
@@ -210,7 +210,7 @@ export abstract class CourseRepo {
       .then(rows => rows[0]);
   }
 
-  static async createLesson(payload: Omit<CreateLessonSchema, "videoFile">, videoUrl: string) {
+  static async createLesson(payload: Omit<CreateLessonSchema, "videoFileKey">, videoUrl: string) {
     return await db
       .insert(courseLesson)
       .values({
@@ -223,7 +223,7 @@ export abstract class CourseRepo {
       .returning();
   }
 
-  static async updateLesson(lessonId: number, payload: Omit<UpdateLessonSchema, "videoFile">, videoUrl?: string) {
+  static async updateLesson(lessonId: number, payload: Omit<UpdateLessonSchema, "videoFileKey">, videoUrl?: string) {
     return await db
       .update(courseLesson)
       .set({

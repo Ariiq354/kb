@@ -15,12 +15,13 @@
     "db:seed": "bun server/database/seed.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1093.0",
-    "@nuxt/image": "2.0.0",
+    "@aws-sdk/client-s3": "^3.1103.0",
+    "@aws-sdk/s3-request-presigner": "^3.1103.0",
+    "@nuxt/image": "2.1.0",
     "@nuxt/ui": "4.10.0",
     "@pinia/nuxt": "1.0.1",
     "@tailwindcss/typography": "^0.5.20",
-    "@vueuse/nuxt": "14.3.0",
+    "@vueuse/nuxt": "14.4.0",
     "better-auth": "^1.7.0-rc.2",
     "date-fns": "^4.4.0",
     "drizzle-orm": "^1.0.0-rc.4-de6c356",
@@ -49,17 +50,5 @@
     "eslint-plugin-format": "^2.0.1",
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.8"
-  },
-  "trustedDependencies": [
-    "@parcel/watcher",
-    "esbuild",
-    "maplibre-gl",
-    "sharp",
-    "unrs-resolver",
-    "vue-demi"
-  ],
-  "overrides": {
-    "@unhead/vue": "^3.2.2",
-    "unhead": "^3.2.2"
   }
 }

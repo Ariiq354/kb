@@ -7,7 +7,7 @@ import { ebook } from "~~/server/database/schema/ebook";
 import { produk } from "~~/server/database/schema/produk";
 
 export abstract class EbookRepo {
-  static async create(payload: Omit<CreateEbookSchema, "file" | "pdfFile">, foto: string, pdfUrl: string) {
+  static async create(payload: Omit<CreateEbookSchema, "fileKey" | "pdfFileKey">, foto: string, pdfUrl: string) {
     return await db.transaction(async (tx) => {
       const [res] = await tx
         .insert(produk)
@@ -33,7 +33,7 @@ export abstract class EbookRepo {
     });
   }
 
-  static async update(produkId: number, payload: Omit<UpdateEbookSchema, "file" | "pdfFile">, foto?: string, pdfUrl?: string) {
+  static async update(produkId: number, payload: Omit<UpdateEbookSchema, "fileKey" | "pdfFileKey">, foto?: string, pdfUrl?: string) {
     return await db.transaction(async (tx) => {
       const result = await tx
         .update(produk)

@@ -1,21 +1,22 @@
 import type { PaginationSearchSchema } from "~~/server/utils/schema";
 import type { CreateCourseSchema, CreateLessonSchema, CreateSectionSchema, UpdateCourseSchema, UpdateLessonSchema, UpdateSectionSchema } from "./model";
 import { createError } from "h3";
-import { deleteFile, uploadFile } from "~~/server/utils/files";
+import { commitUploadedFile, deleteFile } from "~~/server/utils/files";
 import { CourseRepo } from "./repo";
 
 export abstract class CourseService {
   static async create(payload: CreateCourseSchema) {
-    const { file, ...data } = payload;
+    const { fileKey, ...data } = payload;
 
-    const { key } = await uploadFile(
-      "course",
-      file.filename!,
-      file.data,
-      file.type!,
-    );
+    const key = await commitUploadedFile(fileKey, "course");
 
-    return await CourseRepo.create(data, key);
+    try {
+      return await CourseRepo.create(data, key);
+    }
+    catch (error) {
+      await deleteFile(key);
+      throw error;
+    }
   }
 
   static async update(courseId: number, payload: UpdateCourseSchema) {
@@ -28,24 +29,26 @@ export abstract class CourseService {
       });
     }
 
-    const { file, ...data } = payload;
+    const { fileKey, ...data } = payload;
     let key: string | undefined;
 
-    if (file) {
-      const { key: newKey } = await uploadFile(
-        "course",
-        file.filename!,
-        file.data,
-        file.type!,
-      );
-
-      if (existing.foto) {
-        await deleteFile(existing.foto);
-      }
-      key = newKey;
+    if (fileKey) {
+      key = await commitUploadedFile(fileKey, "course");
     }
 
-    await CourseRepo.update(courseId, data, key);
+    try {
+      await CourseRepo.update(courseId, data, key);
+    }
+    catch (error) {
+      if (key) {
+        await deleteFile(key);
+      }
+      throw error;
+    }
+
+    if (key && existing.foto) {
+      await deleteFile(existing.foto);
+    }
   }
 
   static async findAll(query: PaginationSearchSchema) {
@@ -106,16 +109,17 @@ export abstract class CourseService {
   // --- Lesson Service Operations ---
 
   static async createLesson(payload: CreateLessonSchema) {
-    const { videoFile, ...data } = payload;
+    const { videoFileKey, ...data } = payload;
 
-    const { key } = await uploadFile(
-      "course",
-      videoFile.filename!,
-      videoFile.data,
-      videoFile.type!,
-    );
+    const key = await commitUploadedFile(videoFileKey, "course");
 
-    return await CourseRepo.createLesson(data, key);
+    try {
+      return await CourseRepo.createLesson(data, key);
+    }
+    catch (error) {
+      await deleteFile(key);
+      throw error;
+    }
   }
 
   static async updateLesson(lessonId: number, payload: UpdateLessonSchema) {
@@ -127,30 +131,36 @@ export abstract class CourseService {
       });
     }
 
-    const { videoFile, ...data } = payload;
+    const { videoFileKey, ...data } = payload;
     let key: string | undefined;
 
-    if (videoFile) {
-      const { key: newKey } = await uploadFile(
-        "course",
-        videoFile.filename!,
-        videoFile.data,
-        videoFile.type!,
-      );
-
-      if (existing.videoUrl) {
-        await deleteFile(existing.videoUrl);
-      }
-      key = newKey;
+    if (videoFileKey) {
+      key = await commitUploadedFile(videoFileKey, "course");
     }
 
-    const result = await CourseRepo.updateLesson(lessonId, data, key);
+    const result = await CourseRepo.updateLesson(lessonId, data, key).catch(
+      async (error) => {
+        if (key) {
+          await deleteFile(key);
+        }
+        throw error;
+      },
+    );
+
     if (result.length === 0) {
+      if (key) {
+        await deleteFile(key);
+      }
       throw createError({
         statusCode: 404,
         statusMessage: "Lesson tidak ditemukan",
       });
     }
+
+    if (key && existing.videoUrl) {
+      await deleteFile(existing.videoUrl);
+    }
+
     return result[0];
   }
 
