@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import { onClickOutside } from "@vueuse/core";
 import * as maplibregl from "maplibre-gl";
-import { onMounted, onUnmounted, ref, watch } from "vue";
+import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
+import { nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import InputSearch from "~/components/Custom/InputSearch.vue";
 import "maplibre-gl/dist/maplibre-gl.css";
-
-interface Props {
-  mapStyle?: string;
-  center?: [number, number];
-  zoom?: number;
-}
 
 const props = withDefaults(defineProps<Props>(), {
   mapStyle: "https://tiles.openfreemap.org/styles/bright",
@@ -21,10 +16,19 @@ const emit = defineEmits<{
   (e: "update:location", data: { lat: number; lng: number; displayName: string }): void;
 }>();
 
+maplibregl.setWorkerUrl(workerUrl);
+
+interface Props {
+  mapStyle?: string;
+  center?: [number, number];
+  zoom?: number;
+}
+
 const mapContainer = ref<HTMLElement | null>(null);
-const map = ref<maplibregl.Map | null>(null);
+const map = ref<any>(null);
 const marker = ref<maplibregl.Marker | null>(null);
 const isMapReady = ref(false);
+let resizeObserver: ResizeObserver | null = null;
 
 function setMarker(lng: number, lat: number) {
   if (!map.value)
@@ -172,11 +176,18 @@ async function handleMapClick(event: maplibregl.MapMouseEvent) {
 }
 
 onMounted(() => {
-  if (!mapContainer.value)
-    return;
+  const testCanvas = document.createElement("canvas");
+  const hasGL = !!(
+    testCanvas.getContext("webgl2") || testCanvas.getContext("webgl")
+  );
+  if (!hasGL) {
+    console.warn("[MapLibre] WebGL tidak tersedia; map mungkin tidak dirender.");
+  }
+});
 
+function initMap(container: HTMLElement) {
   map.value = new maplibregl.Map({
-    container: mapContainer.value,
+    container,
     style: props.mapStyle,
     center: [...props.center],
     zoom: props.zoom,
@@ -184,15 +195,35 @@ onMounted(() => {
 
   map.value.addControl(new maplibregl.NavigationControl(), "top-right");
 
+  map.value.on("error", (err: { error?: unknown }) => {
+    console.warn("[MapLibre] map error:", err?.error ?? err);
+  });
+
   map.value.on("load", () => {
     isMapReady.value = true;
+    map.value?.resize();
+    requestAnimationFrame(() => map.value?.resize());
     setMarker(props.center[0], props.center[1]);
   });
 
   map.value.on("click", handleMapClick);
-});
+
+  resizeObserver = new ResizeObserver(() => {
+    map.value?.resize();
+  });
+  resizeObserver.observe(container);
+}
+
+// Kunci fix-nya: watch ref, bukan andalkan onMounted timing
+watch(mapContainer, (el) => {
+  if (el && !map.value) {
+    initMap(el);
+  }
+}, { immediate: true });
 
 onUnmounted(() => {
+  resizeObserver?.disconnect();
+  resizeObserver = null;
   if (map.value) {
     map.value.off("click", handleMapClick);
     marker.value?.remove();
@@ -204,7 +235,7 @@ onUnmounted(() => {
 
 <template>
   <ClientOnly>
-    <div class="relative w-full h-87.5 rounded-lg border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
+    <div class="relative w-full rounded-lg border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
       <!-- Search Bar Container -->
       <div
         ref="searchContainer"
@@ -237,10 +268,14 @@ onUnmounted(() => {
       </div>
 
       <!-- Map -->
-      <div ref="mapContainer" class="w-full h-full" />
+      <div
+        ref="mapContainer"
+        class="w-full"
+        style="min-height: 350px; width: 100%;"
+      />
     </div>
     <template #fallback>
-      <div class="w-full h-87.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center">
+      <div class="w-full rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center" style="min-height: 350px;">
         <span class="text-sm text-neutral-500">Loading map...</span>
       </div>
     </template>

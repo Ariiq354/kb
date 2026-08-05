@@ -1,7 +1,7 @@
 export default defineAppConfig({
   ui: {
     colors: {
-      primary: "wewak",
+      primary: "eastern-blue",
       neutral: "stone",
     },
     card: {
