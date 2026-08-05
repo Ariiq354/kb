@@ -28,7 +28,6 @@
     "maplibre-gl": "^6.0.0",
     "nuxt": "^4.5.0",
     "nuxt-charts": "2.2.0",
-    "nuxt-maplibre": "1.2.2",
     "nuxt-security": "2.6.0",
     "pinia": "^4.0.2",
     "postgres": "^3.4.9",

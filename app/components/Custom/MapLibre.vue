@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onClickOutside } from "@vueuse/core";
-import { onUnmounted, ref, watch } from "vue";
-import { MglMap, MglMarker, MglNavigationControl } from "#components";
-import { useMglMap } from "#imports";
+import * as maplibregl from "maplibre-gl";
+import { onMounted, onUnmounted, ref, watch } from "vue";
 import InputSearch from "~/components/Custom/InputSearch.vue";
+import "maplibre-gl/dist/maplibre-gl.css";
 
 interface Props {
-  mapStyle?: any;
+  mapStyle?: string;
   center?: [number, number];
   zoom?: number;
 }
@@ -21,35 +21,36 @@ const emit = defineEmits<{
   (e: "update:location", data: { lat: number; lng: number; displayName: string }): void;
 }>();
 
-const mapCenter = ref<[number, number]>([...props.center]);
-const mapZoom = ref<number>(props.zoom);
-const markerCoordinates = ref<[number, number] | null>([...props.center]);
+const mapContainer = ref<HTMLElement | null>(null);
+const map = ref<maplibregl.Map | null>(null);
+const marker = ref<maplibregl.Marker | null>(null);
+const isMapReady = ref(false);
 
-const mapInstance = useMglMap();
+function setMarker(lng: number, lat: number) {
+  if (!map.value)
+    return;
 
-watch(() => props.center, (newCenter) => {
-  if (mapInstance.map) {
-    mapInstance.map.flyTo({
-      center: [...newCenter],
-      essential: true,
-    });
+  if (marker.value) {
+    marker.value.setLngLat([lng, lat]);
   }
   else {
-    mapCenter.value = [...newCenter];
+    marker.value = new maplibregl.Marker({ color: "#3b82f6" })
+      .setLngLat([lng, lat])
+      .addTo(map.value);
   }
-  markerCoordinates.value = [...newCenter];
+}
+
+watch(() => props.center, (newCenter) => {
+  if (!map.value)
+    return;
+  map.value.flyTo({ center: [...newCenter], essential: true });
+  setMarker(newCenter[0], newCenter[1]);
 }, { deep: true });
 
 watch(() => props.zoom, (newZoom) => {
-  if (mapInstance.map) {
-    mapInstance.map.flyTo({
-      zoom: newZoom,
-      essential: true,
-    });
-  }
-  else {
-    mapZoom.value = newZoom;
-  }
+  if (!map.value)
+    return;
+  map.value.flyTo({ zoom: newZoom, essential: true });
 });
 
 // Search functionality
@@ -112,44 +113,28 @@ function selectLocation(item: SearchResult) {
   const lat = parseFloat(item.lat);
   const lon = parseFloat(item.lon);
 
-  markerCoordinates.value = [lon, lat];
   searchResults.value = [];
 
   isProgrammaticUpdate.value = true;
   searchQuery.value = item.display_name;
 
-  if (mapInstance.map) {
-    mapInstance.map.flyTo({
-      center: [lon, lat],
-      zoom: 16,
-      essential: true,
-    });
-  }
-  else {
-    mapCenter.value = [lon, lat];
-    mapZoom.value = 16;
+  setMarker(lon, lat);
+
+  if (map.value) {
+    map.value.flyTo({ center: [lon, lat], zoom: 16, essential: true });
   }
 
   emit("update:location", { lat, lng: lon, displayName: item.display_name });
 }
 
 // Click on map to place/move marker
-async function handleMapClick(event: any) {
-  const lngLat = event.lngLat;
-  if (!lngLat)
-    return;
-  const { lng, lat } = lngLat;
+async function handleMapClick(event: maplibregl.MapMouseEvent) {
+  const { lng, lat } = event.lngLat;
 
-  markerCoordinates.value = [lng, lat];
+  setMarker(lng, lat);
 
-  if (mapInstance.map) {
-    mapInstance.map.flyTo({
-      center: [lng, lat],
-      essential: true,
-    });
-  }
-  else {
-    mapCenter.value = [lng, lat];
+  if (map.value) {
+    map.value.flyTo({ center: [lng, lat], essential: true });
   }
 
   try {
@@ -186,19 +171,33 @@ async function handleMapClick(event: any) {
   }
 }
 
-// Bind native click event listener to MapLibre instance directly
-watch(() => mapInstance.map, (map, oldMap) => {
-  if (oldMap) {
-    oldMap.off("click", handleMapClick);
-  }
-  if (map) {
-    map.on("click", handleMapClick);
-  }
-}, { immediate: true });
+onMounted(() => {
+  if (!mapContainer.value)
+    return;
+
+  map.value = new maplibregl.Map({
+    container: mapContainer.value,
+    style: props.mapStyle,
+    center: [...props.center],
+    zoom: props.zoom,
+  });
+
+  map.value.addControl(new maplibregl.NavigationControl(), "top-right");
+
+  map.value.on("load", () => {
+    isMapReady.value = true;
+    setMarker(props.center[0], props.center[1]);
+  });
+
+  map.value.on("click", handleMapClick);
+});
 
 onUnmounted(() => {
-  if (mapInstance.map) {
-    mapInstance.map.off("click", handleMapClick);
+  if (map.value) {
+    map.value.off("click", handleMapClick);
+    marker.value?.remove();
+    map.value.remove();
+    map.value = null;
   }
 });
 </script>
@@ -238,19 +237,7 @@ onUnmounted(() => {
       </div>
 
       <!-- Map -->
-      <MglMap
-        :map-style="props.mapStyle"
-        :center="mapCenter"
-        :zoom="mapZoom"
-        class="w-full h-full"
-      >
-        <MglNavigationControl position="top-right" />
-        <MglMarker
-          v-if="markerCoordinates"
-          :coordinates="markerCoordinates"
-          color="#3b82f6"
-        />
-      </MglMap>
+      <div ref="mapContainer" class="w-full h-full" />
     </div>
     <template #fallback>
       <div class="w-full h-87.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center">
