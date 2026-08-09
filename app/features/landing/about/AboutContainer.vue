@@ -5,24 +5,28 @@ const mentors = [
     role: "Relationship Coach",
     description:
       "Membantu pasangan dan calon pasangan membangun hubungan yang sehat, dewasa, dan harmonis melalui komunikasi dan pemahaman yang lebih baik.",
+    foto: "/foto1.webp",
   },
   {
     name: "Coach Isranto Miraji",
     role: "Family Development",
     description:
       "Berfokus pada pengembangan kualitas keluarga dan persiapan pernikahan untuk menciptakan rumah tangga yang kuat dan penuh keberkahan.",
+    foto: "/foto2.webp",
   },
   {
     name: "Ustadz Andri Setiawan",
     role: "Pendidikan Pranikah",
     description:
       "Membimbing calon pasangan memahami pernikahan sebagai ibadah serta membangun fondasi keluarga sesuai nilai-nilai Islam.",
+    foto: "/foto3.webp",
   },
   {
     name: "Ustadz Wiwid",
     role: "Konsultan Keluarga",
     description:
       "Memberikan pendampingan dan nasihat keluarga untuk memperkuat ikatan rumah tangga yang sakinah, mawaddah, dan rahmah.",
+    foto: "/foto4.webp",
   },
 ];
 </script>
@@ -82,10 +86,7 @@ const mentors = [
             <div
               class="flex aspect-4/3 items-center justify-center rounded-2xl bg-primary/5"
             >
-              <UIcon
-                name="i-material-symbols-favorite-rounded"
-                class="size-14 text-primary sm:size-18"
-              />
+              <NuxtImg src="/tentangimg1.webp" />
             </div>
           </div>
         </div>
@@ -115,12 +116,9 @@ const mentors = [
           >
             <!-- Placeholder -->
             <div
-              class="mx-auto flex size-20 items-center justify-center rounded-full bg-primary/10 sm:size-24"
+              class="mx-auto flex size-20 items-center justify-center rounded-full bg-primary/10 sm:size-24 overflow-hidden"
             >
-              <UIcon
-                name="i-material-symbols-person-rounded"
-                class="size-10 text-primary"
-              />
+              <NuxtImg :src="mentor.foto" class="translate-y-5" />
             </div>
 
             <h3 class="mt-4 text-lg font-semibold text-default sm:text-xl">

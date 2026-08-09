@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useAuthSession } from "~/composables/auth";
 
 const isMenuOpen = ref(false);
+const { session } = await useAuthSession();
 
 const navLinks = [
   {
@@ -52,8 +54,8 @@ function toggleMenu() {
         </ULink>
       </nav>
 
-      <UButton to="/login" class="hidden rounded-full px-6 py-2 text-sm lg:inline-flex">
-        Daftar Sekarang
+      <UButton :to="session ? '/dashboard' : '/login'" class="hidden rounded-full px-6 py-2 text-sm lg:inline-flex">
+        {{ session ? "Dashboard" : "Daftar Sekarang" }}
       </UButton>
 
       <UButton

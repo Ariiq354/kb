@@ -4,8 +4,8 @@
       <div class="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div class="relative">
           <div class="absolute -bottom-3 -left-3 z-0 h-full w-full rounded-2xl bg-primary/20 sm:-bottom-4 sm:-left-4" />
-          <div class="relative z-10 flex h-64 items-center justify-center rounded-2xl bg-amber-50 shadow-sm sm:h-80 lg:h-[25rem]">
-            <UIcon name="i-material-symbols-add-photo-alternate-outline" class="size-16 sm:size-20 lg:size-[100px]" />
+          <div class="relative z-10 flex h-64 overflow-hidden items-center justify-center rounded-2xl bg-eastern-blue-100 shadow-sm sm:h-80 lg:h-[25rem]">
+            <NuxtImg src="/landingimg2.webp" />
           </div>
         </div>
         <div class="space-y-6">

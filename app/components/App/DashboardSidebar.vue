@@ -123,7 +123,7 @@ const links = computed<NavigationMenuItem[][]>(() => {
       onSelect: closeSidebar,
     },
     {
-      label: "Produk",
+      label: "Produk Saya",
       icon: "i-lucide-shopping-bag",
       type: "trigger",
       children: [
@@ -194,16 +194,18 @@ const dropdownItems = computed<DropdownMenuItem[][]>(() => [
     class="bg-white dark:bg-gray-900 transition-all duration-300 min-w-0 border-r border-gray-200 dark:border-gray-800 overflow-hidden"
   >
     <template #header>
-      <div class="hidden w-full md:flex items-center justify-center gap-3 px-2 py-3">
-        <NuxtImg
-          src="/logo.webp"
-          alt="Keluarga Bahagia"
-          class="h-10 w-10"
-        />
-        <div class="font-bold text-primary-500 text-nowrap">
-          Keluarga Bahagia
+      <NuxtLink to="/">
+        <div class="hidden w-full md:flex items-center justify-center gap-3 px-2 py-3">
+          <NuxtImg
+            src="/logo.webp"
+            alt="Keluarga Bahagia"
+            class="h-10 w-10"
+          />
+          <div class="font-bold text-primary-500 text-nowrap">
+            Keluarga Bahagia
+          </div>
         </div>
-      </div>
+      </NuxtLink>
     </template>
 
     <template #default>

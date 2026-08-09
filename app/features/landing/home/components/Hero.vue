@@ -27,10 +27,8 @@
         class="absolute inset-0 bg-[#e9b78f] rounded-4xl shadow-xl p-8"
       >
         <!-- Inner Image Wrapper -->
-        <div class="w-full h-full bg-[#f6e8d8] rounded-md overflow-hidden shadow-inner">
-          <div class=" bg-amber-50 relative z-10 h-full shadow-sm flex items-center justify-center">
-            <UIcon name="i-material-symbols-add-photo-alternate-outline" size="50" />
-          </div>
+        <div class="w-full h-full bg-white rounded-md overflow-hidden shadow-inner">
+          <NuxtImg src="/landingimg1.webp" />
         </div>
       </div>
     </div>

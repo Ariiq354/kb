@@ -31,6 +31,15 @@ const links = [
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
+        <template #right>
+          <UButton
+            to="/products"
+            color="primary"
+            icon="i-lucide-shopping-bag"
+          >
+            Lihat Catalog Produk
+          </UButton>
+        </template>
       </UDashboardNavbar>
       <UDashboardToolbar>
         <UNavigationMenu :items="links" highlight class="-mx-1 flex-1" />

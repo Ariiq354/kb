@@ -25,14 +25,6 @@ const { data, status } = await useFetch("/api/v1/user/produk", {
           Anda belum memiliki akses ke course manapun. Silakan lakukan checkout course melalui landing page.
         </p>
       </div>
-      <UButton
-        to="/products"
-        color="primary"
-        variant="soft"
-        icon="i-lucide-shopping-bag"
-      >
-        Lihat Catalog Produk
-      </UButton>
     </div>
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <UserCourseCard
