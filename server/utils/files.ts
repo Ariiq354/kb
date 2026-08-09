@@ -1,10 +1,11 @@
-import type { HashConstructor, HttpRequest } from "@smithy/types";
 import type { UploadDir } from "~~/server/modules/upload/config";
-import { createHash, createHmac } from "node:crypto";
 import path from "node:path";
-import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { formatUrl } from "@aws-sdk/core/util";
-import { SignatureV4 } from "@smithy/signature-v4";
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { UPLOAD_CATEGORIES } from "~~/server/modules/upload/config";
 import { UploadRepo } from "~~/server/modules/upload/repo";
 import { env } from "~~/shared/env";
@@ -20,62 +21,6 @@ const S3 = new S3Client({
   },
   requestChecksumCalculation: "WHEN_REQUIRED",
 });
-
-class NodeSha256 {
-  private hash: ReturnType<typeof createHash> | ReturnType<typeof createHmac>;
-
-  constructor(secret?: string | Uint8Array) {
-    this.hash = secret
-      ? createHmac("sha256", secret)
-      : createHash("sha256");
-  }
-
-  update(data: string | Uint8Array): void {
-    this.hash.update(data);
-  }
-
-  async digest(): Promise<Uint8Array> {
-    return new Uint8Array(this.hash.digest());
-  }
-}
-
-const SIGNER = new SignatureV4({
-  service: "s3",
-  region: "auto",
-  credentials: {
-    accessKeyId: env.CLOUDFLARE_ACCESS_ID,
-    secretAccessKey: env.CLOUDFLARE_SECRET_ID,
-  },
-  sha256: NodeSha256 as unknown as HashConstructor,
-  uriEscapePath: false,
-  applyChecksum: false,
-});
-
-async function presignPutUrl(input: {
-  key: string;
-  contentType: string;
-  contentLength: number;
-}): Promise<string> {
-  const hostname = `${env.CLOUDFLARE_BUCKET}.${env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`;
-
-  const request: HttpRequest = {
-    method: "PUT",
-    protocol: "https:",
-    hostname,
-    path: `/${input.key}`,
-    headers: {
-      "host": hostname,
-      "content-type": input.contentType,
-      "content-length": String(input.contentLength),
-      "X-Amz-Content-Sha256": "UNSIGNED-PAYLOAD",
-    },
-    query: {},
-  };
-
-  const signed = await SIGNER.presign(request, { expiresIn: 5 * 60 });
-
-  return formatUrl(signed);
-}
 
 export async function createPresignedUpload(input: {
   dir: string;
@@ -121,11 +66,16 @@ export async function createPresignedUpload(input: {
     filesize: input.filesize,
   });
 
-  const url = await presignPutUrl({
-    key,
-    contentType: input.filetype,
-    contentLength: input.filesize,
-  });
+  const url = await getSignedUrl(
+    S3,
+    new PutObjectCommand({
+      Bucket: env.CLOUDFLARE_BUCKET,
+      Key: key,
+      ContentType: input.filetype,
+      ContentLength: input.filesize,
+    }),
+    { expiresIn: 3600 },
+  );
 
   return {
     key,
