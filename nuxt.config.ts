@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
 
   modules: [
-    "nuxt-security",
+    // "nuxt-security",
     "@nuxt/image",
     "@nuxt/ui",
     "@nuxt/eslint",
@@ -25,21 +25,21 @@ export default defineNuxtConfig({
     dirs: [],
   },
 
-  security: {
-    sri: false,
-    headers: {
-      crossOriginResourcePolicy: "same-site",
-      contentSecurityPolicy: {
-        "worker-src": ["'self'"],
-        "img-src": [
-          "'self'",
-          "data:",
-          "blob:",
-          "https://assets.keluargabahagia.id",
-        ],
-      },
-    },
-  },
+  // security: {
+  //   sri: false,
+  //   headers: {
+  //     crossOriginResourcePolicy: "same-site",
+  //     contentSecurityPolicy: {
+  //       "worker-src": ["'self'"],
+  //       "img-src": [
+  //         "'self'",
+  //         "data:",
+  //         "blob:",
+  //         "https://assets.keluargabahagia.id",
+  //       ],
+  //     },
+  //   },
+  // },
 
   runtimeConfig: {
     public: {
