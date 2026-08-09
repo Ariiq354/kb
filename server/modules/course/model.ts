@@ -1,16 +1,12 @@
 import { z } from "zod";
-import { multipartFile } from "~~/server/utils/schema";
 
 export const createCourseSchema = z.object({
   judul: z.string().min(1, "Judul tidak boleh kosong!"),
   harga: z.coerce.number().min(0, "Harga tidak boleh kosong!"),
-  status: z.stringbool(),
+  status: z.coerce.boolean(),
   deskripsi: z.string().optional(),
   namaPublisher: z.string().optional(),
-  file: multipartFile({
-    maxSize: 5 * 1024 * 1024,
-    fileTypes: ["image/jpeg", "image/png", "image/webp"],
-  }),
+  file: z.string().optional(),
 });
 
 export type CreateCourseSchema = z.infer<typeof createCourseSchema>;
@@ -34,10 +30,7 @@ export type UpdateSectionSchema = z.infer<typeof updateSectionSchema>;
 export const createLessonSchema = z.object({
   sectionId: z.coerce.number().min(1, "Section ID tidak boleh kosong!"),
   judul: z.string().min(1, "Judul lesson tidak boleh kosong!"),
-  videoFile: multipartFile({
-    maxSize: 500 * 1024 * 1024,
-    fileTypes: ["video/mp4", "video/webm", "video/ogg", "video/quicktime"],
-  }),
+  videoFile: z.string().optional(),
   duration: z.coerce.number().min(0).optional(),
   order: z.coerce.number().min(0, "Order tidak boleh kosong!"),
 });

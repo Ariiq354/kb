@@ -11,6 +11,7 @@ import LessonForm from "~/features/course/components/LessonForm.vue";
 import SectionForm from "~/features/course/components/SectionForm.vue";
 
 import { formatDuration } from "~/utils/number";
+import { presignAndUploadFile } from "~/utils/upload";
 
 const props = defineProps<{
   courseId: number;
@@ -219,29 +220,35 @@ async function saveLesson() {
     const isEdit = activeMode.value === "edit-lesson";
     const url = isEdit ? `/api/v1/course/lesson/${selectedLesson.value!.id}` : "/api/v1/course/lesson";
 
-    const formData = new FormData();
-    formData.append("judul", lessonForm.value.judul);
-    formData.append("duration", lessonForm.value.duration.toString());
-    formData.append("order", lessonForm.value.order.toString());
+    let videoKey: string | undefined;
 
-    if (isEdit) {
-      if (lessonForm.value.videoFile) {
-        formData.append("videoFile", lessonForm.value.videoFile);
-      }
+    if (lessonForm.value.videoFile) {
+      videoKey = await presignAndUploadFile("course-video", lessonForm.value.videoFile);
     }
-    else {
-      formData.append("sectionId", activeSectionId.value!.toString());
-      if (!lessonForm.value.videoFile) {
-        useToastError("Gagal", "File video wajib diunggah!");
-        isLoading.value = false;
-        return;
-      }
-      formData.append("videoFile", lessonForm.value.videoFile);
+
+    if (!isEdit && !videoKey) {
+      useToastError("Gagal", "File video wajib diunggah!");
+      isLoading.value = false;
+      return;
+    }
+
+    const body: Record<string, unknown> = {
+      judul: lessonForm.value.judul,
+      duration: lessonForm.value.duration,
+      order: lessonForm.value.order,
+    };
+
+    if (videoKey) {
+      body.videoFile = videoKey;
+    }
+
+    if (!isEdit) {
+      body.sectionId = activeSectionId.value;
     }
 
     await $fetch(url, {
       method: isEdit ? "PATCH" : "POST",
-      body: formData,
+      body,
     });
 
     useToastSuccess("Sukses", isEdit ? "Lesson berhasil diperbarui" : "Lesson berhasil ditambahkan");

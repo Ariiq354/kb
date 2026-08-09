@@ -1,28 +1,28 @@
 import type { PaginationSearchSchema } from "~~/server/utils/schema";
 import type { CreateEbookSchema, UpdateEbookSchema } from "./model";
 import { createError } from "h3";
-import { deleteFile, uploadFile } from "~~/server/utils/files";
+import { deleteFile } from "~~/server/utils/files";
 import { EbookRepo } from "./repo";
 
 export abstract class EbookService {
   static async create(payload: CreateEbookSchema) {
     const { file, pdfFile, ...data } = payload;
 
-    const { key: coverKey } = await uploadFile(
-      "ebook",
-      file.filename!,
-      file.data,
-      file.type!,
-    );
+    if (!file) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "Cover ebook wajib diunggah!",
+      });
+    }
 
-    const { key: pdfKey } = await uploadFile(
-      "ebook",
-      pdfFile.filename!,
-      pdfFile.data,
-      pdfFile.type!,
-    );
+    if (!pdfFile) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "File PDF ebook wajib diunggah!",
+      });
+    }
 
-    return await EbookRepo.create(data, coverKey, pdfKey);
+    return await EbookRepo.create(data, file, pdfFile);
   }
 
   static async update(produkId: number, payload: UpdateEbookSchema) {
@@ -36,38 +36,16 @@ export abstract class EbookService {
     }
 
     const { file, pdfFile, ...data } = payload;
-    let coverKey: string | undefined;
-    let pdfKey: string | undefined;
 
-    if (file) {
-      const { key } = await uploadFile(
-        "ebook",
-        file.filename!,
-        file.data,
-        file.type!,
-      );
+    await EbookRepo.update(produkId, data, file, pdfFile);
 
-      if (existing.foto) {
-        await deleteFile(existing.foto);
-      }
-      coverKey = key;
+    if (file && existing.foto) {
+      await deleteFile(existing.foto);
     }
 
-    if (pdfFile) {
-      const { key } = await uploadFile(
-        "ebook",
-        pdfFile.filename!,
-        pdfFile.data,
-        pdfFile.type!,
-      );
-
-      if (existing.pdfUrl) {
-        await deleteFile(existing.pdfUrl);
-      }
-      pdfKey = key;
+    if (pdfFile && existing.pdfUrl) {
+      await deleteFile(existing.pdfUrl);
     }
-
-    await EbookRepo.update(produkId, data, coverKey, pdfKey);
   }
 
   static async findAll(query: PaginationSearchSchema) {

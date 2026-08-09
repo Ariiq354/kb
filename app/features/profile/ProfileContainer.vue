@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from "@nuxt/ui";
 import type { Schema } from "./constants";
+import { CalendarDate } from "@internationalized/date";
 import { FetchError } from "ofetch";
 import { ref } from "vue";
 import InputCalendar from "~/components/Custom/InputCalendar.vue";
@@ -10,6 +11,7 @@ import SelectKecamatan from "~/components/Options/SelectKecamatan.vue";
 import SelectKota from "~/components/Options/SelectKota.vue";
 import SelectProvinsi from "~/components/Options/SelectProvinsi.vue";
 import { useToastError, useToastSuccess } from "~/composables/toast";
+import { presignAndUploadFile } from "~/utils/upload";
 import { initFormData, schema } from "./constants";
 
 const { data, refresh } = await useFetch("/api/v1/users/me");
@@ -24,23 +26,32 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   }
 
   isLoading.value = true;
-  const formData = new FormData();
-
-  for (const [key, value] of Object.entries(
-    event.data as Record<string, any>,
-  )) {
-    if (value !== undefined && value !== null && value !== "" && key !== "file") {
-      formData.append(key, value.toString());
-    }
-  }
-
-  if (state.value.file) {
-    formData.append("file", state.value.file);
-  }
 
   try {
+    let fileKey: string | undefined;
+
+    if (state.value.file) {
+      fileKey = await presignAndUploadFile("user-image", state.value.file);
+    }
+
+    const body: Record<string, unknown> = {};
+
+    for (const [key, value] of Object.entries(
+      event.data as Record<string, unknown>,
+    )) {
+      if (value === undefined || value === null || value === "" || key === "file") {
+        continue;
+      }
+
+      body[key] = value instanceof CalendarDate ? value.toString() : value;
+    }
+
+    if (fileKey) {
+      body.file = fileKey;
+    }
+
     await $fetch("/api/v1/users/me", {
-      body: formData,
+      body,
       method: "PATCH",
     });
 

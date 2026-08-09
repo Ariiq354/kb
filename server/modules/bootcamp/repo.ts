@@ -5,6 +5,7 @@ import { and, desc, eq, ilike, inArray } from "drizzle-orm";
 import { db } from "~~/server/database";
 import { bootcamp } from "~~/server/database/schema/bootcamp";
 import { produk } from "~~/server/database/schema/produk";
+import { UploadRepo } from "~~/server/modules/upload/repo";
 
 export abstract class BootcampRepo {
   static async create(payload: Omit<CreateBootcampSchema, "file">, foto: string) {
@@ -35,6 +36,8 @@ export abstract class BootcampRepo {
           googleMapLink: payload.googleMapLink,
           meetingLink: payload.meetingLink,
         });
+
+      await UploadRepo.promote(tx, [foto]);
     });
   }
 
@@ -62,6 +65,8 @@ export abstract class BootcampRepo {
           meetingLink: payload.meetingLink,
         })
         .where(eq(bootcamp.produkId, produkId));
+
+      await UploadRepo.promote(tx, [foto]);
 
       return result;
     });

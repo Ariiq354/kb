@@ -5,6 +5,7 @@ import { and, count, desc, eq, ilike, inArray, or } from "drizzle-orm";
 import { db } from "~~/server/database";
 import { course, courseLesson, courseProgress, courseSection } from "~~/server/database/schema/course";
 import { produk } from "~~/server/database/schema/produk";
+import { UploadRepo } from "~~/server/modules/upload/repo";
 
 export abstract class CourseRepo {
   static async create(payload: Omit<CreateCourseSchema, "file">, foto: string) {
@@ -30,6 +31,8 @@ export abstract class CourseRepo {
           deskripsi: payload.deskripsi,
           namaPublisher: payload.namaPublisher,
         });
+
+      await UploadRepo.promote(tx, [foto]);
     });
   }
 
@@ -63,6 +66,8 @@ export abstract class CourseRepo {
           namaPublisher: payload.namaPublisher,
         })
         .where(eq(course.id, courseRecord.courseId));
+
+      await UploadRepo.promote(tx, [foto]);
 
       return result;
     });
@@ -211,29 +216,43 @@ export abstract class CourseRepo {
   }
 
   static async createLesson(payload: Omit<CreateLessonSchema, "videoFile">, videoUrl: string) {
-    return await db
-      .insert(courseLesson)
-      .values({
-        sectionId: payload.sectionId,
-        judul: payload.judul,
-        videoUrl,
-        duration: payload.duration,
-        order: payload.order,
-      })
-      .returning();
+    return await db.transaction(async (tx) => {
+      const rows = await tx
+        .insert(courseLesson)
+        .values({
+          sectionId: payload.sectionId,
+          judul: payload.judul,
+          videoUrl,
+          duration: payload.duration,
+          order: payload.order,
+        })
+        .returning();
+
+      await UploadRepo.promote(tx, [videoUrl]);
+
+      return rows;
+    });
   }
 
   static async updateLesson(lessonId: number, payload: Omit<UpdateLessonSchema, "videoFile">, videoUrl?: string) {
-    return await db
-      .update(courseLesson)
-      .set({
-        judul: payload.judul,
-        duration: payload.duration,
-        order: payload.order,
-        ...(videoUrl && { videoUrl }),
-      })
-      .where(eq(courseLesson.id, lessonId))
-      .returning();
+    return await db.transaction(async (tx) => {
+      const rows = await tx
+        .update(courseLesson)
+        .set({
+          judul: payload.judul,
+          duration: payload.duration,
+          order: payload.order,
+          ...(videoUrl && { videoUrl }),
+        })
+        .where(eq(courseLesson.id, lessonId))
+        .returning();
+
+      if (rows.length > 0) {
+        await UploadRepo.promote(tx, [videoUrl]);
+      }
+
+      return rows;
+    });
   }
 
   static async deleteLesson(lessonId: number) {

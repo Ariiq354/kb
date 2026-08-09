@@ -6,6 +6,7 @@ import { db } from "~~/server/database";
 import { user } from "~~/server/database/schema/auth";
 import { userProfile } from "~~/server/database/schema/user";
 import { desa, kecamatan, kota, provinsi } from "~~/server/database/schema/wilayah";
+import { UploadRepo } from "~~/server/modules/upload/repo";
 import { generateUniqueCode } from "~~/server/utils/generator";
 
 export abstract class UserRepo {
@@ -38,6 +39,8 @@ export abstract class UserRepo {
           })
           .where(eq(user.id, userId));
       }
+
+      await UploadRepo.promote(tx, [foto]);
     });
   }
 

@@ -5,6 +5,7 @@ import { and, desc, eq, ilike, inArray } from "drizzle-orm";
 import { db } from "~~/server/database";
 import { ebook } from "~~/server/database/schema/ebook";
 import { produk } from "~~/server/database/schema/produk";
+import { UploadRepo } from "~~/server/modules/upload/repo";
 
 export abstract class EbookRepo {
   static async create(payload: Omit<CreateEbookSchema, "file" | "pdfFile">, foto: string, pdfUrl: string) {
@@ -30,6 +31,8 @@ export abstract class EbookRepo {
           deskripsi: payload.deskripsi,
           pdfUrl,
         });
+
+      await UploadRepo.promote(tx, [foto, pdfUrl]);
     });
   }
 
@@ -52,6 +55,8 @@ export abstract class EbookRepo {
           ...(pdfUrl && { pdfUrl }),
         })
         .where(eq(ebook.produkId, produkId));
+
+      await UploadRepo.promote(tx, [foto, pdfUrl]);
 
       return result;
     });

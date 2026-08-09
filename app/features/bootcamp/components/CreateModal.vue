@@ -6,6 +6,7 @@ import { computed, ref } from "vue";
 import LocationPicker from "~/components/Custom/LocationPicker.client.vue";
 import UploadImage from "~/components/Custom/UploadImage.vue";
 import { useToastError, useToastSuccess } from "~/composables/toast";
+import { presignAndUploadFile } from "~/utils/upload";
 import { schema } from "../constants";
 
 const emit = defineEmits(["submit"]);
@@ -50,23 +51,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       sendData.meetingLink = "";
     }
 
-    const formData = new FormData();
+    let fileKey: string | undefined;
 
-    // Append regular fields
-    for (const [key, value] of Object.entries(sendData)) {
-      if (value !== undefined && value !== null && key !== "file" && key !== "foto") {
-        formData.append(key, value.toString());
-      }
-    }
-
-    // Append file if it was uploaded
     if (state.value.file) {
-      formData.append("file", state.value.file);
+      fileKey = await presignAndUploadFile("bootcamp", state.value.file);
     }
+
+    const { file: _file, foto: _foto, ...body } = sendData;
 
     await $fetch(url, {
       method: isEdit ? "PATCH" : "POST",
-      body: formData,
+      body: {
+        ...body,
+        ...(fileKey ? { file: fileKey } : {}),
+      },
     });
 
     useToastSuccess("Sukses", isEdit ? "Data bootcamp berhasil diubah" : "Data bootcamp berhasil ditambahkan");

@@ -4,6 +4,7 @@ import * as bootcampSchema from "./schema/bootcamp";
 import * as courseSchema from "./schema/course";
 import * as diskonSchema from "./schema/diskon";
 import * as ebookSchema from "./schema/ebook";
+import * as fileUploadSchema from "./schema/fileUpload";
 import * as produkSchema from "./schema/produk";
 import * as taarufSchema from "./schema/taaruf";
 import * as userSchema from "./schema/user";
@@ -15,6 +16,7 @@ export const relations = defineRelations({
   ...produkSchema,
   ...bootcampSchema,
   ...ebookSchema,
+  ...fileUploadSchema,
   ...courseSchema,
   ...taarufSchema,
   ...userSchema,

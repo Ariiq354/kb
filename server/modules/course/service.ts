@@ -1,21 +1,21 @@
 import type { PaginationSearchSchema } from "~~/server/utils/schema";
 import type { CreateCourseSchema, CreateLessonSchema, CreateSectionSchema, UpdateCourseSchema, UpdateLessonSchema, UpdateSectionSchema } from "./model";
 import { createError } from "h3";
-import { deleteFile, uploadFile } from "~~/server/utils/files";
+import { deleteFile } from "~~/server/utils/files";
 import { CourseRepo } from "./repo";
 
 export abstract class CourseService {
   static async create(payload: CreateCourseSchema) {
     const { file, ...data } = payload;
 
-    const { key } = await uploadFile(
-      "course",
-      file.filename!,
-      file.data,
-      file.type!,
-    );
+    if (!file) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "Cover course wajib diunggah!",
+      });
+    }
 
-    return await CourseRepo.create(data, key);
+    return await CourseRepo.create(data, file);
   }
 
   static async update(courseId: number, payload: UpdateCourseSchema) {
@@ -29,23 +29,12 @@ export abstract class CourseService {
     }
 
     const { file, ...data } = payload;
-    let key: string | undefined;
 
-    if (file) {
-      const { key: newKey } = await uploadFile(
-        "course",
-        file.filename!,
-        file.data,
-        file.type!,
-      );
+    await CourseRepo.update(courseId, data, file);
 
-      if (existing.foto) {
-        await deleteFile(existing.foto);
-      }
-      key = newKey;
+    if (file && existing.foto) {
+      await deleteFile(existing.foto);
     }
-
-    await CourseRepo.update(courseId, data, key);
   }
 
   static async findAll(query: PaginationSearchSchema) {
@@ -108,14 +97,14 @@ export abstract class CourseService {
   static async createLesson(payload: CreateLessonSchema) {
     const { videoFile, ...data } = payload;
 
-    const { key } = await uploadFile(
-      "course",
-      videoFile.filename!,
-      videoFile.data,
-      videoFile.type!,
-    );
+    if (!videoFile) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "File video wajib diunggah!",
+      });
+    }
 
-    return await CourseRepo.createLesson(data, key);
+    return await CourseRepo.createLesson(data, videoFile);
   }
 
   static async updateLesson(lessonId: number, payload: UpdateLessonSchema) {
@@ -128,29 +117,19 @@ export abstract class CourseService {
     }
 
     const { videoFile, ...data } = payload;
-    let key: string | undefined;
 
-    if (videoFile) {
-      const { key: newKey } = await uploadFile(
-        "course",
-        videoFile.filename!,
-        videoFile.data,
-        videoFile.type!,
-      );
-
-      if (existing.videoUrl) {
-        await deleteFile(existing.videoUrl);
-      }
-      key = newKey;
-    }
-
-    const result = await CourseRepo.updateLesson(lessonId, data, key);
+    const result = await CourseRepo.updateLesson(lessonId, data, videoFile);
     if (result.length === 0) {
       throw createError({
         statusCode: 404,
         statusMessage: "Lesson tidak ditemukan",
       });
     }
+
+    if (videoFile && existing.videoUrl) {
+      await deleteFile(existing.videoUrl);
+    }
+
     return result[0];
   }
 

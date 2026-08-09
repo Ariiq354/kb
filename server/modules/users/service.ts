@@ -2,43 +2,29 @@ import type { UserWithId } from "~~/server/utils/auth";
 import type { PaginationSearchSchema } from "~~/server/utils/schema";
 import type { CariPasanganQuerySchema, UserProfileSchema } from "./model";
 import { createError } from "h3";
-import { deleteFile, uploadFile } from "~~/server/utils/files";
+import { deleteFile } from "~~/server/utils/files";
 import { UserRepo } from "./repo";
 
 export abstract class UserService {
   static async updateUser(user: UserWithId, payload: UserProfileSchema) {
-    const { file, ...profileData } = payload;
-    let newlyUploadedKey: string | undefined;
+    const { file, foto, ...profileData } = payload;
+
+    let imageValue: string | undefined;
 
     if (file) {
-      const fileData = file;
-
-      const { key } = await uploadFile(
-        "user-image",
-        fileData.filename!,
-        fileData.data,
-        fileData.type!,
-      );
-
-      newlyUploadedKey = key;
-      profileData.foto = key;
+      imageValue = file;
+    }
+    else if (foto !== undefined && foto !== user.image) {
+      imageValue = foto;
     }
 
-    try {
-      const result = await UserRepo.updateUser(user.id, profileData);
+    await UserRepo.updateUser(user.id, {
+      ...profileData,
+      ...(imageValue !== undefined ? { foto: imageValue } : {}),
+    });
 
-      if (user.image && (newlyUploadedKey || profileData.foto === "")) {
-        await deleteFile(user.image);
-      }
-
-      return result;
-    }
-    catch (error) {
-      if (newlyUploadedKey) {
-        await deleteFile(newlyUploadedKey);
-      }
-
-      throw error;
+    if (user.image && (file || foto === "")) {
+      await deleteFile(user.image);
     }
   }
 

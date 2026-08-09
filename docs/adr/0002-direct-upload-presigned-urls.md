@@ -1,0 +1,11 @@
+# Direct-to-R2 presigned uploads with a pending/success ledger
+
+Status: accepted
+
+We upload file bytes directly from the browser to Cloudflare R2 via short-lived presigned PUT URLs instead of proxying multipart/form-data through the Nuxt server. Vercel caps serverless request bodies at ~4.5MB, which blocked the 500MB lesson-video uploads and made every other media upload flow through the server twice. A client first posts `{ dir, filename, filesize, filetype }` to `POST /api/v1/upload/presign`; the server adjudicates the request against the dir category (size cap, allowed types, role), mints the key (`dir/<uuid><ext>`), records a `pending` row in the `file_upload` ledger, and returns `{ key, url }`. The client PUTs the bytes straight to `url`, then submits the ordinary JSON create/update with the minted key as a plain string (`file`/`pdfFile`/`videoFile`).
+
+Each module flips its referenced keys to `success` inside the **same** `db.transaction` as its own database write, and verifies the keys exist and are still `pending` first — a write that fails rolls the promotion back, so a key can never be garbage-collected while its product/profile row exists, and a forged key can never be committed. A scheduled GET route (`/api/v1/upload/sweep`, guarded by `CRON_SECRET` via `x-cron-secret` or `Authorization: Bearer`, invoked hourly by a Vercel cron) deletes `pending` rows older than an hour and their R2 objects.
+
+The presigned URL signs `content-type` and `content-length` exactly (built on top of `@smithy/signature-v4`, since the stock S3 presigner deliberately leaves content-type unsigned), so R2 rejects a PUT that carries a different mime type or byte count than the one adjudicated at presign time. This is a header-match check, not byte inspection — the same weakness the old `fileTypes` whitelists had. Role gating is per dir token: `user-image` needs only an authenticated session; all product categories require admin.
+
+This is hard to reverse (new table, signed-length contract, bucket CORS, and the multipart machinery is deleted), surprising without context, and is a real tradeoff vs the multipart proxy, so it earns an ADR.

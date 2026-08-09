@@ -1,21 +1,21 @@
 import type { PaginationSearchSchema } from "~~/server/utils/schema";
 import type { CreateBootcampSchema, UpdateBootcampSchema } from "./model";
 import { createError } from "h3";
-import { deleteFile, uploadFile } from "~~/server/utils/files";
+import { deleteFile } from "~~/server/utils/files";
 import { BootcampRepo } from "./repo";
 
 export abstract class BootcampService {
   static async create(payload: CreateBootcampSchema) {
     const { file, ...data } = payload;
 
-    const { key } = await uploadFile(
-      "bootcamp",
-      file.filename!,
-      file.data,
-      file.type!,
-    );
+    if (!file) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: "Foto bootcamp wajib diunggah!",
+      });
+    }
 
-    return await BootcampRepo.create(data, key);
+    return await BootcampRepo.create(data, file);
   }
 
   static async update(produkId: number, payload: UpdateBootcampSchema) {
@@ -29,23 +29,12 @@ export abstract class BootcampService {
     }
 
     const { file, ...data } = payload;
-    let fotoKey: string | undefined;
 
-    if (file) {
-      const { key } = await uploadFile(
-        "bootcamp",
-        file.filename!,
-        file.data,
-        file.type!,
-      );
+    await BootcampRepo.update(produkId, data, file);
 
-      if (existing.foto) {
-        await deleteFile(existing.foto);
-      }
-      fotoKey = key;
+    if (file && existing.foto) {
+      await deleteFile(existing.foto);
     }
-
-    await BootcampRepo.update(produkId, data, fotoKey);
   }
 
   static async findAll(query: PaginationSearchSchema) {
