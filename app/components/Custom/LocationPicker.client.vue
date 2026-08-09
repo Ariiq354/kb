@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import type { MapMouseEvent, StyleSpecification } from "maplibre-gl";
 import { onClickOutside } from "@vueuse/core";
-import { Marker, Map as MlMap, NavigationControl } from "maplibre-gl";
+import { Marker, Map as MlMap, NavigationControl, setWorkerUrl } from "maplibre-gl";
+import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { onMounted, onUnmounted, ref, shallowRef, watch } from "vue";
 import InputSearch from "~/components/Custom/InputSearch.vue";
 import "maplibre-gl/dist/maplibre-gl.css";
-
-interface Props {
-  mapStyle?: StyleSpecification | string;
-  center?: [number, number];
-  zoom?: number;
-}
 
 const props = withDefaults(defineProps<Props>(), {
   mapStyle: "https://tiles.openfreemap.org/styles/bright",
@@ -22,7 +17,15 @@ const emit = defineEmits<{
   (e: "update:location", data: { lat: number; lng: number; displayName: string }): void;
 }>();
 
-const mapContainer = ref<HTMLElement | null>(null);
+setWorkerUrl(workerUrl);
+
+interface Props {
+  mapStyle?: StyleSpecification | string;
+  center?: [number, number];
+  zoom?: number;
+}
+
+const mapContainer = ref<HTMLElement>();
 const map = shallowRef<MlMap | null>(null);
 const marker = shallowRef<Marker | null>(null);
 
@@ -30,7 +33,9 @@ const mapCenter = ref<[number, number]>([...props.center]);
 const mapZoom = ref<number>(props.zoom);
 const markerCoordinates = ref<[number, number] | null>([...props.center]);
 
-onMounted(() => {
+onMounted(async () => {
+  await nextTick();
+
   if (!mapContainer.value)
     return;
 
@@ -42,6 +47,9 @@ onMounted(() => {
   });
 
   map.value = mlMap;
+  mlMap.on("error", (e) => {
+    console.error("MapLibre error:", e.error);
+  });
 
   mlMap.addControl(new NavigationControl(), "top-right");
 
@@ -234,46 +242,39 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <ClientOnly>
-    <div class="relative w-full h-87.5 rounded-lg border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
-      <!-- Search Bar Container -->
+  <div class="relative w-full h-87.5 rounded-lg border border-neutral-200 dark:border-neutral-800 overflow-hidden bg-neutral-100 dark:bg-neutral-900">
+    <!-- Search Bar Container -->
+    <div
+      ref="searchContainer"
+      class="absolute top-2 left-2 z-10 w-72 sm:w-80 shadow-md rounded-md overflow-hidden"
+      @mousedown.stop
+      @click.stop
+    >
+      <InputSearch
+        v-model="searchQuery"
+        placeholder="Cari lokasi..."
+        :loading="isSearching"
+        class="w-full bg-white dark:bg-neutral-900"
+      />
+
+      <!-- Search Results Dropdown -->
       <div
-        ref="searchContainer"
-        class="absolute top-2 left-2 z-10 w-72 sm:w-80 shadow-md rounded-md overflow-hidden"
-        @mousedown.stop
-        @click.stop
+        v-if="searchResults.length > 0"
+        class="mt-1 max-h-60 overflow-y-auto bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-xl text-sm divide-y divide-neutral-100 dark:divide-neutral-800"
       >
-        <InputSearch
-          v-model="searchQuery"
-          placeholder="Cari lokasi..."
-          :loading="isSearching"
-          class="w-full bg-white dark:bg-neutral-900"
-        />
-
-        <!-- Search Results Dropdown -->
-        <div
-          v-if="searchResults.length > 0"
-          class="mt-1 max-h-60 overflow-y-auto bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg shadow-xl text-sm divide-y divide-neutral-100 dark:divide-neutral-800"
+        <button
+          v-for="item in searchResults"
+          :key="item.place_id"
+          type="button"
+          class="w-full text-left px-3 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-800 focus:outline-none transition-colors block truncate text-neutral-700 dark:text-neutral-300"
+          @click="selectLocation(item)"
         >
-          <button
-            v-for="item in searchResults"
-            :key="item.place_id"
-            type="button"
-            class="w-full text-left px-3 py-2 hover:bg-neutral-50 dark:hover:bg-neutral-800 focus:outline-none transition-colors block truncate text-neutral-700 dark:text-neutral-300"
-            @click="selectLocation(item)"
-          >
-            {{ item.display_name }}
-          </button>
-        </div>
+          {{ item.display_name }}
+        </button>
       </div>
-
-      <!-- Map -->
-      <div ref="mapContainer" class="w-full h-full" />
     </div>
-    <template #fallback>
-      <div class="w-full h-87.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center">
-        <span class="text-sm text-neutral-500">Loading map...</span>
-      </div>
-    </template>
-  </ClientOnly>
+
+    <!-- Map -->
+    <div ref="mapContainer" class="w-full h-full" />
+  </div>
 </template>

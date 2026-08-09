@@ -11,6 +11,12 @@ export default defineNuxtConfig({
     "nuxt-charts",
   ],
 
+  vite: {
+    optimizeDeps: {
+      exclude: ["maplibre-gl"],
+    },
+  },
+
   css: ["~/assets/css/main.css"],
 
   ui: {
@@ -30,6 +36,7 @@ export default defineNuxtConfig({
     headers: {
       crossOriginResourcePolicy: "same-site",
       contentSecurityPolicy: {
+        "worker-src": ["'self'"],
         "img-src": [
           "'self'",
           "data:",
