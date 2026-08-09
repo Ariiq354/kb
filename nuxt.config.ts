@@ -11,12 +11,6 @@ export default defineNuxtConfig({
     "nuxt-charts",
   ],
 
-  vite: {
-    optimizeDeps: {
-      exclude: ["maplibre-gl"],
-    },
-  },
-
   css: ["~/assets/css/main.css"],
 
   ui: {
