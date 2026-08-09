@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import type { MapMouseEvent, StyleSpecification } from "maplibre-gl";
 import { onClickOutside } from "@vueuse/core";
-import { onUnmounted, ref, watch } from "vue";
-import { MglMap, MglMarker, MglNavigationControl } from "#components";
-import { useMglMap } from "#imports";
+import { Marker, Map as MlMap, NavigationControl } from "maplibre-gl";
+import { onMounted, onUnmounted, ref, shallowRef, watch } from "vue";
 import InputSearch from "~/components/Custom/InputSearch.vue";
+import "maplibre-gl/dist/maplibre-gl.css";
 
 interface Props {
-  mapStyle?: any;
+  mapStyle?: StyleSpecification | string;
   center?: [number, number];
   zoom?: number;
 }
@@ -21,15 +22,41 @@ const emit = defineEmits<{
   (e: "update:location", data: { lat: number; lng: number; displayName: string }): void;
 }>();
 
+const mapContainer = ref<HTMLElement | null>(null);
+const map = shallowRef<MlMap | null>(null);
+const marker = shallowRef<Marker | null>(null);
+
 const mapCenter = ref<[number, number]>([...props.center]);
 const mapZoom = ref<number>(props.zoom);
 const markerCoordinates = ref<[number, number] | null>([...props.center]);
 
-const mapInstance = useMglMap();
+onMounted(() => {
+  if (!mapContainer.value)
+    return;
+
+  const mlMap = new MlMap({
+    container: mapContainer.value,
+    style: props.mapStyle,
+    center: mapCenter.value,
+    zoom: mapZoom.value,
+  });
+
+  map.value = mlMap;
+
+  mlMap.addControl(new NavigationControl(), "top-right");
+
+  if (markerCoordinates.value) {
+    marker.value = new Marker({ color: "#3b82f6" })
+      .setLngLat(markerCoordinates.value)
+      .addTo(mlMap);
+  }
+
+  mlMap.on("click", handleMapClick);
+});
 
 watch(() => props.center, (newCenter) => {
-  if (mapInstance.map) {
-    mapInstance.map.flyTo({
+  if (map.value) {
+    map.value.flyTo({
       center: [...newCenter],
       essential: true,
     });
@@ -41,14 +68,20 @@ watch(() => props.center, (newCenter) => {
 }, { deep: true });
 
 watch(() => props.zoom, (newZoom) => {
-  if (mapInstance.map) {
-    mapInstance.map.flyTo({
+  if (map.value) {
+    map.value.flyTo({
       zoom: newZoom,
       essential: true,
     });
   }
   else {
     mapZoom.value = newZoom;
+  }
+});
+
+watch(markerCoordinates, (coordinates) => {
+  if (marker.value && coordinates) {
+    marker.value.setLngLat(coordinates);
   }
 });
 
@@ -97,7 +130,7 @@ async function handleSearch() {
     );
     if (response.ok) {
       const data = await response.json();
-      searchResults.value = data;
+      searchResults.value = data as SearchResult[];
     }
   }
   catch (error) {
@@ -118,8 +151,8 @@ function selectLocation(item: SearchResult) {
   isProgrammaticUpdate.value = true;
   searchQuery.value = item.display_name;
 
-  if (mapInstance.map) {
-    mapInstance.map.flyTo({
+  if (map.value) {
+    map.value.flyTo({
       center: [lon, lat],
       zoom: 16,
       essential: true,
@@ -134,7 +167,7 @@ function selectLocation(item: SearchResult) {
 }
 
 // Click on map to place/move marker
-async function handleMapClick(event: any) {
+function handleMapClick(event: MapMouseEvent) {
   const lngLat = event.lngLat;
   if (!lngLat)
     return;
@@ -142,8 +175,8 @@ async function handleMapClick(event: any) {
 
   markerCoordinates.value = [lng, lat];
 
-  if (mapInstance.map) {
-    mapInstance.map.flyTo({
+  if (map.value) {
+    map.value.flyTo({
       center: [lng, lat],
       essential: true,
     });
@@ -152,6 +185,10 @@ async function handleMapClick(event: any) {
     mapCenter.value = [lng, lat];
   }
 
+  reverseGeocode(lat, lng);
+}
+
+async function reverseGeocode(lat: number, lng: number) {
   try {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
@@ -163,43 +200,36 @@ async function handleMapClick(event: any) {
     );
     if (response.ok) {
       const data = await response.json();
-      searchResults.value = [];
-      isProgrammaticUpdate.value = true;
-      searchQuery.value = data.display_name;
-      emit("update:location", { lat, lng, displayName: data.display_name });
+      applyLocation(lat, lng, data.display_name);
     }
     else {
-      const simpleName = `Koordinat: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-      searchResults.value = [];
-      isProgrammaticUpdate.value = true;
-      searchQuery.value = simpleName;
-      emit("update:location", { lat, lng, displayName: simpleName });
+      applyLocation(lat, lng, coordinateName(lat, lng));
     }
   }
   catch (error) {
     console.error("Reverse geocoding failed:", error);
-    const simpleName = `Koordinat: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-    searchResults.value = [];
-    isProgrammaticUpdate.value = true;
-    searchQuery.value = simpleName;
-    emit("update:location", { lat, lng, displayName: simpleName });
+    applyLocation(lat, lng, coordinateName(lat, lng));
   }
 }
 
-// Bind native click event listener to MapLibre instance directly
-watch(() => mapInstance.map, (map, oldMap) => {
-  if (oldMap) {
-    oldMap.off("click", handleMapClick);
-  }
-  if (map) {
-    map.on("click", handleMapClick);
-  }
-}, { immediate: true });
+function coordinateName(lat: number, lng: number) {
+  return `Koordinat: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+}
+
+function applyLocation(lat: number, lng: number, displayName: string) {
+  searchResults.value = [];
+  isProgrammaticUpdate.value = true;
+  searchQuery.value = displayName;
+  emit("update:location", { lat, lng, displayName });
+}
 
 onUnmounted(() => {
-  if (mapInstance.map) {
-    mapInstance.map.off("click", handleMapClick);
+  if (map.value) {
+    map.value.off("click", handleMapClick);
+    map.value.remove();
   }
+  marker.value = null;
+  map.value = null;
 });
 </script>
 
@@ -238,19 +268,7 @@ onUnmounted(() => {
       </div>
 
       <!-- Map -->
-      <MglMap
-        :map-style="props.mapStyle"
-        :center="mapCenter"
-        :zoom="mapZoom"
-        class="w-full h-full"
-      >
-        <MglNavigationControl position="top-right" />
-        <MglMarker
-          v-if="markerCoordinates"
-          :coordinates="markerCoordinates"
-          color="#3b82f6"
-        />
-      </MglMap>
+      <div ref="mapContainer" class="w-full h-full" />
     </div>
     <template #fallback>
       <div class="w-full h-87.5 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center">

@@ -9,22 +9,9 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@vueuse/nuxt",
     "nuxt-charts",
-    "nuxt-maplibre",
   ],
 
   css: ["~/assets/css/main.css"],
-
-  vite: {
-    optimizeDeps: {
-      include: [
-        "maplibre-gl",
-        "@indoorequal/vue-maplibre-gl",
-      ],
-    },
-    ssr: {
-      noExternal: ["maplibre-gl", "@indoorequal/vue-maplibre-gl"],
-    },
-  },
 
   ui: {
     colorMode: false,

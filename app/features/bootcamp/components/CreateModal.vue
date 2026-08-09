@@ -3,7 +3,7 @@ import type { FormSubmitEvent } from "@nuxt/ui";
 import type { Schema } from "../constants";
 import { FetchError } from "ofetch";
 import { computed, ref } from "vue";
-import MapLibre from "~/components/Custom/MapLibre.vue";
+import LocationPicker from "~/components/Custom/LocationPicker.vue";
 import UploadImage from "~/components/Custom/UploadImage.vue";
 import { useToastError, useToastSuccess } from "~/composables/toast";
 import { schema } from "../constants";
@@ -181,13 +181,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             </UFormField>
           </div>
 
-          <!-- Map (MapLibre) - Show for OFFLINE and HYBRID -->
+          <!-- Map (Location Picker) - Show for OFFLINE and HYBRID -->
           <div
             v-if="state.tipe === 'OFFLINE' || state.tipe === 'HYBRID'"
             class="space-y-2"
           >
             <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Peta Lokasi</span>
-            <MapLibre
+            <LocationPicker
               :center="mapCenter"
               @update:location="handleLocationUpdate"
             />
