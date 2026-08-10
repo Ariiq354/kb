@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { UIcon } from "#components";
 import { computed } from "vue";
 import { DonutChart } from "vue-chrts";
+import { UIcon } from "#components";
 
 interface DistributionProps {
   distribution: Array<{
@@ -42,7 +42,7 @@ const categories = computed(() => {
     </div>
 
     <!-- Nuxt Chart: DonutChart -->
-    <div class="flex justify-center items-center py-2 h-[180px]">
+    <div class="flex justify-center items-center py-2">
       <DonutChart
         :data="chartData"
         :categories="categories"

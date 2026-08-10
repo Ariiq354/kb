@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { UIcon } from "#components";
 import { AreaChart, CurveType } from "vue-chrts";
+import { UIcon } from "#components";
 
 interface LearningChartProps {
   data: Array<{
-    month: string;
     completedLessons: number;
     studyHours: number;
   }>;
@@ -25,7 +24,7 @@ const categories = {
 </script>
 
 <template>
-  <div class="rounded-2xl bg-white/80 dark:bg-slate-900/80 p-6 border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-md shadow-sm">
+  <div class="rounded-2xl bg-white/80 dark:bg-slate-900/80 p-6 border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-md shadow-sm h-full">
     <div class="flex items-center justify-between mb-6">
       <div>
         <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -50,7 +49,7 @@ const categories = {
     </div>
 
     <!-- Nuxt Chart: AreaChart -->
-    <div class="w-full h-[260px] overflow-hidden">
+    <div class="w-full">
       <AreaChart
         :data="props.data"
         :categories="categories"

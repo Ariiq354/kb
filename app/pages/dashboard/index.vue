@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import DashboardContainer from "~/features/dashboard/DashboardContainer.vue";
+
 useHead({
   title: "Dashboard",
 });
@@ -18,9 +20,7 @@ useHead({
       </UDashboardNavbar>
     </template>
     <template #body>
-      <div>
-        Ini Dashboard
-      </div>
+      <DashboardContainer />
     </template>
   </UDashboardPanel>
 </template>
