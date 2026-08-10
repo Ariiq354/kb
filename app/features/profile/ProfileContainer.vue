@@ -129,6 +129,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           description="Silakan lengkapi profil Anda terlebih dahulu agar dapat melihat anggota lain dan mencari pasangan."
           class="mb-6"
         />
+        <UAlert
+          icon="i-lucide-shield-check"
+          color="info"
+          variant="subtle"
+          title="Kerahasiaan & Privasi Data Terjaga"
+          description="Data pribadi dan informasi profil Anda disimpan secara aman dan rahasia. Kami menjamin data Anda tidak akan pernah disebarluaskan kepada pihak mana pun tanpa persetujuan Anda."
+          class="mb-6"
+        />
         <UForm
           id="form-profile"
           class="space-y-8"

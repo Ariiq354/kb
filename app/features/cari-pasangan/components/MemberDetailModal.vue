@@ -93,17 +93,6 @@ function calculateAge(birthDateString?: string | null) {
   return age;
 }
 
-const formattedGaji = computed(() => {
-  if (!activeMember.value?.gaji)
-    return "-";
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(activeMember.value.gaji);
-});
-
 const { session } = await useAuthSession();
 const showAjukanBtn = computed(() => session.value?.user.role === "user");
 const isSubmitting = ref(false);
@@ -286,17 +275,9 @@ async function submitTaarufRequest() {
                 <span class="text-xs text-gray-400 dark:text-gray-500 block uppercase tracking-wider font-semibold">Berat Badan</span>
                 <span class="font-medium text-gray-900 dark:text-white">{{ activeMember.berat || '-' }} kg</span>
               </div>
-              <div>
-                <span class="text-xs text-gray-400 dark:text-gray-500 block uppercase tracking-wider font-semibold">Anak Ke</span>
-                <span class="font-medium text-gray-900 dark:text-white">{{ activeMember.anakKe || '-' }} dari {{ activeMember.dariBersaudara || '-' }} bersaudara</span>
-              </div>
-              <div>
+              <div class="col-span-2">
                 <span class="text-xs text-gray-400 dark:text-gray-500 block uppercase tracking-wider font-semibold">Hobi</span>
                 <span class="font-medium text-gray-900 dark:text-white">{{ activeMember.hobi || '-' }}</span>
-              </div>
-              <div class="col-span-2">
-                <span class="text-xs text-gray-400 dark:text-gray-500 block uppercase tracking-wider font-semibold">Nama Ayah</span>
-                <span class="font-medium text-gray-900 dark:text-white">{{ activeMember.namaAyah || '-' }}</span>
               </div>
             </div>
           </div>
@@ -313,16 +294,12 @@ async function submitTaarufRequest() {
                 <span class="font-medium text-gray-900 dark:text-white">{{ activeMember.pekerjaan || '-' }}</span>
               </div>
               <div>
-                <span class="text-xs text-gray-400 dark:text-gray-500 block uppercase tracking-wider font-semibold">Jurusan</span>
-                <span class="font-medium text-gray-900 dark:text-white">{{ activeMember.jurusan || '-' }}</span>
-              </div>
-              <div>
                 <span class="text-xs text-gray-400 dark:text-gray-500 block uppercase tracking-wider font-semibold">Pendidikan</span>
                 <span class="font-medium text-gray-900 dark:text-white">{{ activeMember.pendidikan || '-' }}</span>
               </div>
-              <div>
-                <span class="text-xs text-gray-400 dark:text-gray-500 block uppercase tracking-wider font-semibold">Estimasi Gaji</span>
-                <span class="font-medium text-gray-900 dark:text-white">{{ formattedGaji }}</span>
+              <div class="col-span-2">
+                <span class="text-xs text-gray-400 dark:text-gray-500 block uppercase tracking-wider font-semibold">Jurusan</span>
+                <span class="font-medium text-gray-900 dark:text-white">{{ activeMember.jurusan || '-' }}</span>
               </div>
               <div class="col-span-2">
                 <span class="text-xs text-gray-400 dark:text-gray-500 block uppercase tracking-wider font-semibold">Lokasi Asal</span>
