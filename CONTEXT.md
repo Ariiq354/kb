@@ -15,3 +15,7 @@ _Avoid_: MapLibre (a rendering technology, not the concept), map
 **Ringkasan Aktivitas**:
 The aggregated dashboard view presenting a user's active learning progress (Courses and Bootcamps), Ta'aruf matchmaking process status, purchased products, and profile completeness metrics. In code this is served by the `/api/v1/dashboard` backend module and rendered by `DashboardContainer.vue`.
 _Avoid_: userStats, summaryPage
+
+**Thumbnail Produk**:
+The normalized visual media asset representing a product in catalog grids and carousels. Standardized to landscape 16:9 (`aspect-video`, `object-cover`, `object-center`) for Bootcamps and Courses, and portrait 3:4 (`aspect-3/4`, `object-cover`, `object-top`) for Ebooks to prevent uneven card heights across varying upload ratios.
+_Avoid_: bannerFoto, posterUrl, productPic

@@ -45,7 +45,7 @@ function getImageUrl(foto?: string) {
       v-slot="{ item }"
       :items="items"
       :ui="{
-        item: 'basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4',
+        item: 'basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4 flex py-2',
         prev: 'start-2 sm:-start-5 lg:-start-12',
         next: 'end-2 sm:-end-5 lg:-end-12',
       }"
