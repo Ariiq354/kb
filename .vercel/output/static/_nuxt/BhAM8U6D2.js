@@ -1,0 +1,1 @@
+import{b as e,k as t,mt as n}from"./C4KZE6Q0.js";import{u as r}from"./BJafdryz.js";import{t as i}from"./CNs_Ozdc.js";var a=t({__name:`index`,setup(t){return i({middleware:[()=>r(`/dashboard/user/produk/bootcamp`,{replace:!0})]}),(t,r)=>(n(),e(`div`))}});export{a as default};

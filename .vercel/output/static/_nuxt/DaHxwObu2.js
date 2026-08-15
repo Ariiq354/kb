@@ -1,0 +1,1 @@
+import{n as e}from"./DzMTmxJ4.js";function t(t,n){e().add({title:t,description:n,icon:`i-lucide-circle-check`,color:`success`,duration:3e3})}function n(t,n){e().add({title:t,description:n,icon:`i-lucide-circle-x`,color:`error`,duration:3e3})}export{t as n,n as t};

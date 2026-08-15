@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { AreaChart, CurveType } from "vue-chrts";
-import { UIcon } from "#components";
+import { AreaChart, UIcon } from "#components";
 
 interface LearningChartProps {
   data: Array<{

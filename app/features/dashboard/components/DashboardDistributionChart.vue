@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { DonutChart } from "vue-chrts";
-import { UIcon } from "#components";
+import { DonutChart, UIcon } from "#components";
 
 interface DistributionProps {
   distribution: Array<{
