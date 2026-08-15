@@ -32,6 +32,7 @@ function clickEdit(item: ExtractFetchData<typeof data>[number]) {
     harga: item.harga,
     status: item.status,
     deskripsi: item.deskripsi ?? "",
+    konten: item.konten ?? "",
     foto: item.foto ?? undefined,
     file: undefined,
     pdfUrl: item.pdfUrl ?? undefined,

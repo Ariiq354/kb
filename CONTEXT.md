@@ -19,3 +19,11 @@ _Avoid_: userStats, summaryPage
 **Thumbnail Produk**:
 The normalized visual media asset representing a product in catalog grids and carousels. Standardized to landscape 16:9 (`aspect-video`, `object-cover`, `object-center`) for Bootcamps and Courses, and portrait 3:4 (`aspect-3/4`, `object-cover`, `object-top`) for Ebooks to prevent uneven card heights across varying upload ratios.
 _Avoid_: bannerFoto, posterUrl, productPic
+
+**Deskripsi Produk**:
+The concise plain-text summary of a product used for catalog card teasers/previews and as the introductory lead text on detail pages.
+_Avoid_: summary, shortDesc, excerpt
+
+**Konten Produk**:
+The deep, rich-text (HTML formatted via WYSIWYG editor) body content detailing the syllabus, breakdown, and comprehensive narrative of a product on its detail page.
+_Avoid_: articleBody, detailText, htmlContent

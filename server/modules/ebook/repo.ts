@@ -29,6 +29,7 @@ export abstract class EbookRepo {
         .values({
           produkId: res.id,
           deskripsi: payload.deskripsi,
+          konten: payload.konten,
           pdfUrl,
         });
 
@@ -52,6 +53,7 @@ export abstract class EbookRepo {
         .update(ebook)
         .set({
           deskripsi: payload.deskripsi,
+          konten: payload.konten,
           ...(pdfUrl && { pdfUrl }),
         })
         .where(eq(ebook.produkId, produkId));
@@ -71,6 +73,7 @@ export abstract class EbookRepo {
         status: produk.status,
         foto: produk.foto,
         deskripsi: ebook.deskripsi,
+        konten: ebook.konten,
         pdfUrl: ebook.pdfUrl,
         createdAt: produk.createdAt,
         updatedAt: produk.updatedAt,
@@ -96,6 +99,7 @@ export abstract class EbookRepo {
         status: produk.status,
         foto: produk.foto,
         deskripsi: ebook.deskripsi,
+        konten: ebook.konten,
         pdfUrl: ebook.pdfUrl,
         createdAt: produk.createdAt,
         updatedAt: produk.updatedAt,

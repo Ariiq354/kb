@@ -10,6 +10,7 @@ export interface EbookRow {
   harga: number;
   status: boolean;
   deskripsi?: string | null;
+  konten?: string | null;
   foto?: string | null;
   pdfUrl?: string | null;
 }
@@ -44,6 +45,7 @@ const baseSchema = z.object({
   harga: z.number().min(0, "Harga tidak boleh kosong!"),
   status: z.boolean(),
   deskripsi: z.string().optional(),
+  konten: z.string().optional(),
   foto: z.string().optional(),
   file: z.custom<File | undefined>().optional(),
   pdfUrl: z.string().optional(),
@@ -76,6 +78,7 @@ export const initFormData: Schema = {
   harga: 0,
   status: true,
   deskripsi: "",
+  konten: "",
   foto: undefined,
   file: undefined,
   pdfUrl: undefined,

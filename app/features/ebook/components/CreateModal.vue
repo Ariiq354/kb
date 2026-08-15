@@ -3,6 +3,7 @@ import type { FormSubmitEvent } from "@nuxt/ui";
 import type { Schema } from "../constants";
 import { FetchError } from "ofetch";
 import { ref } from "vue";
+import Editor from "~/components/Custom/Editor.vue";
 import UploadImage from "~/components/Custom/UploadImage.vue";
 import { useToastError, useToastSuccess } from "~/composables/toast";
 import { presignAndUploadFile } from "~/utils/upload";
@@ -78,7 +79,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <LazyUModal
     v-model:open="openModel"
     :title="state.id ? 'Edit Ebook' : 'Tambah Ebook'"
-    class="max-w-xl"
+    class="max-w-4xl"
   >
     <template #body>
       <UForm
@@ -89,12 +90,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         @submit="onSubmit"
       >
         <div class="space-y-4">
-          <UFormField label="Cover Ebook" name="file">
+          <UFormField label="Thumbnail Ebook" name="file">
             <div class="flex items-center gap-4 mt-2">
               <UploadImage
                 v-model:file="state.file"
                 v-model:foto="state.foto"
-                ratio="16:9"
+                ratio="3:4"
                 :disabled="isLoading"
               />
             </div>
@@ -140,12 +141,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             </div>
           </UFormField>
 
-          <UFormField label="Deskripsi" name="deskripsi">
+          <UFormField label="Deskripsi Singkat" name="deskripsi">
             <UTextarea
               v-model="state.deskripsi"
-              placeholder="Detail deskripsi ebook..."
+              placeholder="Ringkasan singkat ebook..."
               class="w-full"
-              :rows="4"
+              :rows="3"
+              :disabled="isLoading"
+            />
+          </UFormField>
+
+          <UFormField label="Konten Detail Ebook (Rich Text)" name="konten">
+            <Editor
+              v-model="state.konten"
+              placeholder="Tulis sinopsis lengkap, daftar isi, preview bab, dan poin-poin manfaat ebook..."
               :disabled="isLoading"
             />
           </UFormField>

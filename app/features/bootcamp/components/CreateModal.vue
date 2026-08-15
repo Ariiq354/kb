@@ -3,6 +3,7 @@ import type { FormSubmitEvent } from "@nuxt/ui";
 import type { Schema } from "../constants";
 import { FetchError } from "ofetch";
 import { computed, ref } from "vue";
+import Editor from "~/components/Custom/Editor.vue";
 import LocationPicker from "~/components/Custom/LocationPicker.client.vue";
 import UploadImage from "~/components/Custom/UploadImage.vue";
 import { useToastError, useToastSuccess } from "~/composables/toast";
@@ -205,12 +206,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             />
           </UFormField>
 
-          <UFormField label="Deskripsi" name="deskripsi">
+          <UFormField label="Deskripsi Singkat" name="deskripsi">
             <UTextarea
               v-model="state.deskripsi"
-              placeholder="Detail deskripsi bootcamp..."
+              placeholder="Ringkasan singkat bootcamp untuk preview di kartu..."
               class="w-full"
-              :rows="4"
+              :rows="3"
+              :disabled="isLoading"
+            />
+          </UFormField>
+
+          <UFormField label="Konten Detail Bootcamp (Rich Text)" name="konten">
+            <Editor
+              v-model="state.konten"
+              placeholder="Tulis silabus, jadwal materi lengkap, benefit, dan detail rundown bootcamp..."
               :disabled="isLoading"
             />
           </UFormField>

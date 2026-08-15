@@ -11,6 +11,7 @@ export interface BootcampRow {
   status: boolean;
   foto?: string | null;
   deskripsi?: string | null;
+  konten?: string | null;
   tipe: "ONLINE" | "OFFLINE" | "HYBRID";
   tempat: string;
   waktu: string;
@@ -76,6 +77,7 @@ const baseSchema = z.object({
   harga: z.number().min(0, "Harga tidak boleh kosong!"),
   status: z.boolean(),
   deskripsi: z.string().optional(),
+  konten: z.string().optional(),
   tipe: z.enum(["ONLINE", "OFFLINE", "HYBRID"]),
   tempat: z.string().min(1, "Tempat tidak boleh kosong!"),
   waktu: z.string().min(1, "Waktu tidak boleh kosong!"),
@@ -119,6 +121,7 @@ export const initFormData: Schema = {
   harga: 0,
   status: true,
   deskripsi: "",
+  konten: "",
   tipe: "ONLINE",
   tempat: "",
   waktu: "",

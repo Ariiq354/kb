@@ -7,6 +7,7 @@ const baseBootcampSchema = z.object({
   harga: z.coerce.number().min(0, "Harga tidak boleh kosong!"),
   status: z.coerce.boolean(),
   deskripsi: z.string().optional(),
+  konten: z.string().optional(),
   tipe: bootcampTypeEnum,
   tempat: z.string().min(1, "Tempat tidak boleh kosong!"),
   waktu: z.string().min(1, "Waktu tidak boleh kosong!"),

@@ -4,7 +4,7 @@ const props = withDefaults(
     disabled: boolean;
     foto: string | undefined;
     file?: File | undefined;
-    ratio?: "1:1" | "16:9";
+    ratio?: "1:1" | "16:9" | "3:4";
   }>(),
   {
     ratio: "1:1",
@@ -29,15 +29,23 @@ const file = computed({
 const config = useRuntimeConfig();
 
 const sizeClasses = computed(() => {
-  return props.ratio === "16:9"
-    ? "aspect-video w-72"
-    : "aspect-square w-40";
+  if (props.ratio === "16:9") {
+    return "aspect-video w-72";
+  }
+  if (props.ratio === "3:4") {
+    return "aspect-3/4 w-40";
+  }
+  return "aspect-square w-40";
 });
 
 const fileDescription = computed(() => {
   if (props.disabled)
     return undefined;
-  return props.ratio === "16:9" ? "16:9, max. 5MB" : "max. 5MB";
+  if (props.ratio === "16:9")
+    return "16:9, max. 5MB";
+  if (props.ratio === "3:4")
+    return "3:4, max. 5MB";
+  return "max. 5MB";
 });
 </script>
 

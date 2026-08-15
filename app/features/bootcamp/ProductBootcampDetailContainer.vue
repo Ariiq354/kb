@@ -129,15 +129,30 @@ const isBootcampExpired = computed(() => {
             </div>
           </div>
 
-          <!-- Description Section -->
-          <div>
-            <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-2">
-              Deskripsi Bootcamp
+          <!-- Description & Content Section -->
+          <div class="space-y-4">
+            <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">
+              Detail Bootcamp
             </h3>
+
+            <!-- Short Description Summary -->
+            <p
+              v-if="item.deskripsi"
+              class="text-base text-gray-700 dark:text-gray-300 leading-relaxed"
+              :class="{ 'pb-4 border-b border-gray-200 dark:border-gray-700': item.konten }"
+            >
+              {{ item.deskripsi }}
+            </p>
+
+            <!-- Rich Text Content Body -->
             <div
+              v-if="item.konten"
               class="prose prose-base max-w-none dark:prose-invert leading-relaxed text-gray-700 dark:text-gray-300"
-              v-html="item.deskripsi || 'Belum ada deskripsi.'"
+              v-html="item.konten"
             />
+            <p v-else-if="!item.deskripsi" class="text-sm text-gray-500 italic">
+              Belum ada deskripsi atau konten.
+            </p>
           </div>
         </div>
       </div>

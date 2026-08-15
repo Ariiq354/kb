@@ -166,10 +166,24 @@ async function checkKupon() {
             {{ item.judul }}
           </h1>
 
+          <!-- Short Description Summary -->
+          <p
+            v-if="item.deskripsi"
+            class="text-base text-gray-700 leading-relaxed"
+            :class="{ 'mb-6 pb-6 border-b border-gray-200': item.konten }"
+          >
+            {{ item.deskripsi }}
+          </p>
+
+          <!-- Rich Text Content Body -->
           <div
+            v-if="item.konten"
             class="prose prose-base max-w-none md:prose-lg leading-relaxed text-gray-700"
-            v-html="item.deskripsi || 'Belum ada deskripsi.'"
+            v-html="item.konten"
           />
+          <p v-else-if="!item.deskripsi" class="text-sm text-gray-500 italic">
+            Belum ada deskripsi atau konten.
+          </p>
         </div>
       </div>
 

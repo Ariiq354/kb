@@ -11,6 +11,7 @@ export const bootcamp = snakeCase.table("bootcamp", {
   id: integer().primaryKey().generatedByDefaultAsIdentity(),
   produkId: integer().references(() => produk.id, { onDelete: "cascade" }).notNull().unique(),
   deskripsi: text(),
+  konten: text(),
   tipe: bootcampTypeEnum().notNull(),
   tempat: text().notNull(),
   waktu: text().notNull(),

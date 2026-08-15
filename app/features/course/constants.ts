@@ -10,6 +10,7 @@ export interface CourseRow {
   harga: number;
   status: boolean;
   deskripsi?: string | null;
+  konten?: string | null;
   namaPublisher?: string | null;
   foto?: string | null;
 }
@@ -48,6 +49,7 @@ const baseSchema = z.object({
   harga: z.number().min(0, "Harga tidak boleh kosong!"),
   status: z.boolean(),
   deskripsi: z.string().optional(),
+  konten: z.string().optional(),
   namaPublisher: z.string().optional(),
   foto: z.string().optional(),
   file: z.custom<File | undefined>().optional(),
@@ -70,6 +72,7 @@ export const initFormData: Schema = {
   harga: 0,
   status: true,
   deskripsi: "",
+  konten: "",
   namaPublisher: "",
   foto: undefined,
   file: undefined,

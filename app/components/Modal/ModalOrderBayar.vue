@@ -56,7 +56,7 @@ void props;
           </div>
           <div class="flex justify-center p-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white">
             <NuxtImg
-              src="/images/contohqris.png"
+              src="/images/contohqris.webp"
               alt="QRIS Pembayaran"
               class="h-52 object-contain"
             />

@@ -29,6 +29,7 @@ export abstract class CourseRepo {
         .values({
           produkId: res.id,
           deskripsi: payload.deskripsi,
+          konten: payload.konten,
           namaPublisher: payload.namaPublisher,
         });
 
@@ -63,6 +64,7 @@ export abstract class CourseRepo {
         .update(course)
         .set({
           deskripsi: payload.deskripsi,
+          konten: payload.konten,
           namaPublisher: payload.namaPublisher,
         })
         .where(eq(course.id, courseRecord.courseId));
@@ -84,6 +86,7 @@ export abstract class CourseRepo {
         status: produk.status,
         foto: produk.foto,
         deskripsi: course.deskripsi,
+        konten: course.konten,
         namaPublisher: course.namaPublisher,
         createdAt: produk.createdAt,
         updatedAt: produk.updatedAt,
@@ -125,6 +128,7 @@ export abstract class CourseRepo {
         status: produk.status,
         foto: produk.foto,
         deskripsi: course.deskripsi,
+        konten: course.konten,
         namaPublisher: course.namaPublisher,
         createdAt: produk.createdAt,
         updatedAt: produk.updatedAt,

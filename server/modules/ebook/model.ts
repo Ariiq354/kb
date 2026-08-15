@@ -5,6 +5,7 @@ export const createEbookSchema = z.object({
   harga: z.coerce.number().min(0, "Harga tidak boleh kosong!"),
   status: z.coerce.boolean(),
   deskripsi: z.string().optional(),
+  konten: z.string().optional(),
   file: z.string().optional(),
   pdfFile: z.string().optional(),
 });

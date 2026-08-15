@@ -3,6 +3,7 @@ import type { FormSubmitEvent } from "@nuxt/ui";
 import type { Schema } from "../constants";
 import { FetchError } from "ofetch";
 import { ref } from "vue";
+import Editor from "~/components/Custom/Editor.vue";
 import UploadImage from "~/components/Custom/UploadImage.vue";
 import { useToastError, useToastSuccess } from "~/composables/toast";
 import { presignAndUploadFile } from "~/utils/upload";
@@ -64,7 +65,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <LazyUModal
     v-model:open="openModel"
     :title="state.id ? 'Edit Course' : 'Tambah Course'"
-    class="max-w-xl"
+    class="max-w-4xl"
   >
     <template #body>
       <UForm
@@ -75,7 +76,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         @submit="onSubmit"
       >
         <div class="space-y-4">
-          <UFormField label="Cover Course" name="file">
+          <UFormField label="Thumbnail Course" name="file">
             <div class="flex items-center gap-4 mt-2">
               <UploadImage
                 v-model:file="state.file"
@@ -95,37 +96,47 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             />
           </UFormField>
 
-          <UFormField label="Harga (Rp)" name="harga">
-            <UInputNumber
-              v-model="state.harga"
-              placeholder="0"
-              class="w-full"
-              :disabled="isLoading"
-              :format-options="{
-                style: 'currency',
-                currency: 'IDR',
-                currencyDisplay: 'symbol',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              }"
-            />
-          </UFormField>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <UFormField label="Harga (Rp)" name="harga">
+              <UInputNumber
+                v-model="state.harga"
+                placeholder="0"
+                class="w-full"
+                :disabled="isLoading"
+                :format-options="{
+                  style: 'currency',
+                  currency: 'IDR',
+                  currencyDisplay: 'symbol',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }"
+              />
+            </UFormField>
 
-          <UFormField label="Nama Publisher" name="namaPublisher">
-            <UInput
-              v-model="state.namaPublisher"
-              placeholder="Nama penerbit/pembuat course"
-              class="w-full"
-              :disabled="isLoading"
-            />
-          </UFormField>
+            <UFormField label="Nama Publisher" name="namaPublisher">
+              <UInput
+                v-model="state.namaPublisher"
+                placeholder="Nama penerbit/pembuat course"
+                class="w-full"
+                :disabled="isLoading"
+              />
+            </UFormField>
+          </div>
 
-          <UFormField label="Deskripsi" name="deskripsi">
+          <UFormField label="Deskripsi Singkat" name="deskripsi">
             <UTextarea
               v-model="state.deskripsi"
-              placeholder="Detail deskripsi course..."
+              placeholder="Ringkasan singkat course..."
               class="w-full"
-              :rows="4"
+              :rows="3"
+              :disabled="isLoading"
+            />
+          </UFormField>
+
+          <UFormField label="Konten Detail Course (Rich Text)" name="konten">
+            <Editor
+              v-model="state.konten"
+              placeholder="Tulis silabus lengkap, ringkasan modul materi, dan target pembelajaran course..."
               :disabled="isLoading"
             />
           </UFormField>

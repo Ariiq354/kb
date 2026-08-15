@@ -29,6 +29,7 @@ export abstract class BootcampRepo {
         .values({
           produkId: res.id,
           deskripsi: payload.deskripsi,
+          konten: payload.konten,
           tipe: payload.tipe,
           tempat: payload.tempat,
           waktu: payload.waktu,
@@ -57,6 +58,7 @@ export abstract class BootcampRepo {
         .update(bootcamp)
         .set({
           deskripsi: payload.deskripsi,
+          konten: payload.konten,
           tipe: payload.tipe,
           tempat: payload.tempat,
           waktu: payload.waktu,
@@ -81,6 +83,7 @@ export abstract class BootcampRepo {
         status: produk.status,
         foto: produk.foto,
         deskripsi: bootcamp.deskripsi,
+        konten: bootcamp.konten,
         tipe: bootcamp.tipe,
         tempat: bootcamp.tempat,
         waktu: bootcamp.waktu,
@@ -111,6 +114,7 @@ export abstract class BootcampRepo {
         status: produk.status,
         foto: produk.foto,
         deskripsi: bootcamp.deskripsi,
+        konten: bootcamp.konten,
         tipe: bootcamp.tipe,
         tempat: bootcamp.tempat,
         waktu: bootcamp.waktu,

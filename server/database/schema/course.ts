@@ -6,6 +6,7 @@ export const course = snakeCase.table("course", {
   id: integer().primaryKey().generatedByDefaultAsIdentity(),
   produkId: integer().references(() => produk.id, { onDelete: "cascade" }).notNull().unique(),
   deskripsi: text(),
+  konten: text(),
   namaPublisher: text(),
 });
 
