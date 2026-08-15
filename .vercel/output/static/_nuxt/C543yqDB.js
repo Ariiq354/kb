@@ -1,1 +1,0 @@
-import{i as e}from"./C84lBgyS.js";async function t(t,n){let{key:r,url:i}=await e(`/api/v1/upload/presign`,{method:`POST`,body:{dir:t,filename:n.name,filesize:n.size,filetype:n.type}});return await e(i,{method:`PUT`,body:n,headers:{"Content-Type":n.type}}),r}export{t};

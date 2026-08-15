@@ -1,1 +1,0 @@
-import{n as e}from"#entry";var t=e();function n(e,n){return t.create(e,{props:n}).open()}export{n as t};
