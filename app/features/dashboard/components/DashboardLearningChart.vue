@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { AreaChart, UIcon } from "#components";
+import { AreaChart, CurveType } from "vue-chrts";
+import { UIcon, USkeleton } from "#components";
 
 interface LearningChartProps {
   data: Array<{
@@ -49,13 +50,18 @@ const categories = {
 
     <!-- Nuxt Chart: AreaChart -->
     <div class="w-full">
-      <AreaChart
-        :data="props.data"
-        :categories="categories"
-        :height="250"
-        :show-grid-lines="true"
-        :curve-type="CurveType.MonotoneX"
-      />
+      <ClientOnly>
+        <AreaChart
+          :data="props.data"
+          :categories="categories"
+          :height="250"
+          :show-grid-lines="true"
+          :curve-type="CurveType.MonotoneX"
+        />
+        <template #fallback>
+          <USkeleton class="h-62.5 w-full rounded-xl" />
+        </template>
+      </ClientOnly>
     </div>
   </div>
 </template>
