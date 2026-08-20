@@ -83,17 +83,17 @@ const toolbarItems: EditorToolbarItem[][] = [
         base: 'p-3.5 prose prose-sm sm:prose-base dark:prose-invert max-w-none focus:outline-none min-h-[200px]',
       }"
     >
-      <div class="sticky top-0 z-10 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-800 relative">
+      <div class="sticky top-0 z-10 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-800">
         <!-- Left gradient indicator for scroll affordance -->
         <div
-          class="pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-neutral-50 dark:from-neutral-800 to-transparent transition-opacity duration-200 z-10"
+          class="pointer-events-none absolute left-0 top-0 bottom-0 w-6 bg-linear-to-r from-neutral-50 dark:from-neutral-800 to-transparent transition-opacity duration-200 z-10"
           :class="!arrivedState.left ? 'opacity-100' : 'opacity-0'"
         />
 
         <!-- Scrollable Toolbar Container -->
         <div
           ref="toolbarScrollRef"
-          class="px-2 py-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden touch-pan-x flex items-center"
+          class="px-2 py-1.5 overflow-x-auto scrollbar-none [&::-webkit-scrollbar]:hidden touch-pan-x flex items-center"
         >
           <UEditorToolbar
             :editor="editor"
@@ -105,7 +105,7 @@ const toolbarItems: EditorToolbarItem[][] = [
 
         <!-- Right gradient indicator for scroll affordance -->
         <div
-          class="pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-neutral-50 dark:from-neutral-800 to-transparent transition-opacity duration-200 z-10"
+          class="pointer-events-none absolute right-0 top-0 bottom-0 w-6 bg-linear-to-l from-neutral-50 dark:from-neutral-800 to-transparent transition-opacity duration-200 z-10"
           :class="!arrivedState.right ? 'opacity-100' : 'opacity-0'"
         />
       </div>
