@@ -5,7 +5,7 @@ import { env } from "~~/shared/env";
 const resend = new Resend(env.RESEND_API_KEY);
 
 export async function sendContactEmail(data: ContactSchema) {
-  return resend.emails.send({
+  const { data: result, error } = await resend.emails.send({
     from: "noreply@mail.keluargabahagia.id",
     to: "halokeluargabahagia@gmail.com",
     subject: `Pesan Kontak dari ${data.name}`,
@@ -17,4 +17,13 @@ export async function sendContactEmail(data: ContactSchema) {
       <p>${data.message.replace(/\n/g, "<br>")}</p>
     `,
   });
+
+  if (error) {
+    console.error("Resend error:", error);
+    throw new Error(error.message);
+  }
+
+  console.log("Resend email sent:", result);
+
+  return result;
 }
