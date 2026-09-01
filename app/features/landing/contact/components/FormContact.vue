@@ -31,7 +31,7 @@ async function onSubmit(event: FormSubmitEvent<ContactSchema>) {
       body: event.data,
     });
 
-    useToastSuccess("Pesan Terkirim", "Pesan Anda berhasil dikirim. Kami akan segera menghubungi Anda.");
+    useToastSuccess("Pesan Terkirim", "Pesan Anda berhasil dikirim.");
 
     state.name = "";
     state.email = "";
