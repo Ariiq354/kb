@@ -1,16 +1,49 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import type { ContactSchema } from "~~/server/utils/schema";
+import type { FormSubmitEvent } from "#ui/types";
+import { contactSchema } from "~~/server/utils/schema";
+import { useToastError, useToastSuccess } from "~/composables/toast";
+
+const isLoading = ref(false);
+
+const state = reactive<ContactSchema>({
+  name: "",
+  email: "",
+  message: "",
+});
 
 const messageMaxLength = 1000;
-const message = ref("");
 
 const messageCounterClass = computed(() => {
-  if (message.value.length >= messageMaxLength) {
+  if (state.message.length >= messageMaxLength) {
     return "text-error";
   }
 
   return "text-muted";
 });
+
+async function onSubmit(event: FormSubmitEvent<ContactSchema>) {
+  isLoading.value = true;
+
+  try {
+    await $fetch("/api/v1/contact", {
+      method: "POST",
+      body: event.data,
+    });
+
+    useToastSuccess("Pesan Terkirim", "Pesan Anda berhasil dikirim. Kami akan segera menghubungi Anda.");
+
+    state.name = "";
+    state.email = "";
+    state.message = "";
+  }
+  catch {
+    useToastError("Gagal Mengirim Pesan", "Terjadi kesalahan. Silahkan coba lagi.");
+  }
+  finally {
+    isLoading.value = false;
+  }
+}
 </script>
 
 <template>
@@ -33,34 +66,40 @@ const messageCounterClass = computed(() => {
       </div>
     </div>
 
-    <UForm class="mt-6 flex flex-col gap-5 sm:mt-8 sm:gap-6">
+    <UForm
+      :schema="contactSchema"
+      :state="state"
+      class="mt-6 flex flex-col gap-5 sm:mt-8 sm:gap-6"
+      @submit="onSubmit"
+    >
       <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <UFormField label="Nama Lengkap" name="name" :ui="{ label: 'font-bold' }">
-          <UInput placeholder="Contoh: Arif Budiman" :ui="{ base: 'placeholder:text-sm' }" />
+          <UInput v-model="state.name" placeholder="Contoh: Arif Budiman" :ui="{ base: 'placeholder:text-sm' }" :disabled="isLoading" />
         </UFormField>
         <UFormField label="Alamat Email" name="email" :ui="{ label: 'font-bold' }">
-          <UInput placeholder="Contoh: arifbudiman@mail.com" :ui="{ base: 'placeholder:text-sm' }" />
+          <UInput v-model="state.email" placeholder="Contoh: arifbudiman@mail.com" :ui="{ base: 'placeholder:text-sm' }" :disabled="isLoading" />
         </UFormField>
       </div>
       <UFormField label="Pesan Anda" name="message" :ui="{ label: 'font-bold' }">
         <UTextarea
-          v-model="message"
+          v-model="state.message"
           :ui="{ base: 'placeholder:text-sm' }"
           placeholder="Ceritakan bagaimana kami dapat membantu Anda membangun hubungan yang lebih kuat..."
           :rows="10"
           :maxlength="messageMaxLength"
+          :disabled="isLoading"
         />
         <p class="mt-2 text-right text-sm" :class="messageCounterClass">
-          {{ message.length }}/{{ messageMaxLength }}
+          {{ state.message.length }}/{{ messageMaxLength }}
         </p>
       </UFormField>
+      <UButton class="w-full cursor-pointer sm:w-44" type="submit" :loading="isLoading">
+        <div class="flex items-center justify-center gap-4 w-full text-base">
+          <UIcon name="i-lucide-send" />
+          Kirim Pesan
+        </div>
+      </UButton>
     </UForm>
-    <UButton class="w-full cursor-pointer sm:w-44 mt-4">
-      <div class="flex items-center justify-center gap-4 w-full text-base">
-        <UIcon name="i-lucide-send" />
-        Kirim Pesan
-      </div>
-    </UButton>
     <div class="mt-6 flex items-start gap-2 text-muted sm:mt-10">
       <UIcon name="i-lucide-lock-keyhole" class="mt-0.5 shrink-0 text-base" />
       <p class="text-xs leading-5 sm:text-sm">

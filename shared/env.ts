@@ -9,6 +9,7 @@ const EnvZodSchema = z.object({
   CLOUDFLARE_ACCESS_ID: z.string(),
   CLOUDFLARE_SECRET_ID: z.string(),
   CLOUDFLARE_BUCKET: z.string(),
+  RESEND_API_KEY: z.string(),
   CRON_SECRET: z.string().optional(),
 });
 
