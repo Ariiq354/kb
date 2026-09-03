@@ -23,7 +23,7 @@ import FormContact from "./components/FormContact.vue";
                   Dukungan Email
                 </p>
                 <p class="my-1 break-all text-sm text-default sm:text-base">
-                  test@mail.com
+                  halokeluargabahagia@gmail.com
                 </p>
                 <p class="text-sm font-light text-muted">
                   Balasan dikirim dalam 24 jam

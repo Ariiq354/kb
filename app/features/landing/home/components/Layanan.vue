@@ -14,7 +14,7 @@
       <!-- Service 1: Bootcamp -->
       <div class="relative overflow-hidden rounded-2xl border border-primary/20 bg-white p-6 shadow-md sm:p-8 lg:col-span-2">
         <div class="absolute right-0 top-0 p-6 text-primary opacity-10 sm:p-8">
-          <UIcon name="i-material-symbols-favorite" class="size-20 sm:size-[100px]" />
+          <UIcon name="i-material-symbols-favorite" class="size-20 sm:size-25" />
         </div>
 
         <div class="relative z-10 flex flex-col justify-between">
