@@ -25,6 +25,9 @@ const showBanForm = ref(false);
 const banReason = ref("");
 const isSubmittingBan = ref(false);
 
+const showDeleteConfirm = ref(false);
+const isSubmittingDelete = ref(false);
+
 async function toggleBanStatus(banned: boolean) {
   if (banned && !showBanForm.value) {
     showBanForm.value = true;
@@ -65,6 +68,31 @@ async function toggleBanStatus(banned: boolean) {
 function cancelBan() {
   showBanForm.value = false;
   banReason.value = "";
+}
+
+async function confirmDeleteUser() {
+  isSubmittingDelete.value = true;
+  try {
+    await $fetch(`/api/v1/users/${props.user?.id}/delete`, {
+      method: "POST",
+    });
+
+    useToastSuccess(
+      "Anggota Dihapus",
+      `Anggota ${props.user?.name} berhasil dihapus secara permanen.`,
+    );
+    showDeleteConfirm.value = false;
+    openModel.value = false;
+    emit("success");
+  }
+  catch (error: unknown) {
+    console.error(error);
+    const errorDetails = error as { data?: { message?: string } };
+    useToastError("Gagal Menghapus Anggota", errorDetails.data?.message || "Terjadi kesalahan.");
+  }
+  finally {
+    isSubmittingDelete.value = false;
+  }
 }
 </script>
 
@@ -368,6 +396,14 @@ function cancelBan() {
           >
             Tangguhkan (Ban)
           </UButton>
+          <UButton
+            color="error"
+            variant="outline"
+            icon="i-lucide-trash-2"
+            @click="showDeleteConfirm = true"
+          >
+            Hapus Anggota
+          </UButton>
         </div>
 
         <div v-if="!showBanForm" class="flex justify-end sm:ml-auto">
@@ -380,6 +416,45 @@ function cancelBan() {
             Tutup
           </UButton>
         </div>
+      </div>
+    </template>
+  </LazyUModal>
+
+  <LazyUModal
+    v-model:open="showDeleteConfirm"
+    title="Hapus Anggota"
+  >
+    <template #body>
+      <div v-if="user" class="space-y-4">
+        <UAlert
+          icon="i-lucide-alert-triangle"
+          color="error"
+          variant="subtle"
+          title="Tindakan ini tidak dapat dibatalkan"
+          description="Semua data anggota akan dihapus secara permanen dari sistem."
+        />
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          Yakin ingin menghapus anggota <strong class="text-gray-900 dark:text-white">{{ user.name }}</strong> ({{ user.email }})?
+        </p>
+      </div>
+    </template>
+    <template #footer>
+      <div class="flex justify-end gap-2">
+        <UButton
+          color="neutral"
+          variant="outline"
+          :disabled="isSubmittingDelete"
+          @click="showDeleteConfirm = false"
+        >
+          Batal
+        </UButton>
+        <UButton
+          color="error"
+          :loading="isSubmittingDelete"
+          @click="confirmDeleteUser"
+        >
+          Ya, Hapus
+        </UButton>
       </div>
     </template>
   </LazyUModal>

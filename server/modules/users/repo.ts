@@ -119,6 +119,14 @@ export abstract class UserRepo {
     return result || null;
   }
 
+  static async deleteUser(userId: number) {
+    const [result] = await db.delete(user)
+      .where(eq(user.id, userId))
+      .returning();
+
+    return result || null;
+  }
+
   static async findAll(query: PaginationSearchSchema) {
     const conditions: (SQL<unknown> | undefined)[] = [];
 

@@ -52,6 +52,22 @@ export abstract class UserService {
     return await UserRepo.banUser(userId, payload);
   }
 
+  static async deleteUser(userId: number) {
+    const deleted = await UserRepo.deleteUser(userId);
+
+    if (!deleted) {
+      throw createError({
+        statusCode: 404,
+        message: "User tidak ditemukan",
+        data: {
+          code: "USER_MISSING",
+        },
+      });
+    }
+
+    return deleted;
+  }
+
   static async findOppositeGenderMembers(user: UserWithId, query: CariPasanganQuerySchema) {
     const currentUserProfile = await UserRepo.getUserProfile(user.id);
 
