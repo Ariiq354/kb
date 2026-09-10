@@ -4,7 +4,7 @@ import type { CreateCourseSchema, CreateLessonSchema, CreateSectionSchema, Updat
 import { and, count, desc, eq, ilike, inArray, or } from "drizzle-orm";
 import { db } from "~~/server/database";
 import { course, courseLesson, courseProgress, courseSection } from "~~/server/database/schema/course";
-import { produk } from "~~/server/database/schema/produk";
+import { orders, produk } from "~~/server/database/schema/produk";
 import { UploadRepo } from "~~/server/modules/upload/repo";
 
 export abstract class CourseRepo {
@@ -158,15 +158,33 @@ export abstract class CourseRepo {
         .where(or(inArray(course.id, courseIds), inArray(produk.id, courseIds)));
 
       if (rows.length === 0)
-        return [];
+        return { deleted: [], blocked: false };
 
       const produkIds = rows.map(r => r.produkId);
+      const courseIdsToDelete = rows.map(r => r.id);
+
+      const [existingOrder] = await tx
+        .select({ id: orders.id })
+        .from(orders)
+        .where(inArray(orders.produkId, produkIds))
+        .limit(1);
+
+      const [existingProgress] = await tx
+        .select({ id: courseProgress.id })
+        .from(courseProgress)
+        .innerJoin(courseLesson, eq(courseProgress.lessonId, courseLesson.id))
+        .innerJoin(courseSection, eq(courseLesson.sectionId, courseSection.id))
+        .where(inArray(courseSection.courseId, courseIdsToDelete))
+        .limit(1);
+
+      if (existingOrder || existingProgress)
+        return { deleted: [], blocked: true };
 
       await tx
         .delete(produk)
         .where(inArray(produk.id, produkIds));
 
-      return rows;
+      return { deleted: rows, blocked: false };
     });
   }
 

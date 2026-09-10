@@ -45,7 +45,8 @@ async function onClick() {
     emit("close", false);
   }
   catch (error: any) {
-    useToastError("Gagal Memproses", error?.data?.message || "Terjadi kesalahan.");
+    const message = error?.data?.statusMessage || error?.data?.message || error?.statusMessage || error?.message || "Terjadi kesalahan.";
+    useToastError("Gagal Memproses", message);
   }
   finally {
     loading.value = false;

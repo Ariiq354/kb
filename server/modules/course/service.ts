@@ -44,20 +44,27 @@ export abstract class CourseService {
   static async delete(courseIds: number[]) {
     const result = await CourseRepo.delete(courseIds);
 
-    if (result.length === 0) {
+    if (result.blocked) {
+      throw createError({
+        statusCode: 409,
+        statusMessage: "Tidak Bisa Menghapus Produk Karena sudah dibeli/dipakai",
+      });
+    }
+
+    if (result.deleted.length === 0) {
       throw createError({
         statusCode: 404,
         statusMessage: "Course tidak ditemukan",
       });
     }
 
-    for (const item of result) {
+    for (const item of result.deleted) {
       if (item.foto) {
         await deleteFile(item.foto);
       }
     }
 
-    return result;
+    return result.deleted;
   }
 
   // --- Section Service Operations ---
