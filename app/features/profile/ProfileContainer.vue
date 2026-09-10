@@ -74,17 +74,23 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
   <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-    <div class="md:col-span-4 space-y-6">
-      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm dark:bg-gray-900 dark:border-gray-800">
-        <div class="relative h-24 overflow-hidden bg-linear-to-r from-primary-500 to-primary-600">
-          <svg class="absolute inset-0 h-full w-full opacity-20" preserveAspectRatio="none" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 0C100 80 300 0 400 100L400 0H0Z" fill="white" />
-            <path d="M0 100C150 0 250 50 400 0V100H0Z" fill="white" opacity="0.5" />
+    <!-- Card Profile User -->
+    <div class="min-w-0 md:col-span-4">
+      <section aria-labelledby="profile-card-name" class="isolate overflow-hidden rounded-3xl border border-default bg-default shadow-xl shadow-primary/5">
+        <div class="relative h-36 overflow-hidden bg-primary-900 px-6 pt-6">
+          <svg aria-hidden="true" class="pointer-events-none absolute inset-0 h-full w-full text-primary-300" preserveAspectRatio="xMidYMid slice" viewBox="0 0 400 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="310" cy="70" r="106" stroke="currentColor" stroke-width="32" opacity="0.1" />
+            <circle cx="220" cy="148" r="106" stroke="currentColor" stroke-width="1" opacity="0.45" />
+            <circle cx="310" cy="70" r="80" stroke="currentColor" stroke-width="1" opacity="0.35" />
           </svg>
+          <div class="relative flex items-center gap-2 text-primary-100">
+            <UIcon name="i-lucide-user-round" class="size-4" aria-hidden="true" />
+            <span class="text-xs font-semibold tracking-[0.18em] uppercase">Profil saya</span>
+          </div>
         </div>
 
-        <div class="px-6 pb-6 flex flex-col items-center text-center -mt-12">
-          <div class="relative mb-3 bg-white p-1 rounded-xl shadow-sm ring-1 ring-gray-100 dark:bg-gray-800 dark:ring-gray-700">
+        <div class="relative -mt-16 flex flex-col items-center px-5 pb-6 text-center lg:px-6">
+          <div class="rounded-2xl bg-default p-2 shadow-lg shadow-primary/10 ring-1 ring-default">
             <UploadImage
               v-model:file="state.file"
               v-model:foto="state.foto"
@@ -92,30 +98,54 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             />
           </div>
 
-          <h2 class="text-xl font-bold text-gray-900 dark:text-white mt-2">
+          <h2 id="profile-card-name" class="mt-5 w-full text-2xl font-bold tracking-tight wrap-break-word text-highlighted">
             {{ data?.name || '-' }}
           </h2>
-          <p class="text-sm font-medium text-primary-600 dark:text-primary-400 mt-1">
-            {{ data?.pekerjaan || 'Belum ada pekerjaan' }}
+          <p class="mt-2 flex max-w-full items-start justify-center gap-2 text-sm text-muted">
+            <UIcon name="i-lucide-briefcase-business" class="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+            <span class="min-w-0 wrap-break-word">{{ data?.pekerjaan || 'Belum ada pekerjaan' }}</span>
           </p>
 
-          <div v-if="data?.kodeUser" class="mt-3 flex items-center gap-1.5 bg-gray-50 dark:bg-gray-800 border border-primary-100 dark:border-primary-900 px-3 py-1 rounded-full text-xs text-primary-700 dark:text-primary-300">
-            <UIcon name="i-lucide-award" class="size-3.5 text-green-500" />
-            <span class="font-medium">{{ data?.kodeUser }}</span>
+          <div v-if="data?.kodeUser" class="mt-4 inline-flex max-w-full items-center gap-2 rounded-full bg-primary/10 px-3.5 py-2 text-xs text-primary ring-1 ring-inset ring-primary/15">
+            <UIcon name="i-lucide-fingerprint" class="size-4 shrink-0" aria-hidden="true" />
+            <span class="min-w-0 wrap-break-word">ID Anggota <span class="ml-1 font-mono font-semibold">{{ data.kodeUser }}</span></span>
           </div>
 
-          <div class="w-full border-t border-gray-100 dark:border-gray-800 mt-6 pt-5 flex flex-col gap-3.5 text-sm text-left">
-            <div class="flex items-center gap-3 text-gray-600 dark:text-gray-400">
-              <UIcon name="i-lucide-mail" class="size-4.5 text-gray-400 shrink-0" />
-              <span class="truncate font-medium">{{ data?.email || '-' }}</span>
-            </div>
-            <div class="flex items-center gap-3 text-gray-600 dark:text-gray-400">
-              <UIcon name="i-lucide-phone" class="size-4.5 text-gray-400 shrink-0" />
-              <span class="truncate font-medium">{{ data?.noTelepon || '-' }}</span>
-            </div>
+          <div class="mt-7 w-full border-t border-default pt-5 text-left">
+            <h3 class="mb-3 text-xs font-semibold tracking-widest text-muted uppercase">
+              Informasi kontak
+            </h3>
+            <dl class="space-y-2">
+              <div class="relative rounded-2xl bg-muted/60 p-3 pl-16">
+                <dt class="text-xs text-muted">
+                  <span class="absolute top-1/2 left-3 flex size-10 -translate-y-1/2 items-center justify-center rounded-xl bg-default text-primary ring-1 ring-default">
+                    <UIcon name="i-lucide-mail" class="size-4.5" aria-hidden="true" />
+                  </span>
+                  Email
+                </dt>
+                <dd class="mt-0.5 text-sm font-medium wrap-anywhere text-default">
+                  {{ data?.email || 'Belum ditambahkan' }}
+                </dd>
+              </div>
+              <div class="relative rounded-2xl bg-muted/60 p-3 pl-16">
+                <dt class="text-xs text-muted">
+                  <span class="absolute top-1/2 left-3 flex size-10 -translate-y-1/2 items-center justify-center rounded-xl bg-default text-primary ring-1 ring-default">
+                    <UIcon name="i-lucide-phone" class="size-4.5" aria-hidden="true" />
+                  </span>
+                  Nomor telepon
+                </dt>
+                <dd class="mt-0.5 text-sm font-medium wrap-anywhere text-default">
+                  {{ data?.noTelepon || 'Belum ditambahkan' }}
+                </dd>
+              </div>
+            </dl>
           </div>
         </div>
-      </div>
+        <div class="flex items-start gap-2.5 border-t border-default bg-muted/40 px-5 py-4 text-xs leading-relaxed text-muted lg:px-6">
+          <UIcon name="i-lucide-camera" class="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+          <p>Gunakan foto terbaik Anda. Klik <span class="font-semibold text-default">Simpan Profil</span> setelah mengganti foto.</p>
+        </div>
+      </section>
     </div>
 
     <div class="md:col-span-8">
