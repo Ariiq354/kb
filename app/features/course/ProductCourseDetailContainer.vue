@@ -5,7 +5,7 @@ import { useFetch, useRoute, useRuntimeConfig } from "#imports";
 const route = useRoute();
 const config = useRuntimeConfig();
 
-const { data: item, status } = await useFetch<any>(() => `/api/v1/produk/${route.params.id}`, {
+const { data: item, status } = await useFetch<any>(() => `/api/v1/user/produk/${route.params.id}`, {
   ignoreResponseError: true,
 });
 

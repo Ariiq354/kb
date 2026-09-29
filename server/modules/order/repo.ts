@@ -16,6 +16,10 @@ export abstract class OrderRepo {
       throw new Error("Produk tidak ditemukan");
     }
 
+    if (prod.status !== true) {
+      throw new Error("Produk tidak tersedia");
+    }
+
     const existing = await this.checkUserProductOrder(userId, prod.id);
     if (existing.hasOrder && existing.status === "PAID") {
       throw new Error("Anda sudah memiliki produk ini");
@@ -91,6 +95,21 @@ export abstract class OrderRepo {
       status: existingOrder.status,
       order: existingOrder,
     };
+  }
+
+  static async findUserProductDetail(userId: number, produkId: number) {
+    const prod = await ProdukRepo.findById(produkId);
+
+    if (!prod) {
+      return null;
+    }
+
+    if (prod.status === true) {
+      return prod;
+    }
+
+    const existing = await this.checkUserProductOrder(userId, prod.id);
+    return existing.hasOrder ? prod : null;
   }
 
   static async findUserPurchasedProducts(userId: number, type?: "BOOTCAMP" | "EBOOK" | "COURSE") {

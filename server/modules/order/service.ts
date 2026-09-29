@@ -12,6 +12,10 @@ export abstract class OrderService {
     return await OrderRepo.checkUserProductOrder(userId, produkId);
   }
 
+  static async findUserProductDetail(userId: number, produkId: number) {
+    return await OrderRepo.findUserProductDetail(userId, produkId);
+  }
+
   static async findUserPurchasedProducts(userId: number, type?: "BOOTCAMP" | "EBOOK" | "COURSE") {
     return await OrderRepo.findUserPurchasedProducts(userId, type);
   }

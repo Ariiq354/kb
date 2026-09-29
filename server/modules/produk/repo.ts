@@ -62,11 +62,12 @@ export abstract class ProdukRepo {
     return await this.findAll({ page, limit, search, type, status: true });
   }
 
-  static async findById(id: number) {
+  static async findById(id: number, opts?: { activeOnly?: boolean }) {
     let prod = await db
       .select({
         id: produk.id,
         type: produk.type,
+        status: produk.status,
       })
       .from(produk)
       .where(eq(produk.id, id))
@@ -77,6 +78,7 @@ export abstract class ProdukRepo {
         .select({
           id: produk.id,
           type: produk.type,
+          status: produk.status,
         })
         .from(course)
         .innerJoin(produk, eq(course.produkId, produk.id))
@@ -89,6 +91,9 @@ export abstract class ProdukRepo {
     }
 
     if (!prod)
+      return null;
+
+    if (opts?.activeOnly && prod.status !== true)
       return null;
 
     let res: any = null;
@@ -104,6 +109,7 @@ export abstract class ProdukRepo {
 
     if (res) {
       res.type = prod.type;
+      res.status = prod.status;
     }
 
     return res;

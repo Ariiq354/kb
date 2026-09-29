@@ -7,7 +7,7 @@ import { formatRupiah } from "~/utils/number";
 const route = useRoute();
 const config = useRuntimeConfig();
 
-const { data: item, status } = await useFetch<any>(() => `/api/v1/produk/${route.params.id}`, {
+const { data: item, status } = await useFetch<any>(() => `/api/v1/user/produk/${route.params.id}`, {
   ignoreResponseError: true,
 });
 

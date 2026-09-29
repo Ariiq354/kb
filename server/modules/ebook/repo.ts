@@ -84,8 +84,12 @@ export abstract class EbookRepo {
       .then(rows => rows[0]);
   }
 
-  static async findAll(query: PaginationSearchSchema) {
+  static async findAll(query: PaginationSearchSchema & { status?: boolean }) {
     const conditions: (SQL<unknown> | undefined)[] = [];
+
+    if (query.status !== undefined) {
+      conditions.push(eq(produk.status, query.status));
+    }
 
     if (query.search) {
       conditions.push(ilike(produk.judul, `%${query.search}%`));

@@ -13,7 +13,7 @@ export abstract class ProdukService {
     return await ProdukRepo.findByType(type, page, limit, search);
   }
 
-  static async findById(id: number) {
-    return await ProdukRepo.findById(id);
+  static async findById(id: number, opts?: { activeOnly?: boolean }) {
+    return await ProdukRepo.findById(id, opts);
   }
 }

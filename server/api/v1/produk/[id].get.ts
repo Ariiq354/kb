@@ -5,7 +5,7 @@ import { getValidatedRouterParamsSafe } from "~~/server/utils/validator";
 
 export default defineEventHandler(async (event) => {
   const params = await getValidatedRouterParamsSafe(event, idParamsSchema);
-  const data = await ProdukService.findById(params.id);
+  const data = await ProdukService.findById(params.id, { activeOnly: true });
 
   if (!data) {
     throw createError({
