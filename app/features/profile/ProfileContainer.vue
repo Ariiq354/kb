@@ -295,6 +295,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   :disabled="isLoading"
                 />
               </UFormField>
+              <UFormField label="No. Kontak Wali" name="noKontakWali" required>
+                <UInput
+                  v-model="state.noKontakWali"
+                  type="tel"
+                  placeholder="Contoh: 081234567890"
+                  :disabled="isLoading"
+                />
+              </UFormField>
               <UFormField label="Suku" name="suku">
                 <UInput
                   v-model="state.suku"

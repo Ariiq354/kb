@@ -65,6 +65,7 @@ export abstract class UserRepo {
         provinsi: userProfile.provinsi,
         provinsiNama: provinsi.name,
         namaAyah: userProfile.namaAyah,
+        noKontakWali: userProfile.noKontakWali,
         anakKe: userProfile.anakKe,
         dariBersaudara: userProfile.dariBersaudara,
         suku: userProfile.suku,

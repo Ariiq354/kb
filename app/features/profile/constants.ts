@@ -16,6 +16,7 @@ interface UserResponse {
   kota: number | null;
   provinsi: number | null;
   namaAyah: string | null;
+  noKontakWali: string | null;
   anakKe: number | null;
   dariBersaudara: number | null;
   suku: string | null;
@@ -42,6 +43,7 @@ export const schema = z.object({
   kota: z.number({ error: "Wajib diisi" }),
   provinsi: z.number({ error: "Wajib diisi" }),
   namaAyah: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
+  noKontakWali: z.string({ error: "Wajib diisi" }).trim().min(1, "Wajib diisi"),
   anakKe: z.coerce.number({ error: "Wajib diisi" }),
   dariBersaudara: z.coerce.number({ error: "Wajib diisi" }),
   suku: z.string({ error: "Wajib diisi" }).min(1, "Wajib diisi"),
@@ -78,6 +80,7 @@ export function initFormData(data?: UserResponse | null): Partial<Schema> {
     kota: data?.kota ?? undefined,
     provinsi: data?.provinsi ?? undefined,
     namaAyah: data?.namaAyah ?? undefined,
+    noKontakWali: data?.noKontakWali ?? "",
     anakKe: data?.anakKe ?? undefined,
     dariBersaudara: data?.dariBersaudara ?? undefined,
     suku: data?.suku ?? undefined,

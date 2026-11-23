@@ -29,6 +29,11 @@ export abstract class UserService {
   }
 
   static async getUserProfile(userId: number) {
+    const { noKontakWali: _noKontakWali, ...profile } = await UserService.getOwnProfile(userId);
+    return profile;
+  }
+
+  static async getOwnProfile(userId: number) {
     const result = await UserRepo.getUserProfile(userId);
 
     if (!result) {

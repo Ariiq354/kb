@@ -9,6 +9,7 @@ export const userProfileSchema = z.object({
   kota: z.coerce.number().int().positive(),
   provinsi: z.coerce.number().int().positive(),
   namaAyah: z.string().min(1),
+  noKontakWali: z.string({ error: "Wajib diisi" }).trim().min(1, "Wajib diisi"),
   anakKe: z.coerce.number().int().min(1),
   dariBersaudara: z.coerce.number().int().min(1),
   suku: z.string().min(1),

@@ -15,6 +15,7 @@ export const userProfile = snakeCase.table("user_profile", {
   kota: integer().notNull().references(() => kota.id),
   provinsi: integer().notNull().references(() => provinsi.id),
   namaAyah: text().notNull(),
+  noKontakWali: text().notNull().default(""),
   anakKe: integer().notNull(),
   dariBersaudara: integer().notNull(),
   suku: text().notNull(),
